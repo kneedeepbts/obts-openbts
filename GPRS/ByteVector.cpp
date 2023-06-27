@@ -23,7 +23,7 @@
 
 */
 
-#define LOG_GROUP LogGroup::GPRS		// Can set Log.Level.GPRS for debugging
+//#define LOG_GROUP LogGroup::GPRS		// Can set Log.Level.GPRS for debugging
 
 #include "ByteVector.h"
 

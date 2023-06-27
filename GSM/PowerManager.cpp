@@ -15,7 +15,7 @@
 
 #include "PowerManager.h"
 #include <Logger.h>
-#include <OpenBTSConfig.h>
+#include "../apps/OpenBTSConfig.h"
 #include <GSMConfig.h>
 #include <TRXManager.h>
 #include <ControlCommon.h>

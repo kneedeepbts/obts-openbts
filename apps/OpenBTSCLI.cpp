@@ -25,7 +25,7 @@
 
 // KEEP THIS FILE CLEAN FOR GPL PUBLIC RELEASE.
 
-#include <config.h>
+//#include <config.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -120,7 +120,7 @@ bool doCmd(int fd, char *cmd) // return false to abort/exit
 		exit(1);
 	}
 	if (nread != (int) sizeof(len)) {
-		printf("Partial read of length from server, expected %d, got %d\n", sizeof(len), len);
+		printf("Partial read of length from server, expected %d, got %d\n", (int)sizeof(len), len);
 		exit(1);
 	}
 	len = ntohl(len);

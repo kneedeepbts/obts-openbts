@@ -84,13 +84,14 @@ void MachineBase::machineErrorMessage(int level, int state, const L3Message *l3m
 	os << pthread_self() << Utils::timestr() << " " <<debugName() <<":" <<format;
 
 	// This kind sucks, digging into the Logger.  The logger could be better.
-	if (l3msg) {
-		Log(level).get() <<os <<" Unexpected L3 message:"<<l3msg;
-	} else if (sipmsg) {
-		Log(level).get() <<os <<" Unexpected SIP message:"<<sipmsg;
-	} else {
-		Log(level).get() <<os <<" Unexpected"<<LOGHEX(state);
-	}
+    // FIXME: Logging...
+//	if (l3msg) {
+//		Log(level).get() <<os <<" Unexpected L3 message:"<<l3msg;
+//	} else if (sipmsg) {
+//		Log(level).get() <<os <<" Unexpected SIP message:"<<sipmsg;
+//	} else {
+//		Log(level).get() <<os <<" Unexpected"<<LOGHEX(state);
+//	}
 }
 
 MachineStatus MachineBase::unexpectedState(int state, const L3Message*l3msg)

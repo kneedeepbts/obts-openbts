@@ -127,7 +127,7 @@ void SgsnInfo::sirm()
 {
 	std::ostringstream ss;
 	sgsnInfoDump(this,ss);
-	SGSNLOG("Removing SgsnInfo:"<<ss);
+	// FIXME: SGSNLOG("Removing SgsnInfo:"<<ss);
 	sSgsnInfoList.remove(this);
 	delete this;
 }
@@ -224,7 +224,7 @@ static void GmmRemove(GmmInfo *gmm)
 {
 	std::ostringstream ss;
 	gmmInfoDump(gmm,ss,0);
-	SGSNLOG("Removing gmm:"<<ss);
+	// FIXME: SGSNLOG("Removing gmm:"<<ss);
 	SgsnInfo *si;
 	RN_FOR_ALL(SgsnInfoList_t,sSgsnInfoList,si) {
 		// The second test here should be redundant.

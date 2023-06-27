@@ -20,7 +20,7 @@
 #include <Defines.h>
 #include <L3TermCause.h>
 #include <Logger.h>
-#include <OpenBTSConfig.h>
+#include "../apps/OpenBTSConfig.h"
 #include <SIPDialog.h>
 
 namespace Control {

@@ -17,7 +17,7 @@
 #include "GSMTAPDump.h"
 #include "GSMTransfer.h"
 #include <Sockets.h>
-#include <OpenBTSConfig.h>
+#include "../apps/OpenBTSConfig.h"
 
 UDPSocket GSMTAPSocket;
 

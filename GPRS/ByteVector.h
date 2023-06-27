@@ -20,7 +20,7 @@
 #include "MemoryLeak.h"
 #include "BitVector.h"
 #include "ScalarTypes.h"
-#include "Logger.h"
+//#include "Logger.h"
 // Originally based on BitVector, based on Vector
 
 // ByteVector is like a Vector but for objects of type... guess what?

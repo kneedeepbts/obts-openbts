@@ -17,15 +17,15 @@
 
 */
 
-#include "config.h"
+//#include "config.h"
 #include <Globals.h>
 #include <CLI.h>
 #include <TMSITable.h>
 #include <URLEncode.h>
 
-#define PROD_CAT "P"
-
+#define VERSION "poop"
 #define FEATURES "+GPRS "
+#define PROD_CAT "P"
 
 const char *gVERSION(void) { return VERSION; }
 const char *gFEATURES(void) { return FEATURES; }

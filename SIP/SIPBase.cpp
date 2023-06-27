@@ -30,7 +30,7 @@
 #include <Logger.h>
 #include <Timeval.h>
 #include <Reporting.h>
-#include <OpenBTSConfig.h>
+#include "../apps/OpenBTSConfig.h"
 
 #include "SIPMessage.h"
 #include "SIPParse.h"	// For SipParam
@@ -38,7 +38,7 @@
 #include "SIP2Interface.h"
 #include "SIPUtility.h"
 #include "SIPRtp.h"
-#include "config.h"		// For VERSION
+//#include "config.h"		// For VERSION
 
 #undef WARNING
 
@@ -509,7 +509,8 @@ void SipCallbacks::writePrivateHeaders(SipMessage *msg, const L3LogicalChannel *
 string OpenBTSUserAgent()
 {
 	// FIXME: This is broken...
-	static const char* userAgent1 = "OpenBTS " VERSION " Build Date " TIMESTAMP_ISO;
+	//static const char* userAgent1 = "OpenBTS " VERSION " Build Date " TIMESTAMP_ISO;
+    static const char* userAgent1 = "OpenBTS bad version";
 	string userAgent = string(userAgent1);
 	return userAgent;
 }

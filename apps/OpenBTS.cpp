@@ -20,7 +20,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include <config.h>	// For VERSION
+//#include <config.h>	// For VERSION
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -49,7 +49,7 @@ ReportingTable gReports(gConfig.getStr("Control.Reporting.StatsTable").c_str());
 #include <GSMLogicalChannel.h>
 
 #include <ControlTransfer.h>
-#include <Control/TMSITable.h>
+#include <TMSITable.h>
 
 #include <Globals.h>
 
@@ -58,7 +58,7 @@ ReportingTable gReports(gConfig.getStr("Control.Reporting.StatsTable").c_str());
 #include <Configuration.h>
 #include <PhysicalStatus.h>
 #include <SIP2Interface.h>
-#include "NeighborTable.h"
+#include <NeighborTable.h>
 #include <Peering.h>
 #include <GSML3RRElements.h>
 #include <NodeManager.h>
@@ -81,7 +81,8 @@ ReportingTable gReports(gConfig.getStr("Control.Reporting.StatsTable").c_str());
 using namespace std;
 using namespace GSM;
 
-const char* gDateTime = TIMESTAMP_ISO;
+//const char* gDateTime = TIMESTAMP_ISO;
+const char* gDateTime = "TIMESTAMP_ISO";
 
 
 // All of the other globals that rely on the global configuration file need to
@@ -592,7 +593,8 @@ int main(int argc, char *argv[])
 	srandom(time(NULL));
 
 	gConfig.setUpdateHook(purgeConfig);
-	LOG(ALERT) << "OpenBTS (re)starting, ver " << VERSION << " build date/time " << TIMESTAMP_ISO;
+	//LOG(ALERT) << "OpenBTS (re)starting, ver " << VERSION << " build date/time " << TIMESTAMP_ISO;
+        LOG(ALERT) << "OpenBTS (re)starting, ver " << "VERSION" << " build date/time " << "TIMESTAMP_ISO";
 	LOG(ALERT) << "OpenBTS reading config file "<<cOpenBTSConfigFile;
 
 	COUT("\n\n" << gOpenBTSWelcome << "\n");

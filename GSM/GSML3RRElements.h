@@ -25,7 +25,7 @@
 #include "L3Enums.h"
 #include "GSML3Message.h"
 #include "GSML3GPRSElements.h"
-#include <OpenBTSConfig.h>
+#include "../apps/OpenBTSConfig.h"
 
 
 namespace GSM {

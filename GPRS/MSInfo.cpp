@@ -631,14 +631,15 @@ bool MSInfo::msAssignChannels()
 
 		msAssignChannels2(maxdown,maxup,slots.mMultislotSum);
 
-		LOGWATCHF("Channel Assign, max:down/up=%d/%d ch down/up=%d/%d\n",
-			maxdown,maxup,msPCHDowns.size(),msPCHUps.size());
+		// FIXME:
+        //  LOGWATCHF("Channel Assign, max:down/up=%d/%d ch down/up=%d/%d\n",
+		//	maxdown,maxup,msPCHDowns.size(),msPCHUps.size());
 
         // If we are multislot, log a message:
         if (msPCHDowns.size() > 1) {
             std::ostringstream os;
             msDumpChannels(os);
-            LOG(INFO) << "Multislot assignment for "<<this<<os;
+            // FIXME: LOG(INFO) << "Multislot assignment for "<<this<<os;
         }
 
 	} else {

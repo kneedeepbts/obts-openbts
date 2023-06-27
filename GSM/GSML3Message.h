@@ -19,7 +19,7 @@
 #ifndef GSML3MESSAGE_H
 #define GSML3MESSAGE_H
 
-#include <OpenBTSConfig.h>
+#include "../apps/OpenBTSConfig.h"
 #include "GSMCommon.h"
 #include "GSMTransfer.h"
 

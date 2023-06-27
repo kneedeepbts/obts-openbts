@@ -33,13 +33,13 @@
 #include "GSMTransfer.h"
 #include "GSMTDMA.h"
 
-#include <a53.h>
+//#include <a53.h>
 #include "A51.h"
 
 #include "GSM610Tables.h"
 #include "GSM503Tables.h"
 
-#include <OpenBTSConfig.h>
+#include "../apps/OpenBTSConfig.h"
 
 #include "../GPRS/GPRSExport.h"
 

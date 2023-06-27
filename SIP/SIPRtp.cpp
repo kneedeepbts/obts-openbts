@@ -15,8 +15,8 @@
 */
 
 #define LOG_GROUP LogGroup::SIP		// Can set Log.Level.SIP for debugging
-#include <config.h>
-#include <OpenBTSConfig.h>
+//#include <config.h>
+#include "../apps/OpenBTSConfig.h"
 #include "SIPRtp.h"
 #include "SIPBase.h"
 #include "SIP2Interface.h"
@@ -125,13 +125,13 @@ void SipRtp::initRTP1(const char *d_ip_addr, unsigned d_port, unsigned dialogId)
 	rtp_session_set_payload_type(mSession, 3);
 	// (pat added) The last argument is user payload data that is passed to ourRtpTimestampJumpCallback()
 	// I was going to use the dialogId but decided to look up the dialog by mSession.
-	rtp_session_signal_connect(mSession,"timestamp_jump",(RtpCallback)ourRtpTimestampJumpCallback,dialogId);
+	rtp_session_signal_connect(mSession,"timestamp_jump",(RtpCallback)ourRtpTimestampJumpCallback,(void*)dialogId);
 
 	gCountRtpSockets++;
 #ifdef ORTP_NEW_API
 	rtp_session_set_local_addr(mSession, "0.0.0.0", mRTPPort, -1);
 #else
-	rtp_session_set_local_addr(mSession, "0.0.0.0", mRTPPort);
+	//rtp_session_set_local_addr(mSession, "0.0.0.0", mRTPPort);
 #endif
 	rtp_session_set_remote_addr(mSession, d_ip_addr, d_port);
 	WATCHF("*** initRTP local=%d remote=%s %d\n",mRTPPort,d_ip_addr,d_port);

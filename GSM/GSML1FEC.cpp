@@ -30,7 +30,7 @@
 #include "GSMTAPDump.h"
 #include "GSMLogicalChannel.h"
 #include <ControlCommon.h>
-#include <OpenBTSConfig.h>
+#include "../apps/OpenBTSConfig.h"
 #include <TRXManager.h>
 #include <Logger.h>
 #include <TMSITable.h>
@@ -833,7 +833,9 @@ void XCCHL1Decoder::decrypt()
 		if (mEncryptionAlgorithm == 1) {
 			A51_GSM(mKc, 64, count, block1, block2);
 		} else if (mEncryptionAlgorithm == 3) {
-			A53_GSM(mKc, 64, count, block1, block2);
+            // FIXME: Need to bring the liba library in...
+			// A53_GSM(mKc, 64, count, block1, block2);
+            A51_GSM(mKc, 64, count, block1, block2);
 		} else {
 			devassert(0);
 		}
@@ -1202,7 +1204,9 @@ void L1Encoder::transmit(BitVector2 *mI, BitVector2 *mE, const int *qbits)
 			if (mEncryptionAlgorithm == 1) {
 				A51_GSM(kc, 64, count, block1, block2);
 			} else if (mEncryptionAlgorithm == 3) {
-				A53_GSM(kc, 64, count, block1, block2);
+                // FIXME: Need to bring the liba library in...
+                // A53_GSM(mKc, 64, count, block1, block2);
+                A51_GSM(kc, 64, count, block1, block2);
 			} else {
 				devassert(0);
 			}
@@ -1690,7 +1694,9 @@ void TCHFACCHL1Decoder::decrypt(int B)
 		if (mEncryptionAlgorithm == 1) {
 			A51_GSM(mKc, 64, count, block1, block2);
 		} else if (mEncryptionAlgorithm == 3) {
-			A53_GSM(mKc, 64, count, block1, block2);
+            // FIXME: Need to bring the liba library in...
+            // A53_GSM(mKc, 64, count, block1, block2);
+            A51_GSM(mKc, 64, count, block1, block2);
 		} else {
 			devassert(0);
 		}
@@ -2377,7 +2383,9 @@ void TCHFACCHL1Encoder::dispatch()
 			if (mEncryptionAlgorithm == 1) {
 				A51_GSM(kc, 64, count, block1, block2);
 			} else if (mEncryptionAlgorithm == 3) {
-				A53_GSM(kc, 64, count, block1, block2);
+                // FIXME: Need to bring the liba library in...
+                // A53_GSM(mKc, 64, count, block1, block2);
+                A51_GSM(kc, 64, count, block1, block2);
 			} else {
 				devassert(0);
 			}

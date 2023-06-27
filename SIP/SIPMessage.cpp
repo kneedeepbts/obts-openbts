@@ -26,7 +26,7 @@
 #include "SIPUtility.h"
 #include "SIPMessage.h"
 #include "SIPBase.h"
-#include <OpenBTSConfig.h>
+#include "../apps/OpenBTSConfig.h"
 #undef WARNING		// The nimrods defined this to "warning"
 #undef CR			// This too
 

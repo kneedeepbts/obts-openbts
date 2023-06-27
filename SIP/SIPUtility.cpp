@@ -26,7 +26,7 @@
 #include <ortp/telephonyevents.h>
 
 #include "SIPUtility.h"
-#include <OpenBTSConfig.h>
+#include "../apps/OpenBTSConfig.h"
 #include <Sockets.h>
 // #include <GSML3CommonElements.h> // (pat 3-2014) Take this out temporarily to avoid referencing gBTS from the SIP directory. 
 

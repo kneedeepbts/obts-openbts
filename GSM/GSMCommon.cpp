@@ -17,7 +17,7 @@
 
 #define LOG_GROUP LogGroup::GSM		// Can set Log.Level.GSM for debugging
 
-#include <OpenBTSConfig.h>
+#include "../apps/OpenBTSConfig.h"
 #include <math.h>
 #include "GSMCommon.h"
 

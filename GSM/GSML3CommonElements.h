@@ -27,7 +27,7 @@
 
 #include "GSML3Message.h"
 #include <ControlTransfer.h>
-#include <OpenBTSConfig.h>
+#include "../apps/OpenBTSConfig.h"
 
 
 namespace GSM {

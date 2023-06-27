@@ -17,7 +17,7 @@
 
 */
 
-#include "config.h"
+//#include "config.h"
 #include <Globals.h>
 
 #define PROD_CAT "P"
@@ -27,7 +27,8 @@
 // Note that __TIME__ will only get updated if this file gets recompiled, so
 // it will usually be wrong.  Correct solution is to put all the special defines
 // in a header file that always gets generated and recompiled.
-const char *gVersionString = "release " VERSION "+" REPO_REV FEATURES PROD_CAT " built " TIMESTAMP_ISO " ";
+//const char *gVersionString = "release " VERSION "+" REPO_REV FEATURES PROD_CAT " built " TIMESTAMP_ISO " ";
+const char *gVersionString = "bad release";
 
 const char* gOpenBTSWelcome =
 	//23456789123456789223456789323456789423456789523456789623456789723456789
@@ -35,7 +36,7 @@ const char* gOpenBTSWelcome =
 	"Copyright 2008, 2009, 2010 Free Software Foundation, Inc.\n"
 	"Copyright 2010 Kestrel Signal Processing, Inc.\n"
 	"Copyright 2011-2021 Range Networks, Inc.\n"
-	"Release " VERSION "+" REPO_REV " " PROD_CAT " formal build date " TIMESTAMP_ISO "\n"
+	//"Release " VERSION "+" REPO_REV " " PROD_CAT " formal build date " TIMESTAMP_ISO "\n"
 	"\"OpenBTS\" is a registered trademark of Range Networks, Inc.\n"
 	"\nContributors:\n"
 	"  Range Networks, Inc.:\n"

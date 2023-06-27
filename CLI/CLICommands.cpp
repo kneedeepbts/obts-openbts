@@ -24,7 +24,7 @@
 #include <time.h>
 #include <algorithm>		// for sort()
 
-#include <config.h>
+//#include <config.h>
 
 // #include <Config.h>
 #include <Logger.h>
@@ -467,7 +467,7 @@ static CLIStatus sendsimple(int argc, char** argv, ostream& os)
 		(unsigned)random(), // tag
 		IMSI, // to imsi
 		(unsigned)random(), sock.port(), // Call-ID
-		strlen(txtBuf), txtBuf);	// Content-Type and content.
+             (unsigned int)strlen(txtBuf), txtBuf);	// Content-Type and content.
 	sock.write(buffer);
 
 	os << "message submitted for delivery" << endl;
@@ -600,7 +600,7 @@ static CLIStatus handover(int argc, char** argv, ostream& os)
 		int nth = atoi(peerarg+1);
 		vector<string> neighbors = gConfig.getVectorOfStrings("GSM.Neighbors");
 		if (nth < 0 || nth >= (int)neighbors.size()) {
-			os << format("Specified neighbor index '%d' out of bounds.  There are %d neighbors.",nth,neighbors.size());
+			os << format("Specified neighbor index '%d' out of bounds.  There are %d neighbors.",nth,(int)neighbors.size());
 			return BAD_VALUE;
 		}
 		peer = neighbors[nth];

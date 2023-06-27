@@ -17,7 +17,7 @@
 #ifndef _GSMNEIGHBORS_H_
 #define _GSMNEIGHBORS_H_ 1
 
-#include <OpenBTSConfig.h>
+#include "../apps/OpenBTSConfig.h"
 #include "GSMCommon.h"
 #include "GSMConfig.h"
 #include <ControlTransfer.h>
