@@ -19,7 +19,7 @@
 
 #include "../apps/OpenBTSConfig.h"
 #include "GSMCommon.h"
-#include "GSMConfig.h"
+//#include "GSMConfig.h" // Causes gBTS to go missing from CBS?
 #include <ControlTransfer.h>
 
 namespace GSM {

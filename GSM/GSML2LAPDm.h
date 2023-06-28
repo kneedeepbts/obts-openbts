@@ -28,6 +28,8 @@ implementation, although no code is copied directly.
 #include "GSMTransfer.h"
 #include <ControlTransfer.h>
 
+#include "z100timer.h"
+
 
 namespace GSM {
 
@@ -222,7 +224,7 @@ class L2LAPDm : public L2DL {
 	bool mDiscardIQueue;		///< a flag used to abort I-frame sending
 	unsigned mContentionCheck;	///< checksum used for contention resolution, GSM 04.06 5.4.1.4.
 	unsigned mRC;				///< retransmission counter, GSM 04.06 5.4.1-5.4.4
-	Z100Timer mT200;			///< retransmission timer, GSM 04.06 5.8.1
+	kneedeepbts::gsm::Z100Timer mT200;			///< retransmission timer, GSM 04.06 5.8.1
 	size_t mMaxIPayloadBits;	///< N201*8 for the I-frame
 	//@}
 	//@}

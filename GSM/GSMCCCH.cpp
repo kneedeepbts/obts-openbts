@@ -25,6 +25,8 @@
 #include <MAC.h>
 #include <math.h>
 
+#include "gsmtime.h"
+
 using namespace Control;
 using namespace GPRS;
 
@@ -157,7 +159,7 @@ static L2LogicalChannel *preallocateChForRach(RachInfo *rach, bool *deleteMe)
 {
 	*deleteMe = false;
 
-	Time now = gBTS.time();
+    kneedeepbts::gsm::GsmTime now = gBTS.time();
 	int age = now - rach->mWhen;	// The result is number of frames and could be negative.
 	if (age>sMaxAge) {
 		LOG(WARNING) << "ignoring RACH burst with age " << age;
@@ -189,10 +191,10 @@ static L2LogicalChannel *preallocateChForRach(RachInfo *rach, bool *deleteMe)
 
 	int initialTA = rach->initialTA();
 	assert(initialTA >= 0 && initialTA <= 62);	// enforced by AccessGrantResponder.
-	LCH->l1InitPhy(rach->RSSI(),initialTA,gBTS.clock().systime(rach->mWhen.FN()));
+	LCH->l1InitPhy(rach->RSSI(),initialTA,gBTS.clock().systime(rach->mWhen));
 	LCH->lcstart();
 	rach->mChan = LCH;
-	Time sacchStart = LCH->getSACCH()->getNextWriteTime();
+    kneedeepbts::gsm::GsmTime sacchStart = LCH->getSACCH()->getNextWriteTime();
 	rach->mReadyTime = sacchStart;
 	// There is a race whether the thread that runs SACCH can run before sacchStart time, and if not
 	// the SACCH will not be transmitted at this time.
@@ -253,7 +255,7 @@ void pagerAddCcchMessageForGprs(NewPagingEntry *npe)
 }
 
 
-bool CCCHLogicalChannel::sendGprsCcchMessage(NewPagingEntry *gprsMsg, GSM::Time &frameTime)
+bool CCCHLogicalChannel::sendGprsCcchMessage(NewPagingEntry *gprsMsg, kneedeepbts::gsm::GsmTime &frameTime)
 {
 	if (! gprsPageCcchSetTime(gprsMsg->mGprsClient,gprsMsg->mImmAssign,frameTime.FN())) { return false; }
 	L2LogicalChannelBase::l2sendm(*(gprsMsg->mImmAssign),L3_UNIT_DATA);
@@ -269,7 +271,7 @@ bool CCCHLogicalChannel::processRaches()
 {
 	while (RachInfo *rach = gRachq.readNoBlock())
 	{
-		Time now = gBTS.time();
+        kneedeepbts::gsm::GsmTime now = gBTS.time();
 		int age = now - rach->mWhen;	// The result is number of frames and could be negative.
 		if (age>sMaxAge) {
 			LOG(WARNING) << "ignoring RACH burst with age " << age;
@@ -362,7 +364,7 @@ bool CCCHLogicalChannel::processRaches()
 
 		if (0) {	// This was for debugging.  Adding this delay made the layer1 connection reliable.
 			// Delay the channel assignment until the SACCH is known to be transmitting...
-			Time sacchStart = LCH->getSACCH()->getNextWriteTime();
+            kneedeepbts::gsm::GsmTime sacchStart = LCH->getSACCH()->getNextWriteTime();
 			now = gBTS.time();	// Must update this because getTCH blocked.
 			int msecsDelay = ((sacchStart - now.FN()).FN() * gFrameMicroseconds) / 1000;
 			// Add an extra gratuitous 250ms delay for testing.
@@ -391,7 +393,7 @@ bool CCCHLogicalChannel::processPages()
 		LOG(DEBUG)<<LOGVAR(npe1);
 		if (npe1->mGprsClient) {	// Is it a GPRS page?
 			// Add 51 to the frame time because the message because the MS may be on the other 51-multiframe.
-			Time future(mCcchNextWriteTime + 52);
+            kneedeepbts::gsm::GsmTime future(mCcchNextWriteTime + 52);
 			if (! sendGprsCcchMessage(npe1,future)) {
 				delete npe1;	// In the incredibly unlikely event that the above failed, just give up.
 				continue;
@@ -441,7 +443,7 @@ bool CCCHLogicalChannel::ccchServiceQueue()
 	for (NewPagingEntry *gprsIt = gGprsCcchMessageQ.itBegin(); gprsIt; ) {
 		NewPagingEntry *gprsMsg = gprsIt;	// This is redundant; the items are not currently modified by iteration.
 		LOG(DEBUG) << "processing"<<LOGVAR(gprsMsg);
-		GSM::Time drxBeginTime(gprsMsg->mDrxBegin);
+        kneedeepbts::gsm::GsmTime drxBeginTime(gprsMsg->mDrxBegin);
 		if (mCcchNextWriteTime >= drxBeginTime) {
 			// This MS is now in DRX mode.  Move the message to the paging queue.
 			gprsIt = gGprsCcchMessageQ.itRemove(gprsIt);

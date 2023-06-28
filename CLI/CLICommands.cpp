@@ -21,7 +21,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include <time.h>
+#include <gsmtime.h>
 #include <algorithm>		// for sort()
 
 //#include <config.h>
@@ -29,7 +29,7 @@
 // #include <Config.h>
 #include <Logger.h>
 
-#include <GSMConfig.h>
+//#include <GSMConfig.h>
 #include <GSMLogicalChannel.h>
 #include <GSMCCCH.h>
 #include <ControlTransfer.h>

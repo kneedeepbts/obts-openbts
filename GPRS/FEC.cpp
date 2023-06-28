@@ -21,6 +21,10 @@
 #include "FEC.h"
 #include "GSMTAPDump.h"
 #include "../TransceiverRAD1/Transceiver.h"	// For Transceiver::IGPRS
+
+// From GSM Library
+#include <gsmtime.h>
+
 #define FEC_DEBUG 0
 
 namespace GPRS {
@@ -199,7 +203,7 @@ void PDCHL1Downlink::transmit(RLCBSN_t bsn, BitVector *mI, const int *qbits, int
 	int tn = TN();
 
 	for (int qi=0,B=0; B<4; B++) {
-		Time nextWriteTime(fn,tn | transceiverflags);
+        kneedeepbts::gsm::GsmTime nextWriteTime(fn,tn | transceiverflags);
 		mchBurst.time(nextWriteTime);
 		// Copy in the "encrypted" bits, GSM 05.03 4.1.5, 05.02 5.2.3.
 		//OBJLOG(DEBUG) << "transmit mI["<<B<<"]=" << mI[B];
@@ -371,7 +375,7 @@ void PDCHL1Downlink::bugFixIdleFrame()
 
 	// Did we make it in time?
 	{
-	Time tnow = gBTS.time();
+        kneedeepbts::gsm::GsmTime tnow = gBTS.time();
 	int fn = tnow.FN();
 	int mfn = (fn / 13);			// how many 13-multiframes
 	int rem = (fn - (mfn*13));	// how many blocks within the last multiframe.

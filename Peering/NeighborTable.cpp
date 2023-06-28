@@ -23,7 +23,7 @@
 #include <sqlite3.h>
 #include <sqlite3util.h>
 
-#include <time.h>
+#include <gsmtime.h>
 
 #include <sstream>
 #include <algorithm>

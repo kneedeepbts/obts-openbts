@@ -717,11 +717,11 @@ class L3ChannelRequest : public L3RRMessageNRO {
 	private:
 
 	unsigned mRA;		///< request reference
-	GSM::Time mTime;		///< receive timestamp
+    kneedeepbts::gsm::GsmTime mTime;		///< receive timestamp
 
 	public:
 
-	L3ChannelRequest(unsigned wRA, const GSM::Time& wTime)
+	L3ChannelRequest(unsigned wRA, const kneedeepbts::gsm::GsmTime& wTime)
 		:L3RRMessageNRO(),
 		mRA(wRA), mTime(wTime)
 	{}
@@ -729,7 +729,7 @@ class L3ChannelRequest : public L3RRMessageNRO {
 	/**@name Accessors. */
 	//@{
 	unsigned RA() const { return mRA; }
-	const GSM::Time& time() const { return mTime; }
+	const kneedeepbts::gsm::GsmTime& time() const { return mTime; }
 	//@}
 
 	int MTI() const { return (int)ChannelRequest; }

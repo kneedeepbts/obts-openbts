@@ -19,7 +19,7 @@
 #define GPRSL1FEC_H
 
 #include <GSMCommon.h>
-#include <GSMConfig.h>		// for gBTS
+//#include <GSMConfig.h>		// for gBTS
 #include <GSML1FEC.h>
 #include <GSMTransfer.h>	// for TxBurst
 #include <GSMLogicalChannel.h> // for TCHFACCHLogicalChannel

@@ -43,6 +43,9 @@
 #include "L3MobilityManagement.h"
 #include "L3Utils.h"
 
+// From GSM Library
+#include <z100timer.h>
+
 extern int gCountTranEntry;
 
 struct sqlite3;
@@ -54,7 +57,7 @@ class CSL3StateMachine;
 class MachineBase;
 class MMContext;
 
-typedef std::map<std::string, GSM::Z100Timer> TimerTable;		// Not used for l3rewrite
+typedef std::map<std::string, kneedeepbts::gsm::Z100Timer> TimerTable;		// Not used for l3rewrite
 
 
 

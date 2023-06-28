@@ -29,7 +29,7 @@
 #include "radioDevice.h"
 #include "DummyLoad.h"
 
-#include <time.h>
+#include <gsmtime.h>
 #include <signal.h>
 
 #include <GSMCommon.h>

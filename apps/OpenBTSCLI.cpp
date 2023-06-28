@@ -34,7 +34,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#include <time.h>
+#include <gsmtime.h>
 #include <errno.h>
 #include <arpa/inet.h>
 #include <stdarg.h>

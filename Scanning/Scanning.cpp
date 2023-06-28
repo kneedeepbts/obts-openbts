@@ -15,7 +15,7 @@
 */
 
 #include "Scanning.h"
-#include <time.h>
+#include <gsmtime.h>
 #include <sqlite3.h>
 #include <sqlite3util.h>
 

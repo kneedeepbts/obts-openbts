@@ -99,7 +99,7 @@
 //#include <sys/ioctl.h>			// pat added, then removed because it defines NCC used in GSMConfig.
 #include <assert.h>				// pat added
 #include <stdarg.h>				// pat added
-#include <time.h>				// pat added.
+#include <gsmtime.h>                // pat added.
 #include <sys/time.h>
 #include <sys/types.h>
 #include <wait.h>

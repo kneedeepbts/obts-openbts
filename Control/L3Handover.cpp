@@ -30,7 +30,7 @@
 #include "L3MMLayer.h"
 
 #include <GSMLogicalChannel.h>
-#include <GSMConfig.h>
+//#include <GSMConfig.h>
 #include "../GPRS/GPRSExport.h"
 #include <GSML3RRElements.h>
 #include <L3Enums.h>
@@ -41,10 +41,11 @@
 
 #include <Reporting.h>
 #include <Logger.h>
+
+// From GSM Library
+#include <z100timer.h>
+
 #undef WARNING
-
-
-
 
 using namespace std;
 using namespace GSM;
@@ -109,7 +110,7 @@ void ProcessHandoverAccess(L3LogicalChannel *chan)
 	if (TA>62) TA=62;
 
 	// We want to do this loop carefully so we exit as soon as we get a frame that is not HANDOVER_ACCESS.
-	Z100Timer T3105(gConfig.GSM.Timer.T3105);	// It defaults to only 50ms.
+	kneedeepbts::gsm::Z100Timer T3105(gConfig.GSM.Timer.T3105);	// It defaults to only 50ms.
 
 	// 4.08 11.1.3 "Ny1: The maximum number of repetitions for the PHYSICAL INFORMATION message during a handover."
 	for (unsigned sendCount = gConfig.getNum("GSM.Handover.Ny1"); sendCount > 0; sendCount--) {
@@ -313,7 +314,7 @@ bool outboundHandoverTransfer(TranEntry* transaction, L3LogicalChannel *TCH)
 	// Start a timer for T3103, the handover failure timer.
 	// This T3103 timer is for the outbound leg of the handover on BS1.
 	// There is another T3103 timer in GSML1FEC for the inbound handover on BS2.
-	GSM::Z100Timer outboundT3103(gConfig.getNum("GSM.Timer.T3103") + 1000);
+	kneedeepbts::gsm::Z100Timer outboundT3103(gConfig.getNum("GSM.Timer.T3103") + 1000);
 	outboundT3103.set();
 
 	// The next step for the MS is to send Handover Access to BS2.

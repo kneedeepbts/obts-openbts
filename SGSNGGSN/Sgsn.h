@@ -17,7 +17,11 @@
 #define _SGSN_H_
 #include "GPRSL3Messages.h"
 #include "SgsnExport.h"
-#include "GSMCommon.h"	// For Z100Timer
+//#include "GSMCommon.h"	// For Z100Timer
+
+// From GSM Library
+#include <z100timer.h>
+
 #ifndef MIN
 #define MIN(a,b) ((a)<=(b)?(a):(b))
 #endif
@@ -298,10 +302,10 @@ class SgsnInfo
 	// 24.008 11.2.2.  T3310 is in the MS and is 15s.  We are using it here similarly to place a limit
 	// on the Attach Request process, so when we receive an Identity Response we dont send
 	// an attach long afterward.
-	GSM::Z100Timer mT3310FinishAttach;
+    kneedeepbts::gsm::Z100Timer mT3310FinishAttach;
 	// T3370 is the ImsiRequest repeat at 6s, but the total time is only 15s, so its hardly worth bothering,
 	// so we dont; the MS will RACH again if necessary.  But here is the timer anyway.
-	GSM::Z100Timer mT3370ImsiRequest;
+    kneedeepbts::gsm::Z100Timer mT3370ImsiRequest;
 
 	SgsnInfo(uint32_t wTlli);	// May be a URNTI instead of TLLI.
 	~SgsnInfo();

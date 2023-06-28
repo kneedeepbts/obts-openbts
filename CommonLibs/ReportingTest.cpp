@@ -25,7 +25,7 @@
 
 #include "stdlib.h"
 #include <syslog.h>
-#include <time.h>
+#include <gsmtime.h>
 
 #include "Reporting.h"
 

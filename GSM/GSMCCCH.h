@@ -24,6 +24,8 @@
 #include "GSMTDMA.h"
 #include "PagingEntry.h"
 
+#include "gsmtime.h"
+
 namespace GSM {
 
 class NewPager {
@@ -62,7 +64,7 @@ class CCCHLogicalChannel : public NDCCHLogicalChannel
 	unsigned mCcchGroup;	///< CCCH group: 0,1,2,3 corresponding to timeslots 0,2,4,6 on ARFCN 0.
 	bool mRunning;			///< a flag to indication that the service loop is running
 	Thread mServiceThread;	///< a thread for the service loop
-	GSM::Time mCcchNextWriteTime;	///< Indicates frame currently being serviced.
+    kneedeepbts::gsm::GsmTime mCcchNextWriteTime;	///< Indicates frame currently being serviced.
 
 	int mRevPCH[51]; // Reverse index of frame number to paging block number, B0 .. B8.
 
@@ -78,7 +80,7 @@ class CCCHLogicalChannel : public NDCCHLogicalChannel
 	bool processRaches();
 	bool processPages(
 		);
-	bool sendGprsCcchMessage(Control::NewPagingEntry *gprsMsg, GSM::Time &frameTime);
+	bool sendGprsCcchMessage(Control::NewPagingEntry *gprsMsg, kneedeepbts::gsm::GsmTime &frameTime);
 
 	ChannelType chtype() const { return CCCHType; }
 };

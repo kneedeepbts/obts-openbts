@@ -462,7 +462,7 @@ L3ImmediateAssignment *gprsPageCcchStart(
 	// at the time this is sent.
 	RLCBSN_t impossibleBSN = gBSNNext + 10000;
 	//RLCBSN_t impossibleBSN = resBSN + 1000;
-	GSM::Time impossible(BSN2FrameNumber(impossibleBSN),0);	// TN not used.
+    kneedeepbts::gsm::GsmTime impossible(BSN2FrameNumber(impossibleBSN),0);	// TN not used.
 	// The downlink bit documentation is goofed up in GSM 4.08/4.18: They clarified it
 	// in GSM 44.018 sec 10.5.2.25b: This bit is 1 only for downlink TBFs.
 	L3ImmediateAssignment *result = new L3ImmediateAssignment(

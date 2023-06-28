@@ -22,7 +22,7 @@
 
 #include "GSML3RRElements.h"
 #include "Defines.h"
-#include "GSMConfig.h"
+#include "GSMConfig.h" //gBTS
 
 #include <Logger.h>
 

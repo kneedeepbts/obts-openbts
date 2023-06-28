@@ -24,6 +24,10 @@
 #include "GSMChannelHistory.h"
 #include "GSML1FEC.h"
 
+#include <GSMConfig.h> //gBTS
+
+#include "gsmtime.h"
+
 namespace GSM {
 
 // Return the averaged RXLEV from the serving BTS as reported by the handset.
@@ -77,7 +81,7 @@ void NeighborHistory::nhAddPoint(NCellPoint &npt, FrameNum now)
 	int maxage = (1+maxlen) * 2*52;		// Each report requires 2 * 52-multiframes, 480ms.
 	while (nhList.size()) {
 		NCellPoint &bk = nhList.back();
-		if (FNDelta(now,bk.ncpFrame) > maxage) { nhList.pop_back(); continue; }
+		if (kneedeepbts::gsm::FNDelta(now,bk.ncpFrame) > maxage) { nhList.pop_back(); continue; }
 		break;
 	}
 }
@@ -93,7 +97,7 @@ void ChannelHistory::chAddPoint(SCellPoint &spt, FrameNum now)
 	int maxage = (1+maxlen) * 2*52;		// Each report requires 2 * 52-multiframes, 480ms.
 	while (mSCellData.size()) {
 		SCellPoint &bk = mSCellData.back();
-		if (FNDelta(now,bk.scpFrame) > maxage) { mSCellData.pop_back(); continue; }
+		if (kneedeepbts::gsm::FNDelta(now,bk.scpFrame) > maxage) { mSCellData.pop_back(); continue; }
 		break;
 	}
 }
@@ -165,7 +169,7 @@ void ChannelHistory::neighborAddMeasurement(FrameNum when, unsigned arfcn, unsig
 bool ChannelHistory::neighborAddMeasurements(SACCHLogicalChannel* SACCH,const L3MeasurementResults* measurements)
 {
 
-	Time sampleTime = gBTS.time();	// This thread could be running behind the clock, but it is close enough for government work.
+    kneedeepbts::gsm::GsmTime sampleTime = gBTS.time();	// This thread could be running behind the clock, but it is close enough for government work.
 
 	this->mReportTimestamp++;
 

@@ -20,9 +20,6 @@
 
 #define LOG_GROUP LogGroup::GSM		// Can set Log.Level.GSM for debugging
 
-
-
-
 #include <typeinfo>
 #include <iostream>
 
@@ -30,13 +27,10 @@
 #include "GSMConfig.h"	// For gBTS
 #include <Logger.h>
 
+#include "gsmtime.h"
 
 using namespace std;
 using namespace GSM;
-
-
-
-
 
 void L3Message::writeBody(L3Frame&,size_t&) const
 {
@@ -592,8 +586,8 @@ void L3ImmediateAssignment::text(ostream& os) const
 	os << " RequestReference=("<<mRequestReference<<")";
 	os << " TimingAdvance="<<mTimingAdvance;
 	if (mStartTimePresent) {
-		Time now = gBTS.time();
-		int msecsFuture = ((Time(mStartTimeFrame) - now.FN()).FN() * gFrameMicroseconds) / 1000;
+        kneedeepbts::gsm::GsmTime now = gBTS.time();
+		int msecsFuture = ((kneedeepbts::gsm::GsmTime(mStartTimeFrame) - now.FN()).FN() * gFrameMicroseconds) / 1000;
 		os <<LOGVARM(mStartTimeFrame) <<"(" <<msecsFuture <<"ms)";
 	}
 	mIARestOctets.text(os); 

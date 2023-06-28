@@ -27,6 +27,8 @@
 #include "GSM503Tables.h"
 #include "SIPRtp.h"	// For AudioFrame
 
+#include "gsmtime.h"
+
 /* Data transfer objects for the GSM core. */
 
 namespace GSM {
@@ -144,12 +146,12 @@ class TxBurst : public BitVector {
 
 	private:
 
-	Time mTime;			///< GSM frame number
+    kneedeepbts::gsm::GsmTime mTime;			///< GSM frame number
 
 	public:
 
 	/** Create an empty TxBurst. */
-	TxBurst(const Time& wTime = Time(0))
+	TxBurst(const kneedeepbts::gsm::GsmTime& wTime = kneedeepbts::gsm::GsmTime(0))
 		:BitVector(gSlotLen),mTime(wTime)
 	{
 		// Zero out the tail bits now.
@@ -158,7 +160,7 @@ class TxBurst : public BitVector {
 	}
 
 	/** Create a TxBurst by copying from an existing BitVector. */
-	TxBurst(const BitVector& wSig, const Time& wTime = Time(0))
+	TxBurst(const BitVector& wSig, const kneedeepbts::gsm::GsmTime& wTime = kneedeepbts::gsm::GsmTime(0))
 		:BitVector(wSig),mTime(wTime)
 	{ assert(wSig.size()==gSlotLen); }
 
@@ -168,8 +170,8 @@ class TxBurst : public BitVector {
 	/**@name Basic accessors. */
 	//@{
 	// Since mTime is volatile, we can't return a reference.
-	Time time() const { return mTime; }
-	void time(const Time& wTime) { mTime = wTime; }
+    kneedeepbts::gsm::GsmTime time() const { return mTime; }
+	void time(const kneedeepbts::gsm::GsmTime& wTime) { mTime = wTime; }
 	//@}
 
 	bool operator>(const TxBurst& other) const
@@ -199,7 +201,7 @@ class TxBurstQueue : public InterthreadPriorityQueue<TxBurst> {
 	public:
 
 	/** Get the framenumber of the next outgoing burst.  Blocks if queue is empty. */
-	Time nextTime() const;
+    kneedeepbts::gsm::GsmTime nextTime() const;
 
 };
 
@@ -221,7 +223,7 @@ class RxBurst : public SoftVector {
 
 	private:
 
-	Time mTime;				///< timeslot and frame on which this was received
+    kneedeepbts::gsm::GsmTime mTime;				///< timeslot and frame on which this was received
 	float mTimingError;		///< Timing error in symbol steps, <0 means early.
 	float mRSSI;			///< RSSI estimate associated with the slot, dB wrt full scale.
 
@@ -232,16 +234,16 @@ class RxBurst : public SoftVector {
 	RxBurst(const TxBurst& source, float wTimingError=0, int wRSSI=0);
 
 	/** Wrap an RxBurst around an existing float array. */
-	RxBurst(float* wData, const Time &wTime, float wTimingError, int wRSSI)
+	RxBurst(float* wData, const kneedeepbts::gsm::GsmTime &wTime, float wTimingError, int wRSSI)
 		:SoftVector(wData,gSlotLen),mTime(wTime),
 		mTimingError(wTimingError),mRSSI(wRSSI)
 	{ }
 
 
 	// Since mTime is volatile, we can't return a reference.
-	Time time() const { return mTime; }
+    kneedeepbts::gsm::GsmTime time() const { return mTime; }
 
-	void time(const Time& wTime) { mTime = wTime; }
+	void time(const kneedeepbts::gsm::GsmTime& wTime) { mTime = wTime; }
 	
 	float RSSI() const { return mRSSI; }
 

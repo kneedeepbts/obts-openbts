@@ -33,7 +33,7 @@
 #include <Globals.h>
 
 
-#include <GSMConfig.h>
+#include <GSMConfig.h> //gBTS
 #include <GSMTransfer.h>
 #include "ControlCommon.h"
 //#include <GSML3CommonElements.h>

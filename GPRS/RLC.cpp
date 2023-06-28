@@ -18,6 +18,9 @@
 #include "GPRSRLC.h"
 #include "GSMCommon.h"
 
+// From GSM Library
+#include <gsmtime.h>
+
 namespace GPRS {
 
 int deltaBSN(int bsn1,int bsn2)
@@ -72,7 +75,7 @@ int BSN2FrameNumber(RLCBSN_t absn)	// absolute block sequence number.
 	// so 3 radio blocks take 13 frames.
 	int bsn = absn;	// Convert to int so we do math on int, not RLCBSN_t
 	int result = ((int)bsn / 3) * 13 + ((int)bsn % 3) * 4;
-	assert(result >= 0 && (unsigned) result <= GSM::gHyperframe);
+	assert(result >= 0 && (unsigned) result <= kneedeepbts::gsm::gHyperframe);
 	return result;
 }
 

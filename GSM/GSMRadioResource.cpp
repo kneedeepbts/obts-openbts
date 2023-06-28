@@ -18,12 +18,14 @@
 
 #include "GSMRadioResource.h"
 #include "GSMCommon.h"
-#include "GSMConfig.h"
+#include "GSMConfig.h" //gBTS
 #include "GSMLogicalChannel.h"
 #include "GSMCCCH.h"
 #include <ControlTransfer.h>
 #include <L3TranEntry.h>	// For L3TranEntryId, NewTransactionTable.
 #include <Globals.h>
+
+#include "gsmtime.h"
 
 namespace GSM {
 using namespace Control;
@@ -116,7 +118,7 @@ FakeRachType fakeRachTypeTranslate(const char *name)
 // Enqueue a fake rach of the specified type.  Used to test/exercise the CCCH code.
 void createFakeRach(FakeRachType rachtype)
 {
-	Time now = gBTS.time();
+    kneedeepbts::gsm::GsmTime now = gBTS.time();
 	AccessGrantResponder(createFakeRachRA(rachtype),now,0,1,0);
 	//ChannelRequestRecord *req = new ChannelRequestRecord(createFakeRachRA(rachtype),now,0,1);
 	//gBTS.channelRequest(req);
@@ -138,7 +140,7 @@ std::ostream& operator<<(std::ostream& os, const RachInfo *rach) { os << &rach; 
 // Triage the RACHes, prioritize them, put them on RachQ.
 // TODO: Merge RachInfo with ChannelRequestRecord and pass it in here.
 void AccessGrantResponder(
-		unsigned RA, const GSM::Time& when,
+		unsigned RA, const kneedeepbts::gsm::GsmTime& when,
 		float RSSI, float timingError,
 		int TN)	// The TN the RACH arrived on.  Only non-0 if there are multiple beacon timeslots.
 {

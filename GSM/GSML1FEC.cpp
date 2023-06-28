@@ -25,7 +25,7 @@
 #include "GSMCommon.h"
 #include "GSMTransfer.h"
 //#include "GSMSAPMux.h"
-#include "GSMConfig.h"
+#include "GSMConfig.h" //gBTS
 #include "GSMTDMA.h"
 #include "GSMTAPDump.h"
 #include "GSMLogicalChannel.h"
@@ -36,7 +36,7 @@
 #include <TMSITable.h>
 #include <assert.h>
 #include <math.h>
-#include <time.h>
+#include <gsmtime.h>
 
 #include "../GPRS/GPRSExport.h"
 
@@ -321,7 +321,7 @@ void L1Encoder::resync(bool force)
 {
 	// If the encoder's clock is far from the current BTS clock,
 	// get it caught up to something reasonable.
-	Time now = gBTS.time();
+    kneedeepbts::gsm::GsmTime now = gBTS.time();
 	int32_t delta = mNextWriteTime-now;
 	OBJLOG(DEBUG) << "L1Encoder next=" << mNextWriteTime << " now=" << now << " delta=" << delta;
 	if (force || (delta<0) || (delta>(51*26))) {
@@ -335,7 +335,7 @@ void L1Encoder::resync(bool force)
 	}
 }
 
-Time L1Encoder::getNextWriteTime()
+kneedeepbts::gsm::GsmTime L1Encoder::getNextWriteTime()
 {
 	resync();
 	ScopedLock lock(mWriteTimeLock,__FILE__,__LINE__);

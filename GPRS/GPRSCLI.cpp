@@ -25,6 +25,10 @@
 #include "BSSG.h"
 #include "LLC.h"
 #include "CLI.h"
+
+// From GSM Library
+#include <gsmtime.h>
+
 #define strmatch(what,pat) (0==strncmp(what,pat,strlen(pat)))
 
 
@@ -173,7 +177,7 @@ static CLIStatus gprsStats(int argc, char **argv, int argi, ostream&os)
 		os << "GPRS is not enabled.  See 'GPRS.Enable' option.\n";
 		return FAILURE;
 	}
-	GSM::Time now = gBTS.time();
+    kneedeepbts::gsm::GsmTime now = gBTS.time();
 	os << "GSM FN=" << now.FN() << " GPRS BSN=" << gBSNNext << "\n"; 
 	os << "Current number of"
 		<< " PDCH=" << gL2MAC.macPDCHs.size()
@@ -301,8 +305,9 @@ static CLIStatus gprsTestMsg(int argc, char **argv, int argi, ostream&os)
 		return FAILURE;
 	}
 
-	Time gsmfn = gBTS.clock().FN();
-	os << "Test Messages, Current time:"<<LOGVAR(gsmfn)<<LOGVAR(gBSNNext)<<"\n";
+    // FIXME: Fix the logging...
+    //kneedeepbts::gsm::GsmTime gsmfn = gBTS.clock().FN();
+	//os << "Test Messages, Current time:"<<LOGVAR(gsmfn)<<LOGVAR(gBSNNext)<<"\n";
 
 	// Create a dummy RLCRawBLock for the uplink messages to parse.
 	BitVector bvdummy(52*8);

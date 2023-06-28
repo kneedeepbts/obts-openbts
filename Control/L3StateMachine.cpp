@@ -28,7 +28,7 @@
 #include <GSML3RRMessages.h>
 #include <GSML3MMMessages.h>
 #include <SMSMessages.h>
-#include <GSMConfig.h>
+#include <GSMConfig.h> //gBTS
 #include <RRLPServer.h>
 #include <Globals.h>
 #include <typeinfo>

@@ -89,7 +89,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <gsmtime.h>
 #include "./A51.h"
 // We must have a gConfig now to include BitVector.
 #include "Configuration.h"

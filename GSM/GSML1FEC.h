@@ -39,6 +39,8 @@
 #include "GSM610Tables.h"
 #include "GSM503Tables.h"
 
+#include "z100timer.h"
+
 #include "../apps/OpenBTSConfig.h"
 
 #include "../GPRS/GPRSExport.h"
@@ -125,8 +127,8 @@ class L1Encoder {
 	// the encoder mapping (which it has cached) to send incoming bursts directly
 	// to the mapped L1Decoder::writeLowSideRx() for each frame.
 	unsigned mTotalFrames;			///< total frames sent since last open()
-	GSM::Time mPrevWriteTime;		///< timestamp of previous generated burst
-	GSM::Time mNextWriteTime;		///< timestamp of next generated burst
+    kneedeepbts::gsm::GsmTime mPrevWriteTime;		///< timestamp of previous generated burst
+    kneedeepbts::gsm::GsmTime mNextWriteTime;		///< timestamp of next generated burst
 
 	// (pat 10-2014) Another thread calls getNextWriteTime so we must protect places that write to mNextWriteTime.
 	mutable Mutex mWriteTimeLock;
@@ -214,7 +216,7 @@ class L1Encoder {
 	const L1FEC* parent() const { return mParent; }
 	L1FEC* parent() { return mParent; }
 
-	GSM::Time getNextWriteTime();
+    kneedeepbts::gsm::GsmTime getNextWriteTime();
 
 	protected:
 
@@ -304,7 +306,7 @@ class L1Decoder {
 	//Z100Timer mT3101;					///< timer for new channels
 	//Z100Timer mT3109;					///< timer for loss of uplink signal.  Need to check both host and SACCH timers.
 	//Z100Timer mT3111;					///< timer for reuse of a normally closed channel
-	Z100Timer mT3103;					///< timer for handover
+	kneedeepbts::gsm::Z100Timer mT3103;					///< timer for handover
 	//@}
 	bool mDecActive;					///< true between open() and close()
 	//@}
@@ -808,7 +810,7 @@ class SharedL1Decoder
 	//@}
     //@}
 
-	GSM::Time mReadTime;        ///< timestamp of the first burst
+    kneedeepbts::gsm::GsmTime mReadTime;        ///< timestamp of the first burst
 
 	public:
 

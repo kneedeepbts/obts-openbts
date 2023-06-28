@@ -26,6 +26,9 @@
 #include "Utils.h"
 #include "SgsnExport.h"
 
+// From GSM Library
+#include <z100timer.h>
+
 #define CASENAME(x) case x: return #x;
 
 namespace GSM { struct RadData; }
@@ -470,14 +473,14 @@ class MSInfo : public SGSN::MSUEAdapter, public SignalQuality, public MSStat
 	// Note: The MS may take advantage of this time period by keeping the TBF open
 	// after a PDU finishes, and not sending anything for a long time, then
 	// sending sending additional PDUs in the same TBF later, but before the timer expires.
-	GSM::Z100Timer msT3191;		// Waiting for acknowledgement of final TBF data block.
+	kneedeepbts::gsm::Z100Timer msT3191;		// Waiting for acknowledgement of final TBF data block.
 
 	// GSM04.60 sec 13:
-	GSM::Z100Timer msT3193;		// After downlink TBF finished, MS camps on PDCH this long.
+    kneedeepbts::gsm::Z100Timer msT3193;		// After downlink TBF finished, MS camps on PDCH this long.
 								// MS runs same timer but called T3192.
 
 	// GSM04.60 sec 13:
-	GSM::Z100Timer msT3168;		// MS camped on PDCH waiting for uplink assignment.
+    kneedeepbts::gsm::Z100Timer msT3168;		// MS camped on PDCH waiting for uplink assignment.
 								// This timer is defined to be in the MS, not the BTS,
 								// and we do not really need to track it as long as we
 								// are sure we send the downlink assignment message

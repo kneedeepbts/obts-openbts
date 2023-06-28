@@ -32,7 +32,7 @@
 #include <GSML3RRMessages.h>
 #include <GSML3MMMessages.h>
 #include <GSML3CCElements.h>
-#include <GSMConfig.h>
+#include <GSMConfig.h> //gBTS
 #include <ControlTransfer.h>
 
 #include <Peering.h>

@@ -24,7 +24,7 @@
 #include <GSMCommon.h>
 #include <GSMTransfer.h>
 #include <GSMLogicalChannel.h>
-#include <GSMConfig.h>
+#include <GSMConfig.h> //gBTS
 #include <GSML1FEC.h>
 
 #include <Reporting.h>
@@ -32,6 +32,9 @@
 #include <string>
 #include <string.h>
 #include <stdlib.h>
+
+// From GSM Library
+#include <gsmtime.h>
 
 #undef WARNING
 
@@ -123,8 +126,8 @@ void TransceiverManager::clockHandler()
 	if (strncmp(buffer,"IND CLOCK",9)==0) {
 		uint32_t FN;
 		sscanf(buffer,"IND CLOCK %u", &FN);
-		LOG(INFO) << "CLOCK indication, current clock = " << gBTS.clock().clockGet() << " new clock ="<<FN;
-		gBTS.clock().clockSet(FN);
+		LOG(INFO) << "CLOCK indication, current clock = " << gBTS.clock().clockGet() << " new clock =" << FN;
+		gBTS.clock().clockSet(kneedeepbts::gsm::GsmTime(FN));
 		mHaveClock = true;
 		return;
 	}
@@ -258,7 +261,7 @@ void ::ARFCNManager::driveRx()
 	float data[gSlotLen];
 	for (unsigned i=0; i<gSlotLen; i++) data[i] = (*rp++) / 256.0F;
 	// demux
-	receiveBurst(RxBurst(data,GSM::Time(FN,TN),timingError/256.0F,-RSSI));
+	receiveBurst(RxBurst(data,kneedeepbts::gsm::GsmTime(FN,TN),timingError/256.0F,-RSSI));
 }
 
 

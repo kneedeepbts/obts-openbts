@@ -69,7 +69,7 @@ void SelfDetect::RegisterProgram(const char *argv0)
 	LOG(CRIT) << "*** If this is not the case, deleting this file will allow " << p << " to start: " << buf << " exiting...";
 	Exit::exit(Exit::DETECTFILE);
     }
-    
+
     FILE *fp = fopen(buf, "w");
     if (fp == NULL)
     {

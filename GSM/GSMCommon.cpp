@@ -17,8 +17,6 @@
 
 #define LOG_GROUP LogGroup::GSM		// Can set Log.Level.GSM for debugging
 
-#include "../apps/OpenBTSConfig.h"
-#include <math.h>
 #include "GSMCommon.h"
 
 using namespace GSM;
@@ -190,89 +188,89 @@ const unsigned GSM::RACHWaitSParamCombined[16] =
 
 
 
-/** Get a clock difference, within the modulus, v1-v2. */
-int32_t GSM::FNDelta(int32_t v1, int32_t v2)
-{
-	static const int32_t halfModulus = gHyperframe/2;
-	int32_t delta = v1-v2;
-	if (delta>=halfModulus) delta -= gHyperframe;
-	else if (delta<-halfModulus) delta += gHyperframe;
-	return (int32_t) delta;
-}
-
-int GSM::FNCompare(int32_t v1, int32_t v2)
-{
-	int32_t delta = FNDelta(v1,v2);
-	if (delta>0) return 1;
-	if (delta<0) return -1;
-	return 0;
-}
-
-
-
-
-ostream& GSM::operator<<(ostream& os, const Time& t)
-{
-	os << t.TN() << ":" << t.FN();
-	return os;
-}
+///** Get a clock difference, within the modulus, v1-v2. */
+//int32_t GSM::FNDelta(int32_t v1, int32_t v2)
+//{
+//	static const int32_t halfModulus = gHyperframe/2;
+//	int32_t delta = v1-v2;
+//	if (delta>=halfModulus) delta -= gHyperframe;
+//	else if (delta<-halfModulus) delta += gHyperframe;
+//	return (int32_t) delta;
+//}
+//
+//int GSM::FNCompare(int32_t v1, int32_t v2)
+//{
+//	int32_t delta = FNDelta(v1,v2);
+//	if (delta>0) return 1;
+//	if (delta<0) return -1;
+//	return 0;
+//}
 
 
 
 
-void Clock::clockSet(const Time& when)
-{
-	ScopedLock lock(mLock);
-	mBaseTime = Timeval(0);
-	mBaseFN = when.FN();
-	isValid = true;
-}
+//ostream& GSM::operator<<(ostream& os, const Time& t)
+//{
+//	os << t.TN() << ":" << t.FN();
+//	return os;
+//}
 
 
-int32_t Clock::FN() const
-{
-	ScopedLock lock(mLock);
-	Timeval now;
-	int32_t deltaSec = now.sec() - mBaseTime.sec();
-	int32_t deltaUSec = now.usec() - mBaseTime.usec();
-	int64_t elapsedUSec = 1000000LL*deltaSec + deltaUSec;
-	int64_t elapsedFrames = elapsedUSec / gFrameMicroseconds;
-	int32_t currentFN = (mBaseFN + elapsedFrames) % gHyperframe;
-	return currentFN;
-}
-
-double Clock::systime(const GSM::Time& when) const
-{
-	ScopedLock lock(mLock);
-	const double slotMicroseconds = (48.0 / 13e6) * 156.25;
-	const double frameMicroseconds = slotMicroseconds * 8.0;
-	int32_t elapsedFrames = when.FN() - mBaseFN;
-	if (elapsedFrames<0) elapsedFrames += gHyperframe;
-	double elapsedUSec = elapsedFrames * frameMicroseconds + when.TN() * slotMicroseconds;
-	double baseSeconds = mBaseTime.sec() + mBaseTime.usec()*1e-6;
-	double st = baseSeconds + 1e-6*elapsedUSec;
-	return st;
-}
-
-Timeval Clock::systime2(const GSM::Time& when) const
-{
-	double ftime = systime(when);
-	unsigned sec = floor(ftime);
-	unsigned usec = (ftime - sec) * 1e6;
-	return Timeval(sec,usec);
-}
 
 
-void Clock::wait(const Time& when) const
-{
-	int32_t now = FN();
-	int32_t target = when.FN();
-	int32_t delta = FNDelta(target,now);
-	if (delta<1) return;
-	static const int32_t maxSleep = 51*26;
-	if (delta>maxSleep) delta=maxSleep;
-	sleepFrames(delta);
-}
+//void Clock::clockSet(const Time& when)
+//{
+//	ScopedLock lock(mLock);
+//	mBaseTime = Timeval(0);
+//	mBaseFN = when.FN();
+//	isValid = true;
+//}
+//
+//
+//int32_t Clock::FN() const
+//{
+//	ScopedLock lock(mLock);
+//	Timeval now;
+//	int32_t deltaSec = now.sec() - mBaseTime.sec();
+//	int32_t deltaUSec = now.usec() - mBaseTime.usec();
+//	int64_t elapsedUSec = 1000000LL*deltaSec + deltaUSec;
+//	int64_t elapsedFrames = elapsedUSec / gFrameMicroseconds;
+//	int32_t currentFN = (mBaseFN + elapsedFrames) % gHyperframe;
+//	return currentFN;
+//}
+//
+//double Clock::systime(const GSM::Time& when) const
+//{
+//	ScopedLock lock(mLock);
+//	const double slotMicroseconds = (48.0 / 13e6) * 156.25;
+//	const double frameMicroseconds = slotMicroseconds * 8.0;
+//	int32_t elapsedFrames = when.FN() - mBaseFN;
+//	if (elapsedFrames<0) elapsedFrames += gHyperframe;
+//	double elapsedUSec = elapsedFrames * frameMicroseconds + when.TN() * slotMicroseconds;
+//	double baseSeconds = mBaseTime.sec() + mBaseTime.usec()*1e-6;
+//	double st = baseSeconds + 1e-6*elapsedUSec;
+//	return st;
+//}
+//
+//Timeval Clock::systime2(const GSM::Time& when) const
+//{
+//	double ftime = systime(when);
+//	unsigned sec = floor(ftime);
+//	unsigned usec = (ftime - sec) * 1e6;
+//	return Timeval(sec,usec);
+//}
+//
+//
+//void Clock::wait(const Time& when) const
+//{
+//	int32_t now = FN();
+//	int32_t target = when.FN();
+//	int32_t delta = FNDelta(target,now);
+//	if (delta<1) return;
+//	static const int32_t maxSleep = 51*26;
+//	if (delta>maxSleep) delta=maxSleep;
+//	sleepFrames(delta);
+//}
 
 
 
@@ -384,65 +382,65 @@ ostream& GSM::operator<<(ostream& os, ChannelType val)
 
 
 
-
-bool Z100Timer::expired() const
-{
-	assert(mLimitTime!=0);
-	// A non-active timer does not expire.
-	if (!mActive) return false;
-	return mEndTime.passed();
-}
-
-void Z100Timer::set()
-{
-	assert(mLimitTime!=0);
-	mEndTime = Timeval(mLimitTime);
-	mActive=true;
-} 
-
-void Z100Timer::addTime(int msecs)	// Can be positive or negative
-{
-	mLimitTime += msecs;
-	if (mLimitTime < 0) { mLimitTime = 0; }
-	if (mActive) {
-		long remaining = mEndTime.remaining() + msecs;
-		if (remaining < 0) { remaining = 0; }
-		mEndTime.future(remaining);
-	}
-}
-
-void Z100Timer::expire()
-{
-	mEndTime = Timeval(0);
-	mActive=true;
-} 
-
-
-void Z100Timer::set(long wLimitTime)
-{
-	mLimitTime = wLimitTime;
-	set();
-} 
-
-
-long Z100Timer::remaining() const
-{
-	if (!mActive) return 0;
-	long rem = mEndTime.remaining();
-	if (rem<0) rem=0;
-	return rem;
-}
-
-void Z100Timer::wait() const
-{
-	while (!expired()) msleep(remaining());
-}
-
-std::ostream& GSM::operator<<(std::ostream& os, const Z100Timer&zt)
-{
-	if (zt.active()) { os << zt.remaining(); }
-	else { os << "inactive"; }
-	return os;
-}
+//
+//bool Z100Timer::expired() const
+//{
+//	assert(mLimitTime!=0);
+//	// A non-active timer does not expire.
+//	if (!mActive) return false;
+//	return mEndTime.passed();
+//}
+//
+//void Z100Timer::set()
+//{
+//	assert(mLimitTime!=0);
+//	mEndTime = Timeval(mLimitTime);
+//	mActive=true;
+//}
+//
+//void Z100Timer::addTime(int msecs)	// Can be positive or negative
+//{
+//	mLimitTime += msecs;
+//	if (mLimitTime < 0) { mLimitTime = 0; }
+//	if (mActive) {
+//		long remaining = mEndTime.remaining() + msecs;
+//		if (remaining < 0) { remaining = 0; }
+//		mEndTime.future(remaining);
+//	}
+//}
+//
+//void Z100Timer::expire()
+//{
+//	mEndTime = Timeval(0);
+//	mActive=true;
+//}
+//
+//
+//void Z100Timer::set(long wLimitTime)
+//{
+//	mLimitTime = wLimitTime;
+//	set();
+//}
+//
+//
+//long Z100Timer::remaining() const
+//{
+//	if (!mActive) return 0;
+//	long rem = mEndTime.remaining();
+//	if (rem<0) rem=0;
+//	return rem;
+//}
+//
+//void Z100Timer::wait() const
+//{
+//	while (!expired()) msleep(remaining());
+//}
+//
+//std::ostream& GSM::operator<<(std::ostream& os, const Z100Timer&zt)
+//{
+//	if (zt.active()) { os << zt.remaining(); }
+//	else { os << "inactive"; }
+//	return os;
+//}
 
 // vim: ts=4 sw=4

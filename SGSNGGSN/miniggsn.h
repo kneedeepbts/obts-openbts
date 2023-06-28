@@ -15,7 +15,7 @@
 
 #ifndef _MINIGGSN_H_
 #define _MINIGGSN_H_
-#include <time.h>
+#include <gsmtime.h>
 #include "Logger.h"
 
 namespace SGSN {

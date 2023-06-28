@@ -19,6 +19,9 @@
 #define _L3UTILS_H_
 #include <GSMCommon.h>		// Where Z100Timer lives.
 
+// From GSM Library
+#include <z100timer.h>
+
 namespace Control {
 enum L3TimerId {
 	T301,		///< recv ALERT --> recv CONN
@@ -95,7 +98,7 @@ class L3TimerTable {
 const int TimerAbortTran = -1;	// Abort the transaction;  If there are other transactions pending, they may be able to run.
 const int TimerAbortChan = -2;	// Abort the entire MMChannel.
 
-class L3Timer : GSM::Z100Timer
+class L3Timer : kneedeepbts::gsm::Z100Timer
 {
 	L3TimerId mTimerId;
 	// Payload.  Used as Procedure state to be invoked on timeout.  Negative value is one of these:

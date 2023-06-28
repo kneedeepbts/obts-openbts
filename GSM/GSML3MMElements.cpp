@@ -24,7 +24,7 @@
 
 
 
-#include <time.h>
+#include <gsmtime.h>
 #include "GSML3MMElements.h"
 #include <Logger.h>
 #include <Timeval.h>

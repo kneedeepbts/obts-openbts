@@ -27,10 +27,10 @@
 #ifndef INTERTHREAD_H
 #define INTERTHREAD_H
 
-#include "Defines.h"
-#include "Timeval.h"
-#include "Threads.h"
-#include "LinkedLists.h"
+#include "../CommonLibs/Defines.h"
+#include "../CommonLibs/Timeval.h"
+#include "../CommonLibs/Threads.h"
+#include "../CommonLibs/LinkedLists.h"
 #include <map>
 #include <vector>
 #include <queue>

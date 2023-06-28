@@ -21,6 +21,9 @@
 #include "radioDevice.h"
 #include <Interthread.h>
 
+// From GSM Library
+#include <gsmtime.h>
+
 /** samples per GSM symbol */
 #define SAMPSPERSYM 1 
 #define INCHUNK    (625)
@@ -31,18 +34,18 @@ class radioVector : public signalVector {
 
 private:
 
-  GSM::Time mTime;   ///< the burst's GSM timestamp 
+    kneedeepbts::gsm::GsmTime mTime;   ///< the burst's GSM timestamp
   int mARFCN;
 
 public:
   /** constructor */
   radioVector(const signalVector& wVector,
-              GSM::Time& wTime,
+              kneedeepbts::gsm::GsmTime& wTime,
               int& wARFCN): signalVector(wVector),mTime(wTime),mARFCN(wARFCN) {};
 
   /** timestamp read and write operators */
-  GSM::Time time() const { return mTime;}
-  void time(const GSM::Time& wTime) { mTime = wTime;}
+  kneedeepbts::gsm::GsmTime time() const { return mTime;}
+  void time(const kneedeepbts::gsm::GsmTime& wTime) { mTime = wTime;}
 
   /** ARFCN read and write operators */
   int ARFCN() const { return mARFCN;}
@@ -59,21 +62,21 @@ class VectorQueue : public InterthreadPriorityQueue<radioVector> {
 public:
 
   /** the top element of the queue */
-  GSM::Time nextTime() const;
+  kneedeepbts::gsm::GsmTime nextTime() const;
 
   /**
     Get stale burst, if any.
     @param targTime The target time.
     @return Pointer to burst older than target time, removed from queue, or NULL.
   */
-  radioVector* getStaleBurst(const GSM::Time& targTime);
+  radioVector* getStaleBurst(const kneedeepbts::gsm::GsmTime& targTime);
 
   /**
     Get current burst, if any.
     @param targTime The target time.
     @return Pointer to burst at the target time, removed from queue, or NULL.
   */
-  radioVector* getCurrentBurst(const GSM::Time& targTime);
+  radioVector* getCurrentBurst(const kneedeepbts::gsm::GsmTime& targTime);
 
 
 };
@@ -102,7 +105,7 @@ class RadioClock {
 
 private:
 
-  GSM::Time mClock;
+    kneedeepbts::gsm::GsmTime mClock;
   Mutex mLock;
   Signal updateSignal;
 
@@ -110,14 +113,14 @@ public:
 
   /** Set clock */
   //void set(const GSM::Time& wTime) { ScopedLock lock(mLock); mClock = wTime; updateSignal.signal();}
-  void set(const GSM::Time& wTime) { ScopedLock lock(mLock); mClock = wTime; updateSignal.broadcast();;}
+  void set(const kneedeepbts::gsm::GsmTime& wTime) { ScopedLock lock(mLock); mClock = wTime; updateSignal.broadcast();;}
 
   /** Increment clock */
   //void incTN() { ScopedLock lock(mLock); mClock.incTN(); updateSignal.signal();}
   void incTN() { ScopedLock lock(mLock); mClock.incTN(); updateSignal.broadcast();}
 
   /** Get clock value */
-  GSM::Time get() { ScopedLock lock(mLock); return mClock; }
+  kneedeepbts::gsm::GsmTime get() { ScopedLock lock(mLock); return mClock; }
 
   /** Wait until clock has changed */
   //void wait() {ScopedLock lock(mLock); updateSignal.wait(mLock,1);}
@@ -193,7 +196,7 @@ public:
 		 int wTransceiverOversampling = SAMPSPERSYM,
 		 bool wLoadTest = false,
 		 unsigned int wNumARFCNS = 1,
-		 GSM::Time wStartTime = GSM::Time(0));
+                 kneedeepbts::gsm::GsmTime wStartTime = kneedeepbts::gsm::GsmTime(0));
     
   /** destructor */
   ~RadioInterface();

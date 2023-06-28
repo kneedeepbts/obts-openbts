@@ -38,7 +38,7 @@
 #include <assert.h>				// pat added
 #include <stdarg.h>				// pat added
 #include <sys/time.h>				// pat added.
-#include <time.h>				// pat added.
+#include <gsmtime.h>                // pat added.
 #include <sys/types.h>
 #include <wait.h>
 #include <ctype.h>

@@ -22,7 +22,7 @@
 
 #include <Logger.h>
 #include <Globals.h>
-#include <GSMConfig.h>
+#include <GSMConfig.h> //gBTS
 #include <GSMLogicalChannel.h>
 #include <GSML3RRElements.h>
 #include <L3TranEntry.h>

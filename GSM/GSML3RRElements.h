@@ -27,6 +27,7 @@
 #include "GSML3GPRSElements.h"
 #include "../apps/OpenBTSConfig.h"
 
+#include "gsmtime.h"
 
 namespace GSM {
 
@@ -530,7 +531,7 @@ public:
 
 	L3RequestReference() {}
 
-	L3RequestReference(unsigned wRA, const GSM::Time& when)
+	L3RequestReference(unsigned wRA, const kneedeepbts::gsm::GsmTime& when)
 		:mRA(wRA),
 		mT1p(when.T1()%32),mT2(when.T2()),mT3(when.T3())
 	{}

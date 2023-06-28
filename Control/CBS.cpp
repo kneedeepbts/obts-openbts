@@ -21,7 +21,7 @@
 #include "ControlCommon.h"
 #include "CBS.h"
 #include <GSMLogicalChannel.h>
-#include <GSMConfig.h>
+#include <GSMConfig.h> //gBTS
 #include <GSMSMSCBL3Messages.h>
 #include <Reporting.h>
 #include <sqlite3.h>

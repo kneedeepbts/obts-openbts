@@ -31,6 +31,9 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
+// From GSM Library
+#include <gsmtime.h>
+
 /** Define this to be the slot number to be logged. */
 //#define TRANSMIT_LOGGING 1
 
@@ -59,8 +62,8 @@ class Transceiver {
   
 private:
 
-  GSM::Time mTransmitLatency;     ///< latency between basestation clock and transmit deadline clock
-  GSM::Time mLatencyUpdateTime;   ///< last time latency was updated
+    kneedeepbts::gsm::GsmTime mTransmitLatency;     ///< latency between basestation clock and transmit deadline clock
+    kneedeepbts::gsm::GsmTime mLatencyUpdateTime;   ///< last time latency was updated
 
   UDPSocket *mDataSocket[MAXARFCN];	  ///< socket for writing to/reading from GSM core
   UDPSocket *mControlSocket[MAXARFCN];	  ///< socket for writing/reading control commands from GSM core
@@ -77,9 +80,9 @@ private:
   Thread *mControlServiceLoopThread[MAXARFCN];       ///< thread to process control messages from GSM core
   Thread *mTransmitPriorityQueueServiceLoopThread[MAXARFCN];///< thread to process transmit bursts from GSM core
 
-  GSM::Time mTransmitDeadlineClock;       ///< deadline for pushing bursts into transmit FIFO 
-  GSM::Time mLastClockUpdateTime;         ///< last time clock update was sent up to core
-  GSM::Time mStartTime;
+    kneedeepbts::gsm::GsmTime mTransmitDeadlineClock;       ///< deadline for pushing bursts into transmit FIFO
+    kneedeepbts::gsm::GsmTime mLastClockUpdateTime;         ///< last time clock update was sent up to core
+    kneedeepbts::gsm::GsmTime mStartTime;
 
   RadioInterface *mRadioInterface;	  ///< associated radioInterface object
   double txFullScale;                     ///< full scale input to radio
@@ -114,10 +117,10 @@ private:
 
   void setFiller(radioVector *rv, bool allocate, bool force);
   /** modulate and add a burst to the transmit queue */
-  radioVector *fixRadioVector(BitVector &burst, int RSSI, GSM::Time &wTime, int CN);
+  radioVector *fixRadioVector(BitVector &burst, int RSSI, kneedeepbts::gsm::GsmTime &wTime, int CN);
 
   /** Push modulated burst into transmit FIFO corresponding to a particular timestamp */
-  void pushRadioVector(GSM::Time &nowTime);
+  void pushRadioVector(kneedeepbts::gsm::GsmTime &nowTime);
 
   /** Pull and demodulate a burst from the receive FIFO */ 
   void pullRadioVector(void);
@@ -170,7 +173,7 @@ public:
   Transceiver(int wBasePort,
 	      const char *TRXAddress,
 	      int wSamplesPerSymbol,
-	      GSM::Time wTransmitLatency,
+              kneedeepbts::gsm::GsmTime wTransmitLatency,
 	      RadioInterface *wRadioInterface,
 	      unsigned int wNumARFCNs,
 	      unsigned int wOversamplingRate,
@@ -185,7 +188,7 @@ public:
   bool multiARFCN() { return mMultipleARFCN; }
 
   /** return the expected burst type for the specified timestamp */
-  CorrType expectedCorrType(GSM::Time currTime, int CN);
+  CorrType expectedCorrType(kneedeepbts::gsm::GsmTime currTime, int CN);
 
   /** attach the radioInterface receive FIFO */
   void receiveFIFO(VectorFIFO *wFIFO) { mReceiveFIFO = wFIFO;}
@@ -262,8 +265,8 @@ class Demodulator {
   RadioInterface *mRadioInterface;
   VectorFIFO *mDemodFIFO;
   double mEnergyThreshold;             ///< threshold to determine if received data is potentially a GSM burst
-  GSM::Time    prevFalseDetectionTime; ///< last timestamp of a false energy detection
-  GSM::Time    channelEstimateTime[8]; ///< last timestamp of each timeslot's channel estimate
+    kneedeepbts::gsm::GsmTime    prevFalseDetectionTime; ///< last timestamp of a false energy detection
+    kneedeepbts::gsm::GsmTime    channelEstimateTime[8]; ///< last timestamp of each timeslot's channel estimate
   signalVector *channelResponse[8];    ///< most recent channel estimate of all timeslots
   float        SNRestimate[8];         ///< most recent SNR estimate of all timeslots
   signalVector *DFEForward[8];         ///< most recent DFE feedforward filter of all timeslots
@@ -280,7 +283,7 @@ class Demodulator {
   double rxFullScale;                     ///< full scale output to radio
 
   SoftVector* demodRadioVector(radioVector *rxBurst,
-                              GSM::Time &wTime,
+                               kneedeepbts::gsm::GsmTime &wTime,
                               int &RSSI,
                               int &timingOffset);
 
@@ -288,7 +291,7 @@ class Demodulator {
 
   Demodulator(int wCN,
 	      Transceiver *wTRX,
-	      GSM::Time wStartTime);
+              kneedeepbts::gsm::GsmTime wStartTime);
 
   double getEnergyThreshold() {return mEnergyThreshold;}
 

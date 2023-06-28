@@ -79,7 +79,7 @@
 #include "GSML3RRMessages.h"
 #include "GSMSMSCBL3Messages.h"
 #include "GSMLogicalChannel.h"
-#include "GSMConfig.h"
+#include "GSMConfig.h" //gBTS
 
 #include <ControlTransfer.h>
 #include <L3Handover.h>

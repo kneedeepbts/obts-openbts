@@ -19,6 +19,10 @@
 #define GPRSEXPORT_H
 #include <ostream>
 #include <CLI.h>
+
+// From GSM Library
+#include <gsmtime.h>
+
 // The user of this file must include these first, to avoid circular .h files:
 //#include "GSMConfig.h"		// For Time
 //#include "GSMCommon.h"		// For ChannelType
@@ -33,7 +37,6 @@ namespace GSM {
 	class CCCHLogicalChannel;
 	class L3RequestReference;
 	class L3ImmediateAssignment;
-	class Time;
 };
 
 namespace GPRS {
@@ -78,7 +81,7 @@ extern void GPRSWriteLowSideRx(const GSM::RxBurst&, PDCHL1FEC*);
 
 
 // The function by which RACH messages are delivered to GPRS.
-extern void GPRSProcessRACH(unsigned RA, const GSM::Time &when, float RSSI, float timingError);
+extern void GPRSProcessRACH(unsigned RA, const kneedeepbts::gsm::GsmTime &when, float RSSI, float timingError);
 
 extern int GetPowerAlpha();
 extern int GetPowerGamma();

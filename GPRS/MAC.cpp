@@ -32,6 +32,9 @@
 
 #include <Globals.h>
 
+// From GSM Library
+#include <gsmtime.h>
+
 extern bool gLogToConsole;
 
 namespace GPRS {
@@ -658,10 +661,10 @@ static void dumpPdch()
 {
 
 	PDCHL1FEC *ch;
-	printf("PDCHs=%d:",gL2MAC.macPDCHs.size());
+	printf("PDCHs=%d:",(int)gL2MAC.macPDCHs.size());
 	RN_MAC_FOR_ALL_PDCH(ch) { printf(" %s",ch->shortId()); }
 	printf("\n");
-	printf("PACCHs=%d",gL2MAC.macPacchs.size());
+	printf("PACCHs=%d",(int)gL2MAC.macPacchs.size());
 	RN_MAC_FOR_ALL_PACCH(ch) { printf(" %s",ch->shortId()); }
 	printf("\n");
 }
@@ -2127,7 +2130,7 @@ static void advanceBSNNext(int amt)
 static void serviceLoopSynchronize(bool firsttime)
 {
 	static double timeprev;
-	Time tstart = gBTS.time();
+    kneedeepbts::gsm::GsmTime tstart = gBTS.time();
 
 	if (GPRSDebug) {
 		// This is just a debug check that the GSM master clock is sane.
@@ -2135,7 +2138,7 @@ static void serviceLoopSynchronize(bool firsttime)
 		static int fnprev;
 		int fnnow = tstart.FN();
 		if (!firsttime) {
-			int fndelta = GSM::FNDelta(fnnow,fnprev);
+			int fndelta = kneedeepbts::gsm::FNDelta(fnnow,fnprev);
 			GPRSLOG(16) << "GSM FN delta="<<fndelta<<"\n";
 			// 12-12-2011: The FN does run backwards ocassionally,
 			// because the Clock mClock we use is only approximate,
@@ -2167,7 +2170,7 @@ static void serviceLoopSynchronize(bool firsttime)
 		//usleep(usecs);
 	} else {
 		// Wait for the prev frame to come around.
-		Time tprev(gBSNPrev.FN());
+        kneedeepbts::gsm::GsmTime tprev(gBSNPrev.FN());
 		tprev = tprev - configGetNumQ("GPRS.ThreadAdvance",0);
 		gBTS.clock().wait(tprev);
 
@@ -2175,8 +2178,8 @@ static void serviceLoopSynchronize(bool firsttime)
 		// On the ITX board the FN moves backwards 2 units sporadically,
 		// which (I hope) is because the gBTS clock was resynchronized with the radio
 		// causing it to run backwards.
-		Time tnow = gBTS.time();
-		int deltaAfterWait = GSM::FNDelta(tnow.FN(),tprev.FN());
+        kneedeepbts::gsm::GsmTime tnow = gBTS.time();
+		int deltaAfterWait = kneedeepbts::gsm::FNDelta(tnow.FN(),tprev.FN());
 		// The deltaAfterWait is usually -1, so ignore that.
 		if (deltaAfterWait > 3 || deltaAfterWait < -1) {
 			GPRSLOG(2) << "gBTS.clock.wait unexpected wait time: "<<LOGVAR(deltaAfterWait);
@@ -2189,7 +2192,7 @@ static void serviceLoopSynchronize(bool firsttime)
 		// We started the previous iteration of the loop with time
 		// set at the start of gBSNPrev
 		// Has time already run past the beginning of gBSNNext?
-		int delta = GSM::FNDelta(tnow.FN(),gBSNNext.FN());
+		int delta = kneedeepbts::gsm::FNDelta(tnow.FN(),gBSNNext.FN());
 		if (delta > 0 || delta < -(51*26)) {
 			// Set bsnFixed to the beginning frame of the RLC block containing tnow.
 			// | gBSNPrev | gBSNNext | ... | bsnFixed |
@@ -2318,7 +2321,7 @@ static void *macThreadFunc(void *arg)
 
 	// Set the current RLC BSN.
 	//Time tstart = gBTS.time().FN();
-	Time tstart = gBTS.time();
+    kneedeepbts::gsm::GsmTime tstart = gBTS.time();
 	int fnstart = tstart.FN();
 	gBSNNext = FrameNumber2BSN(fnstart);
 
@@ -2326,13 +2329,14 @@ static void *macThreadFunc(void *arg)
 
 	// Lets start synced up on a 52-multiframe boundary.
 	// Remove or is this used for testing
-	if (0) { // why bother?
-		int offset = fnstart % 52;
-		if (offset) {
-			fnstart += (52 - offset);
-			gBTS.clock().wait(fnstart);
-		}
-	}
+    // FIXME: Seems like some sort of "testing" code.  Was bypassed anyway.
+//	if (0) { // why bother?
+//		int offset = fnstart % 52;
+//		if (offset) {
+//			fnstart += (52 - offset);
+//			gBTS.clock().wait(fnstart);
+//		}
+//	}
 
 	GPRSLOG(1) << "macServiceLoop starting:" << LOGVAR(gBSNNext) <<LOGVAR(fnstart);
 

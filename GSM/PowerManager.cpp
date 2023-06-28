@@ -16,7 +16,7 @@
 #include "PowerManager.h"
 #include <Logger.h>
 #include "../apps/OpenBTSConfig.h"
-#include <GSMConfig.h>
+//#include <GSMConfig.h>
 #include <TRXManager.h>
 #include <ControlCommon.h>
 
@@ -33,7 +33,7 @@ void PowerManager::pmSetAttenDirect(int atten)
 {
 	mRadio->setPower(atten);
 	mAtten = atten;
-	LOG(INFO) << "setting power to -" << mAtten << " dB at uptime="<<gBTS.uptime();
+	// FIXME: LOG(INFO) << "setting power to -" << mAtten << " dB at uptime="<<gBTS.uptime();
 }
 
 void PowerManager::pmSetAtten(int atten)

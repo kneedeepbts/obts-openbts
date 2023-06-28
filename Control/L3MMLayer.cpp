@@ -19,7 +19,7 @@
 
 #include "L3MMLayer.h"
 #include "L3MobilityManagement.h"
-#include <GSMConfig.h>
+#include <GSMConfig.h> //gBTS, L2ChanList
 #include "L3CallControl.h"
 #include <GSMLogicalChannel.h>		// Needed for L3LogicalChannel
 #include <GSML3Message.h>		// Needed for L3LogicalChannel

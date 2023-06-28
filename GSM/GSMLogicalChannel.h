@@ -41,6 +41,8 @@
 
 #include <Logger.h>
 
+#include "z100timerthreadsafe.h"
+
 class ARFCNManager;
 class UDPSocket;
 
@@ -97,7 +99,7 @@ public:
 
 
 	// Pat 5-27-2012: Let the LogicalChannel know the next scheduled write time.
-	GSM::Time getNextWriteTime() { return mL1->encoder()->getNextWriteTime(); }
+    kneedeepbts::gsm::GsmTime getNextWriteTime() { return mL1->encoder()->getNextWriteTime(); }
 
 	/**@name L3 interfaces */
 	//@{
@@ -284,9 +286,9 @@ class L2LogicalChannel: public L2SAPMux, public Control::L3LogicalChannel
 	// The messages from L2->L3 for both L2LogicalChannel and SACCHLogicalChannel go in this same queue.
 	InterthreadPriorityQueue<L3Frame> mL3Out;			///< we connect L2->L3 through a FIFO
 
-	Z100TimerThreadSafe mT3101;
-	Z100TimerThreadSafe mT3109;
-	Z100TimerThreadSafe mT3111;
+	kneedeepbts::gsm::Z100TimerThreadSafe mT3101;
+    kneedeepbts::gsm::Z100TimerThreadSafe mT3109;
+    kneedeepbts::gsm::Z100TimerThreadSafe mT3111;
 	// When the channel becomes recyclable there may be a downlink transmission queued up.
 	// SACCH transmissions are at 480ms intervals.
 	// I want to make sure those clear, so we will wait an additional time before recycling the channel.

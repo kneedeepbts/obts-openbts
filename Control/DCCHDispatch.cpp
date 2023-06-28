@@ -26,7 +26,7 @@
 #include "L3MobilityManagement.h"
 #include "L3StateMachine.h"
 #include "L3LogicalChannel.h"
-#include <GSMConfig.h>
+#include <GSMConfig.h> //gBTS
 
 #include <Logger.h>
 #undef WARNING

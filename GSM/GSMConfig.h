@@ -32,6 +32,8 @@
 
 #include "TRXManager.h"
 
+#include "gsmclock.h"
+#include "gsmtime.h"
 
 namespace GSM {
 
@@ -90,7 +92,7 @@ class GSMConfig {
 
 	GSMBand mBand;		///< BTS operating band, or 0 for custom band
 
-	Clock mClock;		///< local copy of BTS master clock
+	kneedeepbts::gsm::GsmClock mClock;		///< local copy of BTS master clock
 
 	/**@name Encoded L2 frames to be sent on the BCCH. */
 	//@{
@@ -164,7 +166,7 @@ class GSMConfig {
 	//@}
 
 	/** Get the current master clock value. */
-	Time time() const { return mClock.clockGet(); }
+	kneedeepbts::gsm::GsmTime time() const { return mClock.clockGet(); }
 
 	/**@name Accessors. */
 	//@{
@@ -172,7 +174,7 @@ class GSMConfig {
 	GSMBand band() const { return mBand; }
 	unsigned BCC() const { return mBCC; }
 	unsigned NCC() const { return mNCC; }
-	GSM::Clock& clock() { return mClock; }
+    kneedeepbts::gsm::GsmClock& clock() { return mClock; }
 	const L3LocationAreaIdentity& LAI() const { return mLAI; }
 	unsigned changemark() const { return mChangemark; }
 	//@}

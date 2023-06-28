@@ -103,7 +103,7 @@ namespace GPRS {
 };
 
 #include "Defines.h"
-#include "GSMConfig.h"		// For Time
+#include "GSMConfig.h" // Causes gConfig issue in BSSG? RadData in RLCHdr?
 #include "GSMCommon.h"		// For ChannelType
 #include "GPRSExport.h"
 #include "Utils.h"

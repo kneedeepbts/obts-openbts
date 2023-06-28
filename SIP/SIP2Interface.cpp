@@ -48,7 +48,7 @@
 
 #include <GSML3CCElements.h>
 #include <GSMLogicalChannel.h>
-#include <GSMConfig.h>
+#include <GSMConfig.h> //gBTS
 #include <Globals.h>	// For gReports.
 #include <L3TranEntry.h>
 #include <L3MMLayer.h>

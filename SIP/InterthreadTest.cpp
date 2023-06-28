@@ -26,10 +26,10 @@
 
 
 
-#include "Threads.h"
+#include "../CommonLibs/Threads.h"
 #include "Interthread.h"
 #include <iostream>
-#include "Configuration.h"
+#include "../CommonLibs/Configuration.h"
 ConfigurationTable gConfig;
 
 using namespace std;

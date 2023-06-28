@@ -20,7 +20,7 @@
 #include "L3LogicalChannel.h"
 #include "L3MMLayer.h"
 #include <GSMLogicalChannel.h>	// Needed for getL2Channel()
-#include <GSMConfig.h>			// For gBTS
+#include <GSMConfig.h> //gBTS
 
 namespace Control {
 using namespace GSM;
