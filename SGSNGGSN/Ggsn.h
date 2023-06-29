@@ -21,7 +21,7 @@
 #include "SgsnBase.h"
 #include "SgsnExport.h"
 #include "GPRSL3Messages.h"
-#include "GSMCommon.h"	// For Z100Timer - I really dont want to include the other stuff here.
+#include "gsmenums.h"    // For Z100Timer - I really dont want to include the other stuff here.
 #include "miniggsn.h"
 
 namespace SGSN {

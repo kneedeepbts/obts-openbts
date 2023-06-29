@@ -191,13 +191,13 @@ L3RRMessage* GSM::parseL3RR(const L3Frame& source)
 This is a local function to map the GSM::ChannelType enum
 to one of the codes from GMS 04.08 10.5.2.8.
 */
-unsigned channelNeededCode(ChannelType wType)
+unsigned channelNeededCode(kneedeepbts::gsm::ChannelType wType)
 {
 	switch (wType) {
-		case AnyDCCHType: return 0;
-		case SDCCHType: return 1;
-		case TCHFType: return 2;
-		case AnyTCHType: return 3;
+		case kneedeepbts::gsm::AnyDCCHType: return 0;
+		case kneedeepbts::gsm::SDCCHType: return 1;
+		case kneedeepbts::gsm::TCHFType: return 2;
+		case kneedeepbts::gsm::AnyTCHType: return 3;
 		default: assert(0);
 	}
 }

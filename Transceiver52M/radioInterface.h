@@ -15,7 +15,7 @@
 
 
 #include "sigProcLib.h"  
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "LinkedLists.h"
 #include "radioDevice.h"
 #include "radioVector.h"

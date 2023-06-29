@@ -25,10 +25,11 @@
 #include <SMSMessages.h>
 #include <Logger.h>
 
-
 //#include <SMSTransfer.h>
 #include <SMSMessages.h>
 //using namespace SMS;
+
+#include "gsmutilities.h"
 
 
 using namespace std;
@@ -127,7 +128,7 @@ size_t GSM::skipTV(unsigned IEI, size_t numBits, const L3Frame& source, size_t& 
 	return rp-base;
 }
 
-string GSM::mti2string(L3PD pd, unsigned mti)
+string GSM::mti2string(kneedeepbts::gsm::L3PD pd, unsigned mti)
 {
 	ostringstream result;
 	// (pat) Since the C++ output paradigm is not OOP, we resort to switch statements.
@@ -135,14 +136,14 @@ string GSM::mti2string(L3PD pd, unsigned mti)
 	// case L3GroupCallControlPD: break;
 	// case L3BroadcastCallControlPD: break;
 	// case L3PDSS1PD: break;
-	case L3CallControlPD: operator<<(result,(L3CCMessage::MessageType) mti); return result.str();
+	case kneedeepbts::gsm::L3CallControlPD: operator<<(result,(L3CCMessage::MessageType) mti); return result.str();
 	// case L3PDSS2PD: break;
-	case L3MobilityManagementPD: operator<<(result,(L3MMMessage::MessageType) mti); return result.str();
-	case L3RadioResourcePD: operator<<(result,(L3RRMessage::MessageType) mti); return result.str();
-	case L3GPRSMobilityManagementPD: operator<<(result, (SGSN::L3GmmMsg::MessageType) mti); return result.str();
-	case L3SMSPD: operator<<(result, (SMS::CPMessage::MessageType) mti); return result.str();
-	case L3GPRSSessionManagementPD: operator<<(result, (SGSN::L3SmMsg::MessageType) mti); return result.str();
-	case L3NonCallSSPD: operator<<(result, (L3SupServMessage::MessageType) mti); return result.str();
+	case kneedeepbts::gsm::L3MobilityManagementPD: operator<<(result,(L3MMMessage::MessageType) mti); return result.str();
+	case kneedeepbts::gsm::L3RadioResourcePD: operator<<(result,(L3RRMessage::MessageType) mti); return result.str();
+	case kneedeepbts::gsm::L3GPRSMobilityManagementPD: operator<<(result, (SGSN::L3GmmMsg::MessageType) mti); return result.str();
+	case kneedeepbts::gsm::L3SMSPD: operator<<(result, (SMS::CPMessage::MessageType) mti); return result.str();
+	case kneedeepbts::gsm::L3GPRSSessionManagementPD: operator<<(result, (SGSN::L3SmMsg::MessageType) mti); return result.str();
+	case kneedeepbts::gsm::L3NonCallSSPD: operator<<(result, (L3SupServMessage::MessageType) mti); return result.str();
 	// case L3LocationPD: break;
 	// case L3ExtendedPD: break;
 	// case L3TestProcedurePD: break;
@@ -172,16 +173,16 @@ GSM::L3Message* GSM::parseL3(const GSM::L3Frame& source)
 	if (source.size()==0) return NULL;
 
 	LOG(DEBUG) << "GSM::parseL3 "<< source;
-	L3PD PD = source.PD();
+    kneedeepbts::gsm::L3PD PD = source.PD();
 	
 	L3Message *retVal = NULL;
 	try {
 		switch (PD) {
-			case L3RadioResourcePD: retVal=parseL3RR(source); break;
-			case L3MobilityManagementPD: retVal=parseL3MM(source); break;
-			case L3CallControlPD: retVal=parseL3CC(source); break;
-			case L3SMSPD: retVal=SMS::parseSMS(source); break;
-			case L3NonCallSSPD: retVal = parseL3SupServ(source); break;
+			case kneedeepbts::gsm::L3RadioResourcePD: retVal=parseL3RR(source); break;
+			case kneedeepbts::gsm::L3MobilityManagementPD: retVal=parseL3MM(source); break;
+			case kneedeepbts::gsm::L3CallControlPD: retVal=parseL3CC(source); break;
+			case kneedeepbts::gsm::L3SMSPD: retVal=SMS::parseSMS(source); break;
+			case kneedeepbts::gsm::L3NonCallSSPD: retVal = parseL3SupServ(source); break;
 			default:
 				LOG(NOTICE) << "L3 parsing failed for unsupported protocol " << PD;
 				return NULL;
@@ -305,6 +306,21 @@ void L3OctetAlignedProtocolElement::parseV(const L3Frame&src, size_t&rp, size_t 
 	}
 	mData = string(tmp,expectedLength);
 	free(tmp);
+}
+
+std::string data2hex(const unsigned char *data, uint32_t nbytes) {
+    //LOG(DEBUG) << LOGVAR(nbytes);
+    string result;
+    result.reserve(2+2*nbytes);
+    result.append("0x");
+    if (nbytes == 0) { result.append("0"); return result; }
+    for (unsigned i = 0; i < nbytes; i++) {
+        char buf[20];	// Paranoid, only need 3.
+        sprintf(buf,"%02x",*data++);
+        //LOG(DEBUG) << LOGVAR(buf) <<LOGVAR(result);
+        result.append(buf);
+    }
+    return result;
 }
 
 // Print it out as a hex string.

@@ -20,12 +20,12 @@
 #define GSMTAPDUMP_H
 
 #include "gsmtap.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSMTransfer.h"
 
 
 void gWriteGSMTAP(unsigned ARFCN, unsigned TS, unsigned FN,
-                  GSM::TypeAndOffset to, bool is_sacch, bool ul_dln,
+                  kneedeepbts::gsm::TypeAndOffset to, bool is_sacch, bool ul_dln,
                   const BitVector2& frame,
 				  unsigned wType = GSMTAP_TYPE_UM);
 #endif

@@ -19,10 +19,12 @@
 #include <Sockets.h>
 #include "../apps/OpenBTSConfig.h"
 
+#include "gsmenums.h"
+
 UDPSocket GSMTAPSocket;
 
 void gWriteGSMTAP(unsigned ARFCN, unsigned TS, unsigned FN,
-                  GSM::TypeAndOffset to, bool is_saach,
+                  kneedeepbts::gsm::TypeAndOffset to, bool is_saach,
 				  bool ul_dln,	// (pat) This flag means uplink
                   const BitVector2& frame,
 				  unsigned wType)	// Defaults to GSMTAP_TYPE_UM
@@ -45,57 +47,57 @@ void gWriteGSMTAP(unsigned ARFCN, unsigned TS, unsigned FN,
 	uint8_t stype, scn;
 
 	switch (to) {
-		case GSM::TDMA_BEACON_BCCH:
+		case kneedeepbts::gsm::TDMA_BEACON_BCCH:
 			stype = GSMTAP_CHANNEL_BCCH;
 			scn = 0;
 			break;
 
-		case GSM::TDMA_BEACON_CCCH:
+		case kneedeepbts::gsm::TDMA_BEACON_CCCH:
 			stype = GSMTAP_CHANNEL_CCCH;
 			scn = 0;
 			break;
 
-		case GSM::SDCCH_4_0:
-		case GSM::SDCCH_4_1:
-		case GSM::SDCCH_4_2:
-		case GSM::SDCCH_4_3:
+		case kneedeepbts::gsm::SDCCH_4_0:
+		case kneedeepbts::gsm::SDCCH_4_1:
+		case kneedeepbts::gsm::SDCCH_4_2:
+		case kneedeepbts::gsm::SDCCH_4_3:
 			stype = GSMTAP_CHANNEL_SDCCH4;
-			scn = to - GSM::SDCCH_4_0;
+			scn = to - kneedeepbts::gsm::SDCCH_4_0;
 			break;
 
-		case GSM::SDCCH_8_0:
-		case GSM::SDCCH_8_1:
-		case GSM::SDCCH_8_2:
-		case GSM::SDCCH_8_3:
-		case GSM::SDCCH_8_4:
-		case GSM::SDCCH_8_5:
-		case GSM::SDCCH_8_6:
-		case GSM::SDCCH_8_7:
+		case kneedeepbts::gsm::SDCCH_8_0:
+		case kneedeepbts::gsm::SDCCH_8_1:
+		case kneedeepbts::gsm::SDCCH_8_2:
+		case kneedeepbts::gsm::SDCCH_8_3:
+		case kneedeepbts::gsm::SDCCH_8_4:
+		case kneedeepbts::gsm::SDCCH_8_5:
+		case kneedeepbts::gsm::SDCCH_8_6:
+		case kneedeepbts::gsm::SDCCH_8_7:
 			stype = GSMTAP_CHANNEL_SDCCH8;
-			scn = to - GSM::SDCCH_8_0;
+			scn = to - kneedeepbts::gsm::SDCCH_8_0;
 			break;
 
-		case GSM::TCHF_0:
+		case kneedeepbts::gsm::TCHF_0:
 			stype = GSMTAP_CHANNEL_TCH_F;
 			scn = 0;
 			break;
 
-		case GSM::TCHH_0:
-		case GSM::TCHH_1:
+		case kneedeepbts::gsm::TCHH_0:
+		case kneedeepbts::gsm::TCHH_1:
 			stype = GSMTAP_CHANNEL_TCH_H;
-			scn = to - GSM::TCHH_0;
+			scn = to - kneedeepbts::gsm::TCHH_0;
 			break;
 
-		case GSM::TDMA_PDCH:	// packet data traffic logical channel, full speed.
+		case kneedeepbts::gsm::TDMA_PDCH:	// packet data traffic logical channel, full speed.
 			stype = GSMTAP_CHANNEL_PACCH;
 			//stype = GSMTAP_CHANNEL_PDCH;
 			scn = 0;	// Is this correct?
 			break;
-		case GSM::TDMA_PTCCH:		// packet data timing advance logical channel
+		case kneedeepbts::gsm::TDMA_PTCCH:		// packet data timing advance logical channel
 			stype = GSMTAP_CHANNEL_PTCCH;
 			scn = 0;
 			break;
-		case GSM::TDMA_PACCH:
+		case kneedeepbts::gsm::TDMA_PACCH:
 			stype = GSMTAP_CHANNEL_PACCH;
 			scn = 0;
 			break;

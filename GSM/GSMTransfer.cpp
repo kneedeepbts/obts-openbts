@@ -94,7 +94,7 @@ ostream& GSM::operator<<(ostream& os, const L2Header::FrameFormat val)
 
 
 
-size_t N201(ChannelType wChanType, L2Header::FrameFormat wFormat)
+size_t N201(kneedeepbts::gsm::ChannelType wChanType, L2Header::FrameFormat wFormat)
 {
 	// Number of payload bytes in the L2Frame.
 	// GSM 04.06 5.8.3
@@ -102,28 +102,28 @@ size_t N201(ChannelType wChanType, L2Header::FrameFormat wFormat)
 		case L2Header::FmtA:
 		case L2Header::FmtB:
 			switch (wChanType) {
-				case SACCHType: return 18;
-				case FACCHType:
-				case SDCCHType: return 20;
+				case kneedeepbts::gsm::SACCHType: return 18;
+				case kneedeepbts::gsm::FACCHType:
+				case kneedeepbts::gsm::SDCCHType: return 20;
 				default: abort();
 			}
 		case L2Header::FmtBbis:
 			// We count L2 pseudolength as part of the header.
 			switch (wChanType) {
-				case BCCHType:
-				case CCCHType: return 22;
+				case kneedeepbts::gsm::BCCHType:
+				case kneedeepbts::gsm::CCCHType: return 22;
 				default: abort();
 			}
 		case L2Header::FmtBter:
 			switch (wChanType) {
-				case SACCHType: return 21;
-				case FACCHType:
-				case SDCCHType: return 23;
+				case kneedeepbts::gsm::SACCHType: return 21;
+				case kneedeepbts::gsm::FACCHType:
+				case kneedeepbts::gsm::SDCCHType: return 23;
 				default: abort();
 			}
 		case L2Header::FmtB4:
 			switch (wChanType) {
-				case SACCHType: return 19;
+				case kneedeepbts::gsm::SACCHType: return 19;
 				default: abort();
 			}
 		default:
@@ -634,9 +634,9 @@ unsigned L3Frame::MTI() const
 	}
 	int mti = peekField(8,8);
 	switch (PD()) {
-		case L3NonCallSSPD:
-		case L3CallControlPD:
-		case L3MobilityManagementPD:
+		case kneedeepbts::gsm::L3NonCallSSPD:
+		case kneedeepbts::gsm::L3CallControlPD:
+		case kneedeepbts::gsm::L3MobilityManagementPD:
 			// (pat) 5-2013: For these protocols only, mask out the unused bits of the raw MTI from the L3 Frame.  See 3GPP 4.08 10.4
 			return mti & 0xbf;
 		default:

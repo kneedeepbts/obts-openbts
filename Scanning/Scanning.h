@@ -23,7 +23,7 @@
 #include <vector>
 
 // From GSM Library
-#include <GSMCommon.h>
+#include <gsmenums.h>
 #include <gsmband.h>
 
 struct sqlite3;

@@ -21,7 +21,7 @@
 #include "TRXManager.h"
 
 #include <Globals.h>
-#include <GSMCommon.h>
+#include <gsmenums.h>
 #include <GSMTransfer.h>
 #include <GSMLogicalChannel.h>
 #include <GSMConfig.h> //gBTS

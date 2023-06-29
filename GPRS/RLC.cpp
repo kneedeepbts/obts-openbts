@@ -16,7 +16,7 @@
 #define LOG_GROUP LogGroup::GPRS		// Can set Log.Level.GPRS for debugging
 
 #include "GPRSRLC.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 
 // From GSM Library
 #include <gsmtime.h>

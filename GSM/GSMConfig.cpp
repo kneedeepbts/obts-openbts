@@ -547,11 +547,11 @@ class Beacon {};
 
 static Thread CBCHControlThread;
 static bool isCBSRunning = false;
-void GSMConfig::createCBCH(ARFCNManager *radio, TypeAndOffset type, int CN, int TN)
+void GSMConfig::createCBCH(ARFCNManager *radio, kneedeepbts::gsm::TypeAndOffset type, int CN, int TN)
 {
 	LOG(INFO) << "creating CBCH for SMSCB";
 	// CBCH is always SDCCH 2 (third one) but may be on any timeslot, depending on beacon type.
-	CBCHLogicalChannel *CBCH = new CBCHLogicalChannel(CN,TN,type == SDCCH_4_2 ? gSDCCH4[2] : gSDCCH8[2]);
+	CBCHLogicalChannel *CBCH = new CBCHLogicalChannel(CN,TN,type == kneedeepbts::gsm::SDCCH_4_2 ? gSDCCH4[2] : gSDCCH8[2]);
 	CBCH->downstream(radio);
 	CBCH->cbchOpen();
 	gBTS.addCBCH(CBCH);
@@ -611,7 +611,7 @@ class BeaconC5 : public Beacon {
 		}
 		// Install CBCH if used.
 		if (SMSCB) {
-			gBTS.createCBCH(radio,SDCCH_4_2,0,0);
+			gBTS.createCBCH(radio, kneedeepbts::gsm::SDCCH_4_2, 0, 0);
 		}
 	}
 };

@@ -24,7 +24,7 @@
 #include "Defines.h"
 #include "BitVector.h"
 #include "Logger.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 //#include "GSMTransfer.h"
 //#include "GSMTDMA.h"
 //#include <Globals.h>

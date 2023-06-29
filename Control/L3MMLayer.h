@@ -85,7 +85,7 @@ class MMUser : public MemCheckMMUser /*: public RefCntBase*/ {
 	protected:
 	void mmuFree(MMUserMap::iterator *it,TermCause cause /*= TermCauseUnknown*/);	// This is the destructor.  It is not public.  Can only delete from gMMLayer because we must lock the universe first.
 
-	GSM::ChannelType mmuGetInitialChanType() const;
+    kneedeepbts::gsm::ChannelType mmuGetInitialChanType() const;
 
 	void MMUserInit() { mmuState = MMStateUndefined; mmuContext = NULL; }
 	public:

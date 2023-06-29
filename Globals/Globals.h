@@ -24,7 +24,7 @@
 #define GLOBALS_H
 
 #if !defined(BUILD_CLI)
-#include <GSMCommon.h>
+#include <gsmenums.h>
 #include "../apps/OpenBTSConfig.h"
 #include <CLI.h>
 #include <PhysicalStatus.h>

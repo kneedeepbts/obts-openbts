@@ -20,7 +20,7 @@
 #include "L3TranEntry.h"
 #include "L3MMLayer.h"
 #include "L3SMSControl.h"
-#include <GSMCommon.h>
+#include <gsmenums.h>
 //#include <GSMConfig.h>
 #include <GSML3Message.h>
 #include <GSMLogicalChannel.h>

@@ -19,7 +19,7 @@
 #include <stdio.h>
 //#include "GPRSInternal.h"
 #include "Configuration.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSML3Message.h"
 #include "ByteVector.h"
 #include "Utils.h"
@@ -94,7 +94,7 @@ class L3GprsFrame : public ByteVector
 	void dump(std::ostream &os);
 	L3GprsFrame(ByteVector &vec) : ByteVector(vec) {}
 
-	GSM::L3PD getPD() { return (GSM::L3PD)getNibble(0,0); }		// protocol descriminator
+    kneedeepbts::gsm::L3PD getPD() { return (kneedeepbts::gsm::L3PD)getNibble(0,0); }		// protocol descriminator
 	//unsigned getSkip() { return getNibble(0,1); }	// skip indicator
 	virtual unsigned getMsgType() { assert(0); }
 	// TODO: Handle extended transaction id 24.007
@@ -169,9 +169,9 @@ class L3SmFrame: public L3GprsFrame
 struct L3GmmMsg : public virtual L3GprsMsg //, public Text2Str
 {
 	// Protocol Discriminator GSM 04.07 11.2.3.1.1
-	static const unsigned mPD = GSM::L3GPRSMobilityManagementPD; // 8
+	static const unsigned mPD = kneedeepbts::gsm::L3GPRSMobilityManagementPD; // 8
 	// This should be declared static, but it is not static in L3Message.
-	GSM::L3PD PD() const { return GSM::L3GPRSMobilityManagementPD; }
+    kneedeepbts::gsm::L3PD PD() const { return kneedeepbts::gsm::L3GPRSMobilityManagementPD; }
 
 	// GSM 04.08, 24.008 table 10.4: Message Types for GPRS Mobility Management.
 	// Note that the IdentityRequest/IdentityResponse are DIFFERENT NUMBERS
@@ -239,8 +239,8 @@ class L3SmMsg : public virtual L3GprsMsg //, public Text2Str
 	int mTransactionId;
 	L3SmMsg() : mTransactionId(-1) {}
 
-	static const unsigned mPD = GSM::L3GPRSSessionManagementPD; // 10
-	GSM::L3PD PD() const { return GSM::L3GPRSSessionManagementPD; }
+	static const unsigned mPD = kneedeepbts::gsm::L3GPRSSessionManagementPD; // 10
+    kneedeepbts::gsm::L3PD PD() const { return kneedeepbts::gsm::L3GPRSSessionManagementPD; }
 
 	enum MessageType {
 		ActivatePDPContextRequest = 0x41,

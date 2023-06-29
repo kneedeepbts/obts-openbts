@@ -397,10 +397,10 @@ void TLAddress::parse(const TLFrame& src, size_t& rp)
 	size_t numDigits = src.readField(rp,8);
 	size_t length = numDigits/2 + (numDigits % 2);
 	if (src.readField(rp, 1) != 1) SMS_READ_ERROR;	
-	mType = (TypeOfNumber)src.readField(rp, 3);
-	mPlan = (NumberingPlan)src.readField(rp, 4);
+	mType = (kneedeepbts::gsm::TypeOfNumber)src.readField(rp, 3);
+	mPlan = (kneedeepbts::gsm::NumberingPlan)src.readField(rp, 4);
 	//LOG(DEBUG) << "parse mType " << mType;
-	mDigits.parse(src,rp,length, mType == InternationalNumber);
+	mDigits.parse(src,rp,length, mType == kneedeepbts::gsm::InternationalNumber);
 }
 
 

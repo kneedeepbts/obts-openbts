@@ -24,7 +24,7 @@
 #include <gsmtime.h>
 #include <signal.h>
 
-#include <GSMCommon.h>
+#include <gsmenums.h>
 #include <Logger.h>
 #include <Configuration.h>
 #include <FactoryCalibration.h>

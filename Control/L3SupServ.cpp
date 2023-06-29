@@ -22,7 +22,7 @@
 #include "L3SupServ.h"
 #include "L3TranEntry.h"
 #include "L3MMLayer.h"
-#include <GSMCommon.h>
+#include <gsmenums.h>
 #include <GSML3Message.h>
 #include <GSML3SSMessages.h>
 #include <GSMLogicalChannel.h>
@@ -171,7 +171,7 @@ enum SSOperationCode {
 // Decode the unstructured data string as per 23.038, 7bit chars to 8bit chars.
 static string ussdDecode(string in)
 {
-	LOG(DEBUG) << LOGVAR(in.size()) <<" " <<data2hex(in.data(),in.size());
+	// FIXME: LOG(DEBUG) << LOGVAR(in.size()) <<" " <<data2hex(in.data(),in.size());
 	// The maximum size is very limited so we can use a presized buffer.
 	unsigned char result[250], *rp = result;
 	unsigned offset = 0;
@@ -352,15 +352,15 @@ class SSMapCommand
 	unsigned ssInvokeID;
 	unsigned ssLinkID;
 
-	string text()
-	{
-		string result = format("ComponentType=0x%x invokeID=0x%x linkID=0x%x opCode=0x%x ok=%d",
-			ssComponentType,ssInvokeID,ssLinkID,ssOpCode,(int)ssParseSuccess);
-		for (vector<string>::iterator it = ssParams.begin(); it != ssParams.end(); it++) {
-			result += " <" + data2hex(it->data(),it->size()) + ">";
-		}
-		return result;
-	}
+//	string text()
+//	{
+//		string result = format("ComponentType=0x%x invokeID=0x%x linkID=0x%x opCode=0x%x ok=%d",
+//			ssComponentType,ssInvokeID,ssLinkID,ssOpCode,(int)ssParseSuccess);
+//		for (vector<string>::iterator it = ssParams.begin(); it != ssParams.end(); it++) {
+//			result += " <" + data2hex(it->data(),it->size()) + ">";
+//		}
+//		return result;
+//	}
 
 	private:
 	string getParam(unsigned paramNum,const char *opname)
@@ -554,7 +554,7 @@ class L3USSDMessage {
 string ssMap2Ussd(const unsigned char *mapcmd,unsigned maplen)
 {
 	SSMapCommand cmd(mapcmd,maplen);
-	LOG(DEBUG) << cmd.text();
+	// FIXME: LOG(DEBUG) << cmd.text();
 	return cmd.ssGetUssd();
 }
 
@@ -626,7 +626,7 @@ void MOSSDMachine::sendUssdMsg(string ussdin, bool final)
 	memcpy(&mapbuf[15],ussd.data(),ussd.size());
 
 	string components = string(mapbuf,15+ussd.size());
-	LOG(DEBUG) << "map="<<data2hex(components.data(),components.size());
+	// FIXME: LOG(DEBUG) << "map="<<data2hex(components.data(),components.size());
 	L3SupServFacilityIE facility(components);
 	if (final) {	// Is it the final USSD message?
 		L3SupServReleaseCompleteMessage ssrelease(getL3TI(), facility);

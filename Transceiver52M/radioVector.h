@@ -23,7 +23,7 @@
 #define RADIOVECTOR_H
 
 #include "sigProcLib.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 
 class radioVector : public signalVector {
 public:

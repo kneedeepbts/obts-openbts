@@ -219,7 +219,7 @@ MMUser::MMUser(string& wImsi)
 //	return L3CMServiceType::ShortMessage;
 //}
 
-GSM::ChannelType MMUser::mmuGetInitialChanType() const
+kneedeepbts::gsm::ChannelType MMUser::mmuGetInitialChanType() const
 {
 	devassert(gMMLock.lockcnt());		// Caller locked it.
 	if (mmuMTCq.size()) {
@@ -229,13 +229,13 @@ GSM::ChannelType MMUser::mmuGetInitialChanType() const
 			devassert(0);
 		case L3CMServiceType::MobileTerminatedCall:
 		case L3CMServiceType::EmergencyCall:
-			return gConfig.getBool("Control.VEA") ?  GSM::TCHFType : GSM::SDCCHType;
+			return gConfig.getBool("Control.VEA") ?  kneedeepbts::gsm::TCHFType : kneedeepbts::gsm::SDCCHType;
 		default:	// There shouldnt be anything else in the MTCq.
-			return GSM::SDCCHType;
+			return kneedeepbts::gsm::SDCCHType;
 		}
 	}
 	devassert(mmuMTSMSq.size());
-	return GSM::SDCCHType;
+	return kneedeepbts::gsm::SDCCHType;
 }
 
 // Caller enters with the whole MMLayer locked so no one will try to add new contexts while we are doing this.
@@ -436,7 +436,7 @@ bool MMContext::mmCheckTimers()
 RefCntPointer<TranEntry> MMContext::findTran(const L3Frame *frame, const L3Message *l3msg) const
 {
 	ScopedLock lock(gMMLock,__FILE__,__LINE__); //FIXMENOW
-	GSM::L3PD pd; int ti;
+    kneedeepbts::gsm::L3PD pd; int ti;
 	// Handle naked primitives.
 	if (frame && !frame->isData()) {
 		// Theoretically primitives should go to all transactions, but in reality the only state
@@ -454,7 +454,7 @@ RefCntPointer<TranEntry> MMContext::findTran(const L3Frame *frame, const L3Messa
 		return (TranEntry*)NULL;	// Shouldnt happen, but be safe.
 	}
 	switch (pd) {
-		case L3CallControlPD: {
+		case kneedeepbts::gsm::L3CallControlPD: {
 			// Setup message is special because it is the message that establishes the TI correspondence.
 			// Dont need to bother checking l3msg because we dont send naked setup messages.
 			int mti = frame ? frame->MTI() : l3msg->MTI();
@@ -465,7 +465,7 @@ RefCntPointer<TranEntry> MMContext::findTran(const L3Frame *frame, const L3Messa
 			}
 			break;
 		}
-		case L3SMSPD: {
+		case kneedeepbts::gsm::L3SMSPD: {
 			for (int tx = TE_MOSMS1; tx <= TE_MTSMS; tx++) {
 				TranEntry *sms = mmcTE[tx].self();
 				if (sms && sms->matchL3TI(ti,true)) {
@@ -477,9 +477,9 @@ RefCntPointer<TranEntry> MMContext::findTran(const L3Frame *frame, const L3Messa
 			if (TranEntry *te = mmcTE[TE_MOSMS1].self()) { return te; }
 			break;
 		}
-		case L3RadioResourcePD:
+		case kneedeepbts::gsm::L3RadioResourcePD:
 			// Fall through for all other RR messages.
-		case L3MobilityManagementPD:
+		case kneedeepbts::gsm::L3MobilityManagementPD:
 			// TODO: This is a hack.  We should split the Procedures into MM and CS parts, and
 			// run the MM procedure first to identify the channel, then send a message to the CS procedure to start it.
 			//return mmcTE[TE_MM] ? mmcTE[TE_MM] : mmcTE[TE_CS1] ? mmcTE[TE_CS1] : mmcTE[TE_MOSMS1] ? mmcTE[TE_MOSMS1] : mmcTE[TE_MTSMS];
@@ -487,7 +487,7 @@ RefCntPointer<TranEntry> MMContext::findTran(const L3Frame *frame, const L3Messa
 				if (TranEntry *te = mmcTE[txi].self()) { return te; }
 			}
 			break;
-		case L3NonCallSSPD: {
+		case kneedeepbts::gsm::L3NonCallSSPD: {
 				// The transaction identifier is used to identify whether the SS message applies to a specific
 				// call or is outside any call, ie, was started by a CM service request.
 				// I am not sure what to do about in-call SS: we could pass the USSD SIP INFO message in

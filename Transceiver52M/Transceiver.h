@@ -31,7 +31,7 @@
 
 #include "radioInterface.h"
 #include "Interthread.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "Sockets.h"
 
 #include <sys/types.h>

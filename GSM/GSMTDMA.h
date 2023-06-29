@@ -20,7 +20,7 @@
 #define GSMTDMA_H
 
 
-#include "GSMCommon.h"
+#include "gsmenums.h"
 
 
 namespace GSM {
@@ -50,7 +50,7 @@ class TDMAMapping {
 
 	private:
 
-	TypeAndOffset mTypeAndOffset;				///< col 1, 2, encoded as per GSM 04.08 10.5.2.5
+    kneedeepbts::gsm::TypeAndOffset mTypeAndOffset;				///< col 1, 2, encoded as per GSM 04.08 10.5.2.5
 	bool mDownlink;								///< col 3, true for downlink channels
 	bool mUplink;								///< col 3, true for uplink channels
 	char mAllowedSlots;							///< col 4, an 8-bit mask
@@ -73,7 +73,7 @@ class TDMAMapping {
 		@param wNumFrames Number of occupied TDMA frames in frame mapping.
 		@param wFrameMapping "Interleaved Block TDMA Frame Mapping" -- MUST PERSIST!!
 	*/
-	TDMAMapping(TypeAndOffset wTypeAndOffset,
+	TDMAMapping(kneedeepbts::gsm::TypeAndOffset wTypeAndOffset,
 		bool wDownlink, bool wUplink, char wAllowedSlots, bool wC0Only,
 		unsigned wRepeatLength, unsigned wNumFrames, const unsigned *wFrameMapping);
 
@@ -91,7 +91,7 @@ class TDMAMapping {
 
 	unsigned repeatLength() const { return mRepeatLength; }
 
-	TypeAndOffset typeAndOffset() const { return mTypeAndOffset; }
+    kneedeepbts::gsm::TypeAndOffset typeAndOffset() const { return mTypeAndOffset; }
 
 	bool uplink() const { return mUplink; }
 

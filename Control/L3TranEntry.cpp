@@ -628,7 +628,7 @@ L2LogicalChannel* TranEntry::getL2Channel() const
 
 // This is used after the channel() is changed from SDCCH to to TCHFACCH just to be safe.
 L3LogicalChannel* TranEntry::getTCHFACCH() {
-	devassert(channel()->chtype()==FACCHType);	// This is the type returned by the TCHFACCHLogicalChannel, even though it is TCH too.
+	devassert(channel()->chtype() == kneedeepbts::gsm::FACCHType);	// This is the type returned by the TCHFACCHLogicalChannel, even though it is TCH too.
 	return channel();
 }
 

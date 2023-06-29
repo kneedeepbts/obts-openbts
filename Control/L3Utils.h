@@ -17,7 +17,7 @@
 
 #ifndef _L3UTILS_H_
 #define _L3UTILS_H_
-#include <GSMCommon.h>		// Where Z100Timer lives.
+#include <gsmenums.h>        // Where Z100Timer lives.
 
 // From GSM Library
 #include <z100timer.h>

@@ -18,7 +18,7 @@
 #define _GSMNEIGHBORS_H_ 1
 
 #include "../apps/OpenBTSConfig.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 //#include "GSMConfig.h" // Causes gBTS to go missing from CBS?
 #include <ControlTransfer.h>
 

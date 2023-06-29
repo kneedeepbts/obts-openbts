@@ -68,7 +68,7 @@ void L3GmmDlMsg::gWrite(ByteVector &msg)
 {
 	// Note: nibbles are reversed.
 	msg.appendField(0,4);	// Skip indicator.
-	msg.appendField(GSM::L3GPRSMobilityManagementPD,4);	// protocol discriminator.
+	msg.appendField(kneedeepbts::gsm::L3GPRSMobilityManagementPD,4);	// protocol discriminator.
 	msg.appendByte(MTI());
 	gmmWriteBody(msg);
 }
@@ -316,10 +316,10 @@ std::ostream& operator<<(std::ostream& os, L3SmMsg::MessageType mt)
 const char *L3GprsMsgType2Name(unsigned pd, unsigned mt)
 {
 	static char buf[40];	// Beware: will fail if multithreaded; GPRS is single threaded.
-	switch ((GSM::L3PD) pd) {
-	case GSM::L3GPRSMobilityManagementPD:	// Couldnt we shorten this?
+	switch ((kneedeepbts::gsm::L3PD) pd) {
+	case kneedeepbts::gsm::L3GPRSMobilityManagementPD:	// Couldnt we shorten this?
 		return L3GmmMsg::name(mt);
-	case GSM::L3GPRSSessionManagementPD:	// Couldnt we shorten this?
+	case kneedeepbts::gsm::L3GPRSSessionManagementPD:	// Couldnt we shorten this?
 		return L3SmMsg::name(mt);
 	default:
 		sprintf(buf,"unsupported PD: %d\n",pd);
@@ -338,14 +338,14 @@ void L3GprsFrame::dump(std::ostream &os)
 {
 	//L3GprsFrame frame(vec);
 	os << "(";
-	GSM::L3PD pd = getPD();
-	switch ((GSM::L3PD) pd) {
-	case GSM::L3GPRSMobilityManagementPD: {	// Couldnt we shorten this?
+    kneedeepbts::gsm::L3PD pd = getPD();
+	switch ((kneedeepbts::gsm::L3PD) pd) {
+	case kneedeepbts::gsm::L3GPRSMobilityManagementPD: {	// Couldnt we shorten this?
 		L3GmmFrame gmframe(*this);
 		L3GmmMsg::dump(gmframe,os);
 		break;
 	}
-	case GSM::L3GPRSSessionManagementPD: {	// Couldnt we shorten this?
+	case kneedeepbts::gsm::L3GPRSSessionManagementPD: {	// Couldnt we shorten this?
 		L3SmFrame smframe(*this);
 		L3SmMsg::dump(smframe,os);
 		break;
@@ -1264,10 +1264,10 @@ void L3SmDlMsg::appendTiPd(ByteVector &msg)
 	// Note: nibbles are reversed, as always for L3 messages.
 	if (mTransactionId < 7) {
 		msg.appendField(tiFlag|mTransactionId,4);	// Transaction id.  The 0x8 indicates this is a command.
-		msg.appendField(GSM::L3GPRSSessionManagementPD,4);	// protocol discriminator.
+		msg.appendField(kneedeepbts::gsm::L3GPRSSessionManagementPD,4);	// protocol discriminator.
 	} else {
 		msg.appendField(tiFlag|0x7,4);	// Magic value indicates additional transaction id field present.
-		msg.appendField(GSM::L3GPRSSessionManagementPD,4);	// protocol discriminator.
+		msg.appendField(kneedeepbts::gsm::L3GPRSSessionManagementPD,4);	// protocol discriminator.
 		msg.appendByte(0x80|mTransactionId);	// The 0x80 is a required but meaningless extension indicator.
 	}
 }

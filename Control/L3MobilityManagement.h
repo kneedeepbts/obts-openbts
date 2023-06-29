@@ -16,13 +16,14 @@
 #ifndef _L3MOBILITYMANAGEMENT_H_
 #define _L3MOBILITYMANAGEMENT_H_ 1
 
-#include <GSMCommon.h>
 //#include <memory>	// for auto_ptr, shared_ptr
 #include "L3StateMachine.h"
 #include "TMSITable.h"
 #include <SIPBase.h>
 #include <GSML3MMElements.h>
 
+// From GSM Library
+#include <gsmenums.h>
 
 namespace SIP { class DialogMessage; };
 
@@ -156,7 +157,7 @@ struct RegistrationResult {
 		uint32_t mOldTmsi;		// The tmsi sent in LUR, which is irrelevant if the LAI is not ours, but saved only for reporting purposes.
 		//string mRAND;
 		TmsiTableStore store;	// In-memory storage for stuff in the TMSI_TABLE.
-		GSM::MobileIDType mQueryType;	// What mobileId did we last request: IMSIType or IMEIType?
+        kneedeepbts::gsm::MobileIDType mQueryType;	// What mobileId did we last request: IMSIType or IMEIType?
 		RegistrationResult mRegistrationResult;
 		// If we received or queried for IMSI (as opposed to registration by TMSI) we set mFullQuery so that
 		// in this case we will also optionally query for IMEI.
@@ -196,7 +197,7 @@ struct RegistrationResult {
 		uint32_t getTmsi() { return mAssignedTmsi; }
 
 		MMSharedData() :
-			mAssignedTmsi(0), mTmsiStatus(tmsiNone), mOldTmsi(0), mQueryType(GSM::NoIDType)
+			mAssignedTmsi(0), mTmsiStatus(tmsiNone), mOldTmsi(0), mQueryType(kneedeepbts::gsm::NoIDType)
 			{}
 	};
 
@@ -218,7 +219,7 @@ struct RegistrationResult {
 
 	// Initial identification phase of LU - Location Updating.
 	class LUStart : public LUBase /*, public virtual LUSharedData*/ {
-		MachineStatus sendQuery(GSM::MobileIDType);
+		MachineStatus sendQuery(kneedeepbts::gsm::MobileIDType);
 		public:
 		enum State {		// There is no integral start state because the state machine start state receives the LUR message.
 			stateSecondAttempt,

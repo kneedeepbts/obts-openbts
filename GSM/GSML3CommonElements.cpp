@@ -127,16 +127,16 @@ void L3CellIdentity::text(ostream& os) const
 bool L3MobileIdentity::operator==(const L3MobileIdentity& other) const
 {
 	if (other.mType!=mType) return false;
-	if (mType==TMSIType) return (mTMSI==other.mTMSI);
+	if (mType == kneedeepbts::gsm::TMSIType) return (mTMSI == other.mTMSI);
 	return (strcmp(mDigits,other.mDigits)==0);
 }
 
 bool L3MobileIdentity::fmidMatch(const Control::FullMobileId *mobileId) const
 {
 	switch (this->type()) {
-	case GSM::IMSIType: return 0 == strcmp(mobileId->mImsi.c_str(),this->digits());
-	case GSM::IMEIType: return 0 == strcmp(mobileId->mImei.c_str(),this->digits());
-	case GSM::TMSIType: return mobileId->mTmsi.valid() && mobileId->mTmsi.value() == this->TMSI();
+	case kneedeepbts::gsm::IMSIType: return 0 == strcmp(mobileId->mImsi.c_str(),this->digits());
+	case kneedeepbts::gsm::IMEIType: return 0 == strcmp(mobileId->mImei.c_str(),this->digits());
+	case kneedeepbts::gsm::TMSIType: return mobileId->mTmsi.valid() && mobileId->mTmsi.value() == this->TMSI();
 	default: return false;	// something wrong, but certainly no match
 	}
 }
@@ -144,15 +144,15 @@ bool L3MobileIdentity::fmidMatch(const Control::FullMobileId *mobileId) const
 bool L3MobileIdentity::operator<(const L3MobileIdentity& other) const
 {
 	if (other.mType != mType) return mType > other.mType;
-	if (mType == TMSIType) return mTMSI > other.mTMSI;
+	if (mType == kneedeepbts::gsm::TMSIType) return mTMSI > other.mTMSI;
 	return strcmp(mDigits,other.mDigits)>0;
 }
 
 
 size_t L3MobileIdentity::lengthV() const
 {
-	if (mType==NoIDType) return 1;
-	if (mType==TMSIType) return 5;
+	if (mType == kneedeepbts::gsm::NoIDType) return 1;
+	if (mType == kneedeepbts::gsm::TMSIType) return 5;
 	return 1 + strlen(mDigits)/2;
 }
 
@@ -161,12 +161,12 @@ void L3MobileIdentity::writeV(L3Frame& dest, size_t &wp) const
 {
 	// See GSM 04.08 10.5.1.4.
 
-	if (mType==NoIDType) {
+	if (mType == kneedeepbts::gsm::NoIDType) {
 		dest.writeField(wp,0x0f0,8);
 		return;
 	}
 
-	if (mType==TMSIType) {
+	if (mType == kneedeepbts::gsm::TMSIType) {
 		dest.writeField(wp,0x0f4,8);
 		dest.writeField(wp,mTMSI,32);
 		return;
@@ -203,17 +203,17 @@ void L3MobileIdentity::parseV( const L3Frame& src, size_t &rp, size_t expectedLe
     
 	// Get odd-count flag and identity type. 
 	bool oddCount = (bool) src.readField(rp,1);
-	mType = (MobileIDType) src.readField(rp,3);
+	mType = (kneedeepbts::gsm::MobileIDType) src.readField(rp,3);
 
 	switch (mType) {
-		case TMSIType:
+		case kneedeepbts::gsm::TMSIType:
 			mDigits[0]='\0';
 			// GSM 03.03 2.4 tells us the TMSI is always 32 bits
 			mTMSI = src.readField(rp,32);
 			break;
-		case IMSIType:
-		case IMEISVType:
-		case IMEIType:
+		case kneedeepbts::gsm::IMSIType:
+		case kneedeepbts::gsm::IMEISVType:
+		case kneedeepbts::gsm::IMEIType:
 			while (rp<endCount) {
 				unsigned tmp = src.readField(rp,4);
 				mDigits[numDigits++] = src.readField(rp,4)+'0';
@@ -226,14 +226,14 @@ void L3MobileIdentity::parseV( const L3Frame& src, size_t &rp, size_t expectedLe
 		default:
 			LOG(NOTICE) << "non-standard identity type " << (int)mType;
 			mDigits[0]='\0';
-			mType = NoIDType;
+			mType = kneedeepbts::gsm::NoIDType;
 	}
 }
 
 void L3MobileIdentity::text(ostream& os) const
 {
 	os << mType << "=";
-	if (mType==TMSIType) {
+	if (mType == kneedeepbts::gsm::TMSIType) {
 		os << hex << "0x" << mTMSI << dec;
 		return;
 	}

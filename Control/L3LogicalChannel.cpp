@@ -447,12 +447,12 @@ void L3LogicalChannel::getTranIds(TranEntryList &tids) const
 
 bool L3LogicalChannel::isTCHF() const
 {
-	return chtype()==GSM::FACCHType;
+	return chtype() == kneedeepbts::gsm::FACCHType;
 }
 
 bool L3LogicalChannel::isSDCCH() const
 {
-	return chtype()==GSM::SDCCHType;
+	return chtype() == kneedeepbts::gsm::SDCCHType;
 }
 
 // For use by the CLI.

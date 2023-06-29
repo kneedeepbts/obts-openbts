@@ -17,7 +17,7 @@
 #define _L3CALLCONTROL_H_ 1
 
 #include "L3StateMachine.h"
-#include <GSMCommon.h>
+#include <gsmenums.h>
 #include <GSML3Message.h>
 
 namespace Control {

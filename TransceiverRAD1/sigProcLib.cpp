@@ -18,7 +18,7 @@
 //#define NDEBUG
 
 #include "sigProcLib.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 
 #include <Logger.h>
 using namespace GSM;

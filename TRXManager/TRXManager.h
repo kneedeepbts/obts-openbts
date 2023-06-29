@@ -25,7 +25,7 @@
 #include "Threads.h"
 #include "Sockets.h"
 #include "Interthread.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSMTransfer.h"
 #include <list>
 

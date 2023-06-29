@@ -24,7 +24,7 @@ implementation, although no code is copied directly.
 #ifndef L2LAPDM_H
 #define L2LAPDM_H
 
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSMTransfer.h"
 #include <ControlTransfer.h>
 

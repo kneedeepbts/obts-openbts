@@ -17,7 +17,7 @@
 #define LOG_GROUP LogGroup::GSM		// Can set Log.Level.GSM for debugging
 
 #include "GSMRadioResource.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSMConfig.h" //gBTS
 #include "GSMLogicalChannel.h"
 #include "GSMCCCH.h"
@@ -36,7 +36,7 @@ using namespace Control;
 	@param RA The request reference from the channel request message.
 	@return channel type code, undefined if not a supported service
 */
-ChannelType decodeChannelNeeded(unsigned RA)
+    kneedeepbts::gsm::ChannelType decodeChannelNeeded(unsigned RA)
 {
 	// This code is based on GSM 04.08 Table 9.9. section 9.1.8
 
@@ -44,40 +44,40 @@ ChannelType decodeChannelNeeded(unsigned RA)
 	unsigned RA5 = RA>>5;
 
 	// We use VEA for all emergency calls, regardless of configuration.
-	if (RA5 == 0x05) return TCHFType;		// emergency call
+	if (RA5 == 0x05) return kneedeepbts::gsm::TCHFType;		// emergency call
 
 	// Answer to paging, Table 9.9a.
 	// We don't support TCH/H, so it's wither SDCCH or TCH/F.
 	// The spec allows for "SDCCH-only" MS.  We won't support that here.
 	// FIXME -- So we probably should not use "any channel" in the paging indications.
-	if (RA5 == 0x04) return TCHFType;		// any channel or any TCH.
-	if (RA4 == 0x01) return SDCCHType;		// SDCCH
-	if (RA4 == 0x02) return TCHFType;		// TCH/F
-	if (RA4 == 0x03) return TCHFType;		// TCH/F
-	if ((RA&0xf8) == 0x78 && RA != 0x7f) return PSingleBlock1PhaseType;
-	if ((RA&0xf8) == 0x70) return PSingleBlock2PhaseType;
+	if (RA5 == 0x04) return kneedeepbts::gsm::TCHFType;		// any channel or any TCH.
+	if (RA4 == 0x01) return kneedeepbts::gsm::SDCCHType;		// SDCCH
+	if (RA4 == 0x02) return kneedeepbts::gsm::TCHFType;		// TCH/F
+	if (RA4 == 0x03) return kneedeepbts::gsm::TCHFType;		// TCH/F
+	if ((RA&0xf8) == 0x78 && RA != 0x7f) return kneedeepbts::gsm::PSingleBlock1PhaseType;
+	if ((RA&0xf8) == 0x70) return kneedeepbts::gsm::PSingleBlock2PhaseType;
 
 	int NECI = gConfig.getNum("GSM.CellSelection.NECI");
 	if (NECI==0) {
-		if (RA5 == 0x07) return SDCCHType;		// MOC or SDCCH procedures
-		if (RA5 == 0x00) return SDCCHType;		// location updating
+		if (RA5 == 0x07) return kneedeepbts::gsm::SDCCHType;		// MOC or SDCCH procedures
+		if (RA5 == 0x00) return kneedeepbts::gsm::SDCCHType;		// location updating
 	} else {
 		if (gConfig.getBool("Control.VEA")) {
 			// Very Early Assignment
-			if (RA5 == 0x07) return TCHFType;		// MOC for TCH/F
-			if (RA4 == 0x04) return TCHFType;		// MOC, TCH/H sufficient
+			if (RA5 == 0x07) return kneedeepbts::gsm::TCHFType;		// MOC for TCH/F
+			if (RA4 == 0x04) return kneedeepbts::gsm::TCHFType;		// MOC, TCH/H sufficient
 		} else {
 			// Early Assignment
-			if (RA5 == 0x07) return SDCCHType;		// MOC for TCH/F
-			if (RA4 == 0x04) return SDCCHType;		// MOC, TCH/H sufficient
+			if (RA5 == 0x07) return kneedeepbts::gsm::SDCCHType;		// MOC for TCH/F
+			if (RA4 == 0x04) return kneedeepbts::gsm::SDCCHType;		// MOC, TCH/H sufficient
 		}
-		if (RA4 == 0x00) return SDCCHType;		// location updating
-		if (RA4 == 0x01) return SDCCHType;		// other procedures on SDCCH
+		if (RA4 == 0x00) return kneedeepbts::gsm::SDCCHType;		// location updating
+		if (RA4 == 0x01) return kneedeepbts::gsm::SDCCHType;		// other procedures on SDCCH
 	}
 
 	// Anything else falls through to here.
 	// We are still ignoring data calls, LMU.
-	return UndefinedCHType;
+	return kneedeepbts::gsm::UndefinedCHType;
 }
 
 /** Return true if RA indicates LUR. */
@@ -127,7 +127,7 @@ void createFakeRach(FakeRachType rachtype)
 std::ostream& operator<<(std::ostream& os, const RachInfo &rach)
 {
 	unsigned RA = rach.mRA;
-	ChannelType chtype = decodeChannelNeeded(RA);
+	kneedeepbts::gsm::ChannelType chtype = decodeChannelNeeded(RA);
 	os <<LOGVAR(chtype) <<LOGVAR2("lur",requestingLUR(RA))
 				<<LOGHEX(RA) <<LOGVAR2("TE",rach.initialTA())<<LOGVAR2("RSSI",rach.RSSI()) <<LOGVAR2("when",rach.mWhen) <<LOGVAR(rach.mTN);
 	return os;

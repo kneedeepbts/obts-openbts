@@ -444,7 +444,7 @@ class L3ChannelDescription : public L3ProtocolElement {
 //
 
 	// Octet 2.
-	TypeAndOffset mTypeAndOffset; // 5 bit
+    kneedeepbts::gsm::TypeAndOffset mTypeAndOffset; // 5 bit
 	unsigned mTN; 		//3 bit 	Timeslot Number
 
 	// Octet 3 & 4.
@@ -457,7 +457,7 @@ class L3ChannelDescription : public L3ProtocolElement {
 public:
 
 	/** Non-hopping initializer. */
-	L3ChannelDescription(TypeAndOffset wTypeAndOffset, unsigned wTN,
+	L3ChannelDescription(kneedeepbts::gsm::TypeAndOffset wTypeAndOffset, unsigned wTN,
 			unsigned wTSC, unsigned wARFCN)
 		:L3ProtocolElement(),
 		mTypeAndOffset(wTypeAndOffset),mTN(wTN),
@@ -469,11 +469,11 @@ public:
 
 	/** Blank initializer */
 	L3ChannelDescription()
-		:mTypeAndOffset(TDMA_MISC),
+		:mTypeAndOffset(kneedeepbts::gsm::TDMA_MISC),
 		mTN(0),mTSC(0),mHFlag(0),mARFCN(0),mMAIO(0),mHSN(0)
 	{ }
 
-	bool initialized() { return mTypeAndOffset != TDMA_MISC; }
+	bool initialized() { return mTypeAndOffset != kneedeepbts::gsm::TDMA_MISC; }
 	
 
 	size_t lengthV() const  { return 3; }
@@ -482,7 +482,7 @@ public:
 	void parseV(const L3Frame&, size_t& , size_t) { assert(0); }
 	void text(std::ostream&) const;
 
-	TypeAndOffset typeAndOffset() const { return mTypeAndOffset; }
+    kneedeepbts::gsm::TypeAndOffset typeAndOffset() const { return mTypeAndOffset; }
 	unsigned TN() const { return mTN; }
 	unsigned TSC() const{ return mTSC; }
 	unsigned ARFCN() const { return mARFCN; }
@@ -493,7 +493,7 @@ class L3ChannelDescription2 : public L3ChannelDescription {
 
 	public:
 	
-	L3ChannelDescription2(TypeAndOffset wTypeAndOffset, unsigned wTN,
+	L3ChannelDescription2(kneedeepbts::gsm::TypeAndOffset wTypeAndOffset, unsigned wTN,
 		unsigned wTSC, unsigned wARFCN)
 		:L3ChannelDescription(wTypeAndOffset,wTN,wTSC,wARFCN)
 	{ }

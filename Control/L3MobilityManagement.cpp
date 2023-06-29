@@ -183,7 +183,7 @@ MachineStatus L3IdentifyMachine::machineRunState(int state, const GSM::L3Message
 		// This is the start state.  It may return immediately if the MS is already identified.
 		case stateStart: {
 			// Have an imsi already?
-			if (mMobileID.type()==IMSIType) {
+			if (mMobileID.type() == kneedeepbts::gsm::IMSIType) {
 				string imsi(mMobileID.digits());
 				tran()->setSubscriberImsi(imsi,false);
 				*mResultPtr = gTMSITable.tmsiTabCheckAuthorization(imsi);
@@ -191,7 +191,7 @@ MachineStatus L3IdentifyMachine::machineRunState(int state, const GSM::L3Message
 			}
 
 			// If we got a TMSI, find the IMSI.
-			if (mMobileID.type()==TMSIType) {
+			if (mMobileID.type() == kneedeepbts::gsm::TMSIType) {
 				unsigned authorized;
 				string imsi = gTMSITable.tmsiTabGetIMSI(mMobileID.TMSI(),&authorized);
 				LOG(DEBUG) <<"lookup"<<LOGVAR(mMobileID.TMSI()) <<LOGVAR(imsi);
@@ -214,7 +214,7 @@ MachineStatus L3IdentifyMachine::machineRunState(int state, const GSM::L3Message
 			// the MS should have done a LocationUpdate first, which provides us with the IMSI.
 			PROCLOG(NOTICE) << "No IMSI or valid TMSI.  Reqesting IMSI.";
 			timerStart(T3270,T3270ms,TimerAbortChan);
-			channel()->l3sendm(L3IdentityRequest(IMSIType));
+			channel()->l3sendm(L3IdentityRequest(kneedeepbts::gsm::IMSIType));
 			return MachineStatusOK;
 		}
 
@@ -224,7 +224,7 @@ MachineStatus L3IdentifyMachine::machineRunState(int state, const GSM::L3Message
 			timerStop(T3270);
 			const L3IdentityResponse *resp = dynamic_cast<typeof(resp)>(l3msg);
 			const L3MobileIdentity &mobileID = resp->mobileID();	// Do not need a copy operation.
-			if (mobileID.type()==IMSIType) {
+			if (mobileID.type() == kneedeepbts::gsm::IMSIType) {
 				string imsi = string(mobileID.digits());
 				tran()->setSubscriberImsi(imsi,false);
 				*mResultPtr = gTMSITable.tmsiTabCheckAuthorization(imsi);
@@ -409,7 +409,7 @@ MachineStatus LUStart::stateRecvLocationUpdatingRequest(const GSM::L3LocationUpd
 	gReports.incr("OpenBTS.GSM.MM.LUR.Start");
 
 	switch (ludata()->mLUMobileId.type()) {
-		case GSM::IMSIType: {
+		case kneedeepbts::gsm::IMSIType: {
 			ludata()->mFullQuery = true;
 			string imsi = string(ludata()->mLUMobileId.digits());
 			// TODO: We should notify the MM layer.
@@ -426,7 +426,7 @@ MachineStatus LUStart::stateRecvLocationUpdatingRequest(const GSM::L3LocationUpd
 			}
 			return machineRunState(stateHaveImsi);
 		}
-		case GSM::TMSIType: {
+		case kneedeepbts::gsm::TMSIType: {
 			uint32_t tmsi = ludata()->mLUMobileId.TMSI();
 			ludata()->mOldTmsi = tmsi;
 			// Look in the TMSI table to see if it's one we assigned.
@@ -447,27 +447,27 @@ MachineStatus LUStart::stateRecvLocationUpdatingRequest(const GSM::L3LocationUpd
 				// Unrecognized TMSI; Query for IMSI
 				// We leave the TMSI state at tmsiNone and save the unrecognized tmsi only in mOldTmsi.
 				ludata()->mFullQuery = true;
-				return sendQuery(IMSIType);
+				return sendQuery(kneedeepbts::gsm::IMSIType);
 			}
 		}
-		case GSM::IMEIType:
+		case kneedeepbts::gsm::IMEIType:
 			// (pat) The phone was not supposed to send an IMEI in the LUR message,
 			// but lets go ahead and accept it.  So we need to query for the imsi:
 			ludata()->store.setImei(ludata()->mLUMobileId.digits());
-			return sendQuery(IMSIType);
+			return sendQuery(kneedeepbts::gsm::IMSIType);
 		default:
 			LOG(ERR) << "Unexpected MobileIdentity type in LocationUpdateRequest:"<<lur;
 			// But who cares?  Lets try sending an identity request for what we want.
 			// If it fails that, then we will reject it.
 			ludata()->mFullQuery = true;
-			return sendQuery(IMSIType);
+			return sendQuery(kneedeepbts::gsm::IMSIType);
 	}
 }
 
 // Send a query.  Only send each query once.
-MachineStatus LUStart::sendQuery(MobileIDType qtype)
+MachineStatus LUStart::sendQuery(kneedeepbts::gsm::MobileIDType qtype)
 {
-	assert(qtype == IMSIType || qtype == IMEIType);
+	assert(qtype == kneedeepbts::gsm::IMSIType || qtype == kneedeepbts::gsm::IMEIType);
 	ludata()->mQueryType = qtype;
 	timerStart(T3270,12000,TimerAbortChan);
 	channel()->l3sendm(GSM::L3IdentityRequest(qtype));
@@ -479,11 +479,11 @@ MachineStatus LUStart::stateRecvIdentityResponse(const GSM::L3IdentityResponse *
 {
 	//const GSM::L3IdentityResponse *resp = dynamic_cast<typeof(resp)>(l3msg);
 	LOG(INFO) << *resp;
-	MobileIDType idtype = resp->mobileID().type();
+    kneedeepbts::gsm::MobileIDType idtype = resp->mobileID().type();
 	// Meaningful IdentityResponse?
 
 	// Store the result, even if it was not what we asked for.
-	if (idtype == IMSIType) {
+	if (idtype == kneedeepbts::gsm::IMSIType) {
 		string imsi = string(resp->mobileID().digits());
 
 		{
@@ -525,7 +525,7 @@ MachineStatus LUStart::stateRecvIdentityResponse(const GSM::L3IdentityResponse *
 			// We already assigned the new imsi above.  We just fall through to try another registration.
 			assert(ludata()->getTmsiStatus() == tmsiFailed);
 		}
-	} else if (idtype == IMEIType) {
+	} else if (idtype == kneedeepbts::gsm::IMEIType) {
 		// We do not check whether the IMEI matches what we may have stored already because
 		// we dont care if the user has switched their SIM card to a new handset.
 		ludata()->store.setImei(string(resp->mobileID().digits()));
@@ -534,17 +534,17 @@ MachineStatus LUStart::stateRecvIdentityResponse(const GSM::L3IdentityResponse *
 		return MachineStatusOK;	// Just ignore it.  T3270 is still running.  Maybe it will return what we asked for later.
 	}
 
-	if (ludata()->mQueryType == NoIDType) {
+	if (ludata()->mQueryType == kneedeepbts::gsm::NoIDType) {
 		// This was an unsoliticed or duplicate IdentityResponse.
 		return MachineStatusOK;
 	}
 
 	if (ludata()->mQueryType == idtype) {	// success
 		timerStop(T3270);
-		ludata()->mQueryType = NoIDType;
+		ludata()->mQueryType = kneedeepbts::gsm::NoIDType;
 		// Go to the next state.
 		timerStart(TMMCancel,12000,TimerAbortChan);
-		if (idtype == IMSIType) {
+		if (idtype == kneedeepbts::gsm::IMSIType) {
 			return machineRunState(stateHaveImsi);
 		} else {
 			return machineRunState(stateHaveIds);
@@ -570,7 +570,7 @@ MachineStatus LUStart::machineRunState(int state, const GSM::L3Message* l3msg, c
 	case stateSecondAttempt: {
 		// The second attempt is initiated from LUAuthentication if registration by tmsi fails.
 		ludata()->mFullQuery = true;
-		return sendQuery(IMSIType);
+		return sendQuery(kneedeepbts::gsm::IMSIType);
 	}
 
 	case L3CASE_MM(IdentityResponse): {
@@ -580,7 +580,7 @@ MachineStatus LUStart::machineRunState(int state, const GSM::L3Message* l3msg, c
 
 	case stateHaveImsi:
 	{
-		if (ludata()->mFullQuery && gConfig.defines("Control.LUR.QueryIMEI") && ludata()->store.getImei().size() == 0) { return sendQuery(IMEIType); }
+		if (ludata()->mFullQuery && gConfig.defines("Control.LUR.QueryIMEI") && ludata()->store.getImei().size() == 0) { return sendQuery(kneedeepbts::gsm::IMEIType); }
 		return machineRunState(stateHaveIds);
 	}
 

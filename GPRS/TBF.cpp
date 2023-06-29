@@ -504,7 +504,7 @@ void sendAssignmentCcch(
 	// to start another assignment.  This ack time will be updated to the real value by gprsPageCcchSetTime().
 	tbf->mtSetAckExpected(gBSNNext + 1000,MsgTransAssign1);
 	// We allocate a NewPagingEntry for convenience of queuing this request, but since this is not a real page the first argument (ChannelType) is unused.
-	NewPagingEntry *npe = new NewPagingEntry(GSM::PSingleBlock1PhaseType,imsi);
+	NewPagingEntry *npe = new NewPagingEntry(kneedeepbts::gsm::PSingleBlock1PhaseType,imsi);
 	npe->mGprsClient = tbf;
 	npe->mImmAssign = gprsPageCcchStart(pacch,tbf);
 	// We dont support DRX yet, so just set the DRX time to the current frame, ie, assume all MS are in DRX if they are on CCCH.

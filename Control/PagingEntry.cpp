@@ -27,7 +27,7 @@ NewPagingEntry::~NewPagingEntry()
 	if (mImmAssign) { delete mImmAssign; }
 }
 
-GSM::ChannelType NewPagingEntry::getGsmChanType() const
+kneedeepbts::gsm::ChannelType NewPagingEntry::getGsmChanType() const
 {
 	return mInitialChanType;
 }

@@ -1174,12 +1174,12 @@ void handleL3Msg(SgsnInfo *si, ByteVector &bv)
 			return;
 		}
 		pd = frame.getNibble(0,0);	// protocol descriminator
-		switch ((GSM::L3PD) pd) {
-		case GSM::L3GPRSMobilityManagementPD: {	// Couldnt we shorten this?
+		switch ((kneedeepbts::gsm::L3PD) pd) {
+		case kneedeepbts::gsm::L3GPRSMobilityManagementPD: {	// Couldnt we shorten this?
 			handleL3GmmMsg(si,frame);
 			break;
 		}
-		case GSM::L3GPRSSessionManagementPD: {	// Couldnt we shorten this?
+		case kneedeepbts::gsm::L3GPRSSessionManagementPD: {	// Couldnt we shorten this?
 			Ggsn::handleL3SmMsg(si,frame);
 			break;
 		}

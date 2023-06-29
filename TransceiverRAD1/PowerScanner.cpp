@@ -20,7 +20,7 @@
 #include "RAD1Device.h"
 #include <Interthread.h>
 #include <Scanning.h>
-#include <GSMCommon.h>
+#include <gsmenums.h>
 
 #include <list>
 

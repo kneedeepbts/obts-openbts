@@ -16,7 +16,7 @@
 
 //#include <unistd.h>
 #include "GPRSInternal.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSML3RRMessages.h"	// for L3RRMessage
 #include "GSML3RRElements.h"	// for L3RequestReference
 #define MAC_IMPLEMENTATION 1

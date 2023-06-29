@@ -108,7 +108,7 @@ class L3LogicalChannel {
 	virtual bool multiframeMode(SAPI_t SAPI) const = 0;	// Used by SMS code.
 	virtual const char * descriptiveString() const;
 	virtual bool radioFailure() const = 0;
-	virtual GSM::ChannelType chtype() const =0;
+	virtual kneedeepbts::gsm::ChannelType chtype() const =0;
 	bool isSDCCH() const;
 	bool isTCHF() const;
 	bool isReleased() const { return mChState == chRequestRelease || mChState == chRequestHardRelease; }

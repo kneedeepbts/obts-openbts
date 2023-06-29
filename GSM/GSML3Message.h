@@ -20,9 +20,9 @@
 #define GSML3MESSAGE_H
 
 #include "../apps/OpenBTSConfig.h"
-#include "GSMCommon.h"
 #include "GSMTransfer.h"
 
+#include "gsmenums.h"
 #include "gsmerror.h"
 
 namespace GSM {
@@ -100,7 +100,7 @@ class L3Message {
 	L3Frame* frame(GSM::Primitive prim=L3_DATA) const;
 
 	/** Return the L3 protocol discriptor. */
-	virtual GSM::L3PD PD() const =0;
+	virtual kneedeepbts::gsm::L3PD PD() const =0;
 
 	/** Return the messag type indicator (MTI). */
 	virtual int MTI() const =0;
@@ -337,7 +337,7 @@ class GenericMessageElement {
 
 std::ostream& operator<<(std::ostream& os, const GenericMessageElement& elem);
 
-string mti2string(L3PD pd, unsigned mti);
+string mti2string(kneedeepbts::gsm::L3PD pd, unsigned mti);
 
 }; // GSM
 

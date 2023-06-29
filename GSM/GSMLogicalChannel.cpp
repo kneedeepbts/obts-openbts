@@ -666,7 +666,7 @@ void SACCHLogicalChannel::writeToL1(const L2Frame& frame)
 L3ChannelDescription L2LogicalChannelBase::channelDescription() const
 {
 	// In some debug cases, L1 may not exist, so we fake this information.
-	if (mL1==NULL) return L3ChannelDescription(TDMA_MISC,0,0,0);
+	if (mL1==NULL) return L3ChannelDescription(kneedeepbts::gsm::TDMA_MISC,0,0,0);
 
 	// In normal cases, we get this information from L1.
 	return L3ChannelDescription(
@@ -777,7 +777,7 @@ static L3Message* parseSACCHMessage(const L3Frame *l3frame)
 
 bool SACCHLogicalChannel::processMeasurementReport(L3Frame *rrFrame)
 {
-	if (! (rrFrame->isData() && rrFrame->PD() == L3RadioResourcePD && rrFrame->MTI() == L3RRMessage::MeasurementReport)) { return false; }
+	if (! (rrFrame->isData() && rrFrame->PD() == kneedeepbts::gsm::L3RadioResourcePD && rrFrame->MTI() == L3RRMessage::MeasurementReport)) { return false; }
 
 	// Neither of these 'ifs' should fail, but be safe.
 	if (const L3Message* rrMessage = parseSACCHMessage(rrFrame)) {

@@ -23,7 +23,7 @@
 */
 
 #include "sigProcLib.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 
 extern "C" {
 #include "convolve.h"

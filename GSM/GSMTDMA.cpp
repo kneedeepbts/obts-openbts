@@ -15,16 +15,16 @@
 
 #define LOG_GROUP LogGroup::GSM		// Can set Log.Level.GSM for debugging
 
-
 #include "GSMTDMA.h"
 
+#include <cassert>
 
 using namespace GSM;
 
 
 
 
-TDMAMapping::TDMAMapping(TypeAndOffset
+TDMAMapping::TDMAMapping(kneedeepbts::gsm::TypeAndOffset
 		wTypeAndOffset, bool wDownlink, bool wUplink, char wAllowedSlots, bool wC0Only,
 		unsigned wRepeatLength, unsigned wNumFrames, const unsigned *wFrameMapping)
 	:mTypeAndOffset(wTypeAndOffset),
@@ -55,174 +55,174 @@ TDMAMapping::TDMAMapping(TypeAndOffset
 		REPEAT,sizeof(NAME##Frames)/sizeof(unsigned),NAME##Frames)
 
 const unsigned LoopbackTestFullFrames[] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47};
-MAKE_TDMA_MAPPING(LoopbackTestFull,TDMA_MISC,true,true,0xff,false,51);
+MAKE_TDMA_MAPPING(LoopbackTestFull,kneedeepbts::gsm::TDMA_MISC,true,true,0xff,false,51);
 
 const unsigned FCCHFrames[] = {0,10,20,30,40};
-MAKE_TDMA_MAPPING(FCCH,TDMA_BEACON,true,false,0x01,true,51);
+MAKE_TDMA_MAPPING(FCCH,kneedeepbts::gsm::TDMA_BEACON,true,false,0x01,true,51);
 
 const unsigned SCHFrames[] = {1,11,21,31,41};
-MAKE_TDMA_MAPPING(SCH,TDMA_BEACON,true,false,0x01,true,51);
+MAKE_TDMA_MAPPING(SCH,kneedeepbts::gsm::TDMA_BEACON,true,false,0x01,true,51);
 
 const unsigned BCCHFrames[] = {2,3,4,5};
-MAKE_TDMA_MAPPING(BCCH,TDMA_BEACON_BCCH,true,false,0x55,true,51);
+MAKE_TDMA_MAPPING(BCCH,kneedeepbts::gsm::TDMA_BEACON_BCCH,true,false,0x55,true,51);
 
 // Note that we removed frames for the SDCCH components of the Combination-V C0T0.
 // (pat) This comes from GSM 5.02 clause 7 table 5 of 9 page 46.
 const unsigned RACHC5Frames[] = {4,5,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,45,46};
 // allowedSlots == 0x1 means only on timeslot 0.
-MAKE_TDMA_MAPPING(RACHC5,TDMA_BEACON,false,true,0x1,true,51);
+MAKE_TDMA_MAPPING(RACHC5,kneedeepbts::gsm::TDMA_BEACON,false,true,0x1,true,51);
 
 // Combination-V beacon has three CCCH.
 const unsigned CCCH_C5Frames[] = { 6,7,8,9, 12,13,14,15, 16,17,18,19 };
-MAKE_TDMA_MAPPING(CCCH_C5,TDMA_BEACON_CCCH,true,false,0x01,true,51);
+MAKE_TDMA_MAPPING(CCCH_C5,kneedeepbts::gsm::TDMA_BEACON_CCCH,true,false,0x01,true,51);
 
 
 const unsigned SDCCH_4_0DFrames[] = {22,23,24,25};
-MAKE_TDMA_MAPPING(SDCCH_4_0D,SDCCH_4_0,true,false,0x01,true,51);
+MAKE_TDMA_MAPPING(SDCCH_4_0D,kneedeepbts::gsm::SDCCH_4_0,true,false,0x01,true,51);
 
 const unsigned SDCCH_4_0UFrames[] = {37,38,39,40};
-MAKE_TDMA_MAPPING(SDCCH_4_0U,SDCCH_4_0,false,true,0x01,true,51);
+MAKE_TDMA_MAPPING(SDCCH_4_0U,kneedeepbts::gsm::SDCCH_4_0,false,true,0x01,true,51);
 
 const unsigned SDCCH_4_1DFrames[] = {26,27,28,29};
-MAKE_TDMA_MAPPING(SDCCH_4_1D,SDCCH_4_1,true,false,0x01,true,51);
+MAKE_TDMA_MAPPING(SDCCH_4_1D,kneedeepbts::gsm::SDCCH_4_1,true,false,0x01,true,51);
 
 const unsigned SDCCH_4_1UFrames[] = {41,42,43,44};
-MAKE_TDMA_MAPPING(SDCCH_4_1U,SDCCH_4_1,false,true,0x01,true,51);
+MAKE_TDMA_MAPPING(SDCCH_4_1U,kneedeepbts::gsm::SDCCH_4_1,false,true,0x01,true,51);
 
 const unsigned SDCCH_4_2DFrames[] = {32,33,34,35};
-MAKE_TDMA_MAPPING(SDCCH_4_2D,SDCCH_4_2,true,false,0x01,true,51);
+MAKE_TDMA_MAPPING(SDCCH_4_2D,kneedeepbts::gsm::SDCCH_4_2,true,false,0x01,true,51);
 
 const unsigned SDCCH_4_2UFrames[] = {47,48,49,50};
-MAKE_TDMA_MAPPING(SDCCH_4_2U,SDCCH_4_2,false,true,0x01,true,51);
+MAKE_TDMA_MAPPING(SDCCH_4_2U,kneedeepbts::gsm::SDCCH_4_2,false,true,0x01,true,51);
 
 const unsigned SDCCH_4_3DFrames[] = {36,37,38,39};
-MAKE_TDMA_MAPPING(SDCCH_4_3D,SDCCH_4_3,true,false,0x01,true,51);
+MAKE_TDMA_MAPPING(SDCCH_4_3D,kneedeepbts::gsm::SDCCH_4_3,true,false,0x01,true,51);
 
 const unsigned SDCCH_4_3UFrames[] = {0,1,2,3};
-MAKE_TDMA_MAPPING(SDCCH_4_3U,SDCCH_4_3,false,true,0x01,true,51);
+MAKE_TDMA_MAPPING(SDCCH_4_3U,kneedeepbts::gsm::SDCCH_4_3,false,true,0x01,true,51);
 
 
 const unsigned SACCH_C4_0DFrames[] = {42,43,44,45};
-MAKE_TDMA_MAPPING(SACCH_C4_0D,SDCCH_4_0,true,false,0x01,true,102);
+MAKE_TDMA_MAPPING(SACCH_C4_0D,kneedeepbts::gsm::SDCCH_4_0,true,false,0x01,true,102);
 
 const unsigned SACCH_C4_0UFrames[] = {57,58,59,60};
-MAKE_TDMA_MAPPING(SACCH_C4_0U,SDCCH_4_0,false,true,0x01,true,102);
+MAKE_TDMA_MAPPING(SACCH_C4_0U,kneedeepbts::gsm::SDCCH_4_0,false,true,0x01,true,102);
 
 const unsigned SACCH_C4_1DFrames[] = {46,47,48,49};
-MAKE_TDMA_MAPPING(SACCH_C4_1D,SDCCH_4_1,true,false,0x01,true,102);
+MAKE_TDMA_MAPPING(SACCH_C4_1D,kneedeepbts::gsm::SDCCH_4_1,true,false,0x01,true,102);
 
 const unsigned SACCH_C4_1UFrames[] = {61,62,63,64};
-MAKE_TDMA_MAPPING(SACCH_C4_1U,SDCCH_4_1,false,true,0x01,true,102);
+MAKE_TDMA_MAPPING(SACCH_C4_1U,kneedeepbts::gsm::SDCCH_4_1,false,true,0x01,true,102);
 
 const unsigned SACCH_C4_2DFrames[] = {93,94,95,96};
-MAKE_TDMA_MAPPING(SACCH_C4_2D,SDCCH_4_2,true,false,0x01,true,102);
+MAKE_TDMA_MAPPING(SACCH_C4_2D,kneedeepbts::gsm::SDCCH_4_2,true,false,0x01,true,102);
 
 const unsigned SACCH_C4_2UFrames[] = {6,7,8,9};
-MAKE_TDMA_MAPPING(SACCH_C4_2U,SDCCH_4_2,false,true,0x01,true,102);
+MAKE_TDMA_MAPPING(SACCH_C4_2U,kneedeepbts::gsm::SDCCH_4_2,false,true,0x01,true,102);
 
 const unsigned SACCH_C4_3DFrames[] = {97,98,99,100};
-MAKE_TDMA_MAPPING(SACCH_C4_3D,SDCCH_4_3,true,false,0x01,true,102);
+MAKE_TDMA_MAPPING(SACCH_C4_3D,kneedeepbts::gsm::SDCCH_4_3,true,false,0x01,true,102);
 
 const unsigned SACCH_C4_3UFrames[] = {10,11,12,13};
-MAKE_TDMA_MAPPING(SACCH_C4_3U,SDCCH_4_3,false,true,0x01,true,102);
+MAKE_TDMA_MAPPING(SACCH_C4_3U,kneedeepbts::gsm::SDCCH_4_3,false,true,0x01,true,102);
 
 
 const unsigned SDCCH_8_0DFrames[] = {0,1,2,3};
-MAKE_TDMA_MAPPING(SDCCH_8_0D,SDCCH_8_0,true,false,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_0D,kneedeepbts::gsm::SDCCH_8_0,true,false,0xFF,true,51);
 
 const unsigned SDCCH_8_0UFrames[] = {15,16,17,18};
-MAKE_TDMA_MAPPING(SDCCH_8_0U,SDCCH_8_0,false,true,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_0U,kneedeepbts::gsm::SDCCH_8_0,false,true,0xFF,true,51);
 
 const unsigned SDCCH_8_1DFrames[] = {4,5,6,7};
-MAKE_TDMA_MAPPING(SDCCH_8_1D,SDCCH_8_1,true,false,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_1D,kneedeepbts::gsm::SDCCH_8_1,true,false,0xFF,true,51);
 
 const unsigned SDCCH_8_1UFrames[] = {19,20,21,22};
-MAKE_TDMA_MAPPING(SDCCH_8_1U,SDCCH_8_1,false,true,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_1U,kneedeepbts::gsm::SDCCH_8_1,false,true,0xFF,true,51);
 
 const unsigned SDCCH_8_2DFrames[] = {8,9,10,11};
-MAKE_TDMA_MAPPING(SDCCH_8_2D,SDCCH_8_2,true,false,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_2D,kneedeepbts::gsm::SDCCH_8_2,true,false,0xFF,true,51);
 
 const unsigned SDCCH_8_2UFrames[] = {23,24,25,26};
-MAKE_TDMA_MAPPING(SDCCH_8_2U,SDCCH_8_2,false,true,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_2U,kneedeepbts::gsm::SDCCH_8_2,false,true,0xFF,true,51);
 
 const unsigned SDCCH_8_3DFrames[] = {12,13,14,15};
-MAKE_TDMA_MAPPING(SDCCH_8_3D,SDCCH_8_3,true,false,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_3D,kneedeepbts::gsm::SDCCH_8_3,true,false,0xFF,true,51);
 
 const unsigned SDCCH_8_3UFrames[] = {27,28,29,30};
-MAKE_TDMA_MAPPING(SDCCH_8_3U,SDCCH_8_3,false,true,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_3U,kneedeepbts::gsm::SDCCH_8_3,false,true,0xFF,true,51);
 
 const unsigned SDCCH_8_4DFrames[] = {16,17,18,19};
-MAKE_TDMA_MAPPING(SDCCH_8_4D,SDCCH_8_4,true,false,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_4D,kneedeepbts::gsm::SDCCH_8_4,true,false,0xFF,true,51);
 
 const unsigned SDCCH_8_4UFrames[] = {31,32,33,34};
-MAKE_TDMA_MAPPING(SDCCH_8_4U,SDCCH_8_4,false,true,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_4U,kneedeepbts::gsm::SDCCH_8_4,false,true,0xFF,true,51);
 
 const unsigned SDCCH_8_5DFrames[] = {20,21,22,23};
-MAKE_TDMA_MAPPING(SDCCH_8_5D,SDCCH_8_5,true,false,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_5D,kneedeepbts::gsm::SDCCH_8_5,true,false,0xFF,true,51);
 
 const unsigned SDCCH_8_5UFrames[] = {35,36,37,38};
-MAKE_TDMA_MAPPING(SDCCH_8_5U,SDCCH_8_5,false,true,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_5U,kneedeepbts::gsm::SDCCH_8_5,false,true,0xFF,true,51);
 
 const unsigned SDCCH_8_6DFrames[] = {24,25,26,27};
-MAKE_TDMA_MAPPING(SDCCH_8_6D,SDCCH_8_6,true,false,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_6D,kneedeepbts::gsm::SDCCH_8_6,true,false,0xFF,true,51);
 
 const unsigned SDCCH_8_6UFrames[] = {39,40,41,42};
-MAKE_TDMA_MAPPING(SDCCH_8_6U,SDCCH_8_6,false,true,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_6U,kneedeepbts::gsm::SDCCH_8_6,false,true,0xFF,true,51);
 
 const unsigned SDCCH_8_7DFrames[] = {28,29,30,31};
-MAKE_TDMA_MAPPING(SDCCH_8_7D,SDCCH_8_7,true,false,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_7D,kneedeepbts::gsm::SDCCH_8_7,true,false,0xFF,true,51);
 
 const unsigned SDCCH_8_7UFrames[] = {43,44,45,46};
-MAKE_TDMA_MAPPING(SDCCH_8_7U,SDCCH_8_7,false,true,0xFF,true,51);
+MAKE_TDMA_MAPPING(SDCCH_8_7U,kneedeepbts::gsm::SDCCH_8_7,false,true,0xFF,true,51);
 
 
 const unsigned SACCH_C8_0DFrames[] = {32,33,34,35};
-MAKE_TDMA_MAPPING(SACCH_C8_0D,SDCCH_8_0,true,false,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_0D,kneedeepbts::gsm::SDCCH_8_0,true,false,0xFF,true,102);
 
 const unsigned SACCH_C8_0UFrames[] = {47,48,49,50};
-MAKE_TDMA_MAPPING(SACCH_C8_0U,SDCCH_8_0,false,true,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_0U,kneedeepbts::gsm::SDCCH_8_0,false,true,0xFF,true,102);
 
 const unsigned SACCH_C8_1DFrames[] = {36,37,38,39};
-MAKE_TDMA_MAPPING(SACCH_C8_1D,SDCCH_8_1,true,false,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_1D,kneedeepbts::gsm::SDCCH_8_1,true,false,0xFF,true,102);
 
 const unsigned SACCH_C8_1UFrames[] = {51,52,53,54};
-MAKE_TDMA_MAPPING(SACCH_C8_1U,SDCCH_8_1,false,true,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_1U,kneedeepbts::gsm::SDCCH_8_1,false,true,0xFF,true,102);
 
 const unsigned SACCH_C8_2DFrames[] = {40,41,42,43};
-MAKE_TDMA_MAPPING(SACCH_C8_2D,SDCCH_8_2,true,false,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_2D,kneedeepbts::gsm::SDCCH_8_2,true,false,0xFF,true,102);
 
 const unsigned SACCH_C8_2UFrames[] = {55,56,57,58};
-MAKE_TDMA_MAPPING(SACCH_C8_2U,SDCCH_8_2,false,true,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_2U,kneedeepbts::gsm::SDCCH_8_2,false,true,0xFF,true,102);
 
 const unsigned SACCH_C8_3DFrames[] = {44,45,46,47};
-MAKE_TDMA_MAPPING(SACCH_C8_3D,SDCCH_8_3,true,false,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_3D,kneedeepbts::gsm::SDCCH_8_3,true,false,0xFF,true,102);
 
 const unsigned SACCH_C8_3UFrames[] = {59,60,61,62};
-MAKE_TDMA_MAPPING(SACCH_C8_3U,SDCCH_8_3,false,true,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_3U,kneedeepbts::gsm::SDCCH_8_3,false,true,0xFF,true,102);
 
 const unsigned SACCH_C8_4DFrames[] = {83,84,85,86};
-MAKE_TDMA_MAPPING(SACCH_C8_4D,SDCCH_8_4,true,false,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_4D,kneedeepbts::gsm::SDCCH_8_4,true,false,0xFF,true,102);
 
 const unsigned SACCH_C8_4UFrames[] = {98,99,100,101};
-MAKE_TDMA_MAPPING(SACCH_C8_4U,SDCCH_8_4,false,true,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_4U,kneedeepbts::gsm::SDCCH_8_4,false,true,0xFF,true,102);
 
 const unsigned SACCH_C8_5DFrames[] = {87,88,89,90};
-MAKE_TDMA_MAPPING(SACCH_C8_5D,SDCCH_8_5,true,false,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_5D,kneedeepbts::gsm::SDCCH_8_5,true,false,0xFF,true,102);
 
 const unsigned SACCH_C8_5UFrames[] = {0,1,2,3};
-MAKE_TDMA_MAPPING(SACCH_C8_5U,SDCCH_8_5,false,true,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_5U,kneedeepbts::gsm::SDCCH_8_5,false,true,0xFF,true,102);
 
 const unsigned SACCH_C8_6DFrames[] = {91,92,93,94};
-MAKE_TDMA_MAPPING(SACCH_C8_6D,SDCCH_8_6,true,false,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_6D,kneedeepbts::gsm::SDCCH_8_6,true,false,0xFF,true,102);
 
 const unsigned SACCH_C8_6UFrames[] = {4,5,6,7};
-MAKE_TDMA_MAPPING(SACCH_C8_6U,SDCCH_8_6,false,true,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_6U,kneedeepbts::gsm::SDCCH_8_6,false,true,0xFF,true,102);
 
 const unsigned SACCH_C8_7DFrames[] = {95,96,97,98};
-MAKE_TDMA_MAPPING(SACCH_C8_7D,SDCCH_8_7,true,false,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_7D,kneedeepbts::gsm::SDCCH_8_7,true,false,0xFF,true,102);
 
 const unsigned SACCH_C8_7UFrames[] = {8,9,10,11};
-MAKE_TDMA_MAPPING(SACCH_C8_7U,SDCCH_8_7,false,true,0xFF,true,102);
+MAKE_TDMA_MAPPING(SACCH_C8_7U,kneedeepbts::gsm::SDCCH_8_7,false,true,0xFF,true,102);
 
 
 
@@ -245,31 +245,31 @@ MAKE_TDMA_MAPPING(SACCH_C8_7U,SDCCH_8_7,false,true,0xFF,true,102);
 // if the 26-multi-frame were aligned at 0.
 // This odd fact is going to get hard-coded into GPRS.
 const unsigned SACCH_TF_T0Frames[] = {12,38,64,90};
-MAKE_TDMA_MAPPING(SACCH_TF_T0,TCHF_0,true,true,0x01,true,104);
+MAKE_TDMA_MAPPING(SACCH_TF_T0,kneedeepbts::gsm::TCHF_0,true,true,0x01,true,104);
 
 const unsigned SACCH_TF_T1Frames[] = {25,51,77,103};
-MAKE_TDMA_MAPPING(SACCH_TF_T1,TCHF_0,true,true,0x02,true,104);
+MAKE_TDMA_MAPPING(SACCH_TF_T1,kneedeepbts::gsm::TCHF_0,true,true,0x02,true,104);
 
 const unsigned SACCH_TF_T2Frames[] = {38,64,90,12};
-MAKE_TDMA_MAPPING(SACCH_TF_T2,TCHF_0,true,true,0x04,true,104);
+MAKE_TDMA_MAPPING(SACCH_TF_T2,kneedeepbts::gsm::TCHF_0,true,true,0x04,true,104);
 
 const unsigned SACCH_TF_T3Frames[] = {51,77,103,25};
-MAKE_TDMA_MAPPING(SACCH_TF_T3,TCHF_0,true,true,0x08,true,104);
+MAKE_TDMA_MAPPING(SACCH_TF_T3,kneedeepbts::gsm::TCHF_0,true,true,0x08,true,104);
 
 const unsigned SACCH_TF_T4Frames[] = {64,90,12,38};
-MAKE_TDMA_MAPPING(SACCH_TF_T4,TCHF_0,true,true,0x10,true,104);
+MAKE_TDMA_MAPPING(SACCH_TF_T4,kneedeepbts::gsm::TCHF_0,true,true,0x10,true,104);
 
 const unsigned SACCH_TF_T5Frames[] = {77,103,25,51};
-MAKE_TDMA_MAPPING(SACCH_TF_T5,TCHF_0,true,true,0x20,true,104);
+MAKE_TDMA_MAPPING(SACCH_TF_T5,kneedeepbts::gsm::TCHF_0,true,true,0x20,true,104);
 
 const unsigned SACCH_TF_T6Frames[] = {90,12,38,64};
-MAKE_TDMA_MAPPING(SACCH_TF_T6,TCHF_0,true,true,0x40,true,104);
+MAKE_TDMA_MAPPING(SACCH_TF_T6,kneedeepbts::gsm::TCHF_0,true,true,0x40,true,104);
 
 const unsigned SACCH_TF_T7Frames[] = {103,25,51,77};
-MAKE_TDMA_MAPPING(SACCH_TF_T7,TCHF_0,true,true,0x80,true,104);
+MAKE_TDMA_MAPPING(SACCH_TF_T7,kneedeepbts::gsm::TCHF_0,true,true,0x80,true,104);
 
 const unsigned FACCH_TCHFFrames[] = {0,1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,23,24};
-MAKE_TDMA_MAPPING(FACCH_TCHF,TCHF_0,true,true,0xff,true,26);
+MAKE_TDMA_MAPPING(FACCH_TCHF,kneedeepbts::gsm::TCHF_0,true,true,0xff,true,26);
 
 
 

@@ -22,7 +22,7 @@
 #ifndef GSML3CCMESSAGES_H
 #define GSML3CCMESSAGES_H
 
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSML3Message.h"
 #include "GSML3CommonElements.h"
 #include "GSML3CCElements.h"
@@ -98,7 +98,7 @@ class L3CCMessage : public L3Message {
 	/** Override the write method to include transaction identifiers in header. */
 	void write(L3Frame& dest) const;
 
-	L3PD PD() const { return L3CallControlPD; }
+    kneedeepbts::gsm::L3PD PD() const { return kneedeepbts::gsm::L3CallControlPD; }
 
 	unsigned TI() const { return mTI; }
 	void TI(unsigned wTI) { mTI = wTI; }

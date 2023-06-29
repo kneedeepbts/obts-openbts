@@ -76,33 +76,33 @@ class TLAddress : public TLElement {
 
 private:
 
-	GSM::TypeOfNumber mType;  // International and other flags
-	GSM::NumberingPlan mPlan;
-	GSM::L3BCDDigits mDigits;
+    kneedeepbts::gsm::TypeOfNumber mType;  // International and other flags
+    kneedeepbts::gsm::NumberingPlan mPlan;
+    GSM::L3BCDDigits mDigits;
 
 public:
 
 	TLAddress():TLElement() {}
 
-	TLAddress(GSM::TypeOfNumber wType, GSM::NumberingPlan wPlan, const char* wDigits)
+	TLAddress(kneedeepbts::gsm::TypeOfNumber wType, kneedeepbts::gsm::NumberingPlan wPlan, const char* wDigits)
 		:TLElement(),
 		mPlan(wPlan), mDigits(wDigits)
 	{
-		mType = (wDigits[0] == '+') ?  GSM::InternationalNumber : GSM::NationalNumber;
+		mType = (wDigits[0] == '+') ?  kneedeepbts::gsm::InternationalNumber : kneedeepbts::gsm::NationalNumber;
 		LOG(DEBUG) << "TLaddrress ctor type=" << mType << " Digits " << wDigits;
 	}
 
 	TLAddress(const char* wDigits)
 		:TLElement(),
-		mPlan(GSM::E164Plan), mDigits(wDigits)
+		mPlan(kneedeepbts::gsm::E164Plan), mDigits(wDigits)
 	{
-		mType = (wDigits[0] == '+') ?  GSM::InternationalNumber : GSM::NationalNumber;
+		mType = (wDigits[0] == '+') ?  kneedeepbts::gsm::InternationalNumber : kneedeepbts::gsm::NationalNumber;
 		LOG(DEBUG) << "TLaddrress ctor type=" << mType << " Digits " << wDigits;
 	}
 
 	const char *digits() const { return mDigits.digits(); }
-	GSM::TypeOfNumber type() const { return mType; }
-	GSM::NumberingPlan plan() const { return mPlan; }
+    kneedeepbts::gsm::TypeOfNumber type() const { return mType; }
+    kneedeepbts::gsm::NumberingPlan plan() const { return mPlan; }
 
 	size_t length() const { return 2 + mDigits.lengthV(); }
 	void parse(const TLFrame&, size_t&);
@@ -791,7 +791,7 @@ class CPMessage : public GSM::L3Message
 	/** Override the write method to include transaction identifiers in header. */
 	void write(GSM::L3Frame& dest) const;
 
-	GSM::L3PD PD() const { return GSM::L3SMSPD; }
+    kneedeepbts::gsm::L3PD PD() const { return kneedeepbts::gsm::L3SMSPD; }
 
 	unsigned TI() const { return mTI; }
 	void TI(unsigned wTI){ mTI=wTI; }

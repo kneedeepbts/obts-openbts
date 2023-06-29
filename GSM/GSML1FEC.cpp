@@ -22,7 +22,7 @@
 
 
 #include "GSML1FEC.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSMTransfer.h"
 //#include "GSMSAPMux.h"
 #include "GSMConfig.h" //gBTS
@@ -251,7 +251,7 @@ void L1Encoder::rollForward()
 
 
 
-TypeAndOffset L1Encoder::typeAndOffset() const
+kneedeepbts::gsm::TypeAndOffset L1Encoder::typeAndOffset() const
 {
 	return mMapping.typeAndOffset();
 }
@@ -433,7 +433,7 @@ unsigned L1Decoder::ARFCN() const
 }
 
 
-TypeAndOffset L1Decoder::typeAndOffset() const
+kneedeepbts::gsm::TypeAndOffset L1Decoder::typeAndOffset() const
 {
 	return mMapping.typeAndOffset();
 }
@@ -2728,7 +2728,7 @@ BitVector2 randomBitVector(int n)
 
 void TestTCHL1FEC()
 {
-	const TDMAMapping hack((TypeAndOffset)0,0,0,0,0,0,0,0);
+	const TDMAMapping hack((kneedeepbts::gsm::TypeAndOffset)0,0,0,0,0,0,0,0);
 	TCHFACCHL1Encoder encoder(0, 0, hack, 0);
 	TCHFACCHL1Decoder decoder(0, 0, hack, 0);
 	for (unsigned modei = 0; modei <= TCH_FS; modei++) {

@@ -22,7 +22,7 @@
 #ifndef GSML3RRMESSAGES_H
 #define GSML3RRMESSAGES_H
 
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSML3Message.h"
 #include "GSML3CommonElements.h"
 #include "GSML3RRElements.h"
@@ -131,7 +131,7 @@ class L3RRMessage : public L3Message {
 	L3RRMessage():L3Message() { } 
 	
 	/** Return the L3 protocol discriptor. */
-	L3PD PD() const { return L3RadioResourcePD; }
+    kneedeepbts::gsm::L3PD PD() const { return kneedeepbts::gsm::L3RadioResourcePD; }
 
 	void text(std::ostream&) const;
 };
@@ -192,7 +192,7 @@ class L3PagingRequestType1 : public L3RRMessageNRO {
 	private:
 
 	std::vector<L3MobileIdentity> mMobileIDs;
-	ChannelType mChannelsNeeded[2];
+    kneedeepbts::gsm::ChannelType mChannelsNeeded[2];
 
 
 	public:
@@ -202,20 +202,20 @@ class L3PagingRequestType1 : public L3RRMessageNRO {
 	{
 		// The empty paging request is a single untyped mobile ID.
 		mMobileIDs.push_back(L3MobileIdentity());
-		mChannelsNeeded[0]=AnyDCCHType;
-		mChannelsNeeded[1]=AnyDCCHType;
+		mChannelsNeeded[0]=kneedeepbts::gsm::AnyDCCHType;
+		mChannelsNeeded[1]=kneedeepbts::gsm::AnyDCCHType;
 	}
 
-	L3PagingRequestType1(const L3MobileIdentity& wId, ChannelType wType)
+	L3PagingRequestType1(const L3MobileIdentity& wId, kneedeepbts::gsm::ChannelType wType)
 		:L3RRMessageNRO()
 	{
 		mMobileIDs.push_back(wId);
 		mChannelsNeeded[0]=wType;
-		mChannelsNeeded[1]=AnyDCCHType;
+		mChannelsNeeded[1]=kneedeepbts::gsm::AnyDCCHType;
 	}
 
-	L3PagingRequestType1(const L3MobileIdentity& wId1, ChannelType wType1,
-			const L3MobileIdentity& wId2, ChannelType wType2)
+	L3PagingRequestType1(const L3MobileIdentity& wId1, kneedeepbts::gsm::ChannelType wType1,
+			const L3MobileIdentity& wId2, kneedeepbts::gsm::ChannelType wType2)
 		:L3RRMessageNRO()
 	{
 		mMobileIDs.push_back(wId1);
@@ -224,7 +224,7 @@ class L3PagingRequestType1 : public L3RRMessageNRO {
 		mChannelsNeeded[1]=wType2;
 	}
 
-	unsigned chanCode(ChannelType) const;
+	unsigned chanCode(kneedeepbts::gsm::ChannelType) const;
 
 	int MTI() const { return PagingRequestType1; }
 

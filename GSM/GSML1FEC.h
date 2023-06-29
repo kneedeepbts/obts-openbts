@@ -29,7 +29,7 @@
 #include "ViterbiR204.h"
 #include "AmrCoder.h"
 
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSMTransfer.h"
 #include "GSMTDMA.h"
 
@@ -179,7 +179,7 @@ class L1Encoder {
 	unsigned TN() const { return mTN; }
 	unsigned TSC() const { return mTSC; }
 	unsigned ARFCN() const;
-	TypeAndOffset typeAndOffset() const;	///< this comes from mMapping
+    kneedeepbts::gsm::TypeAndOffset typeAndOffset() const;	///< this comes from mMapping
 	//@}
 	//@}
 
@@ -331,7 +331,7 @@ class L1Decoder {
 	const TDMAMapping& mMapping;	///< demux parameters
 	L1FEC* mParent;			///< a containing L1 processor, if any
 	/** The channel type. */
-	virtual ChannelType channelType() const = 0;
+	virtual kneedeepbts::gsm::ChannelType channelType() const = 0;
 	//@}
 
 	// (pat) Moved to classes that use the convolutional coder.
@@ -416,7 +416,7 @@ class L1Decoder {
 	//@{
 	unsigned TN() const { return mTN; }
 	unsigned ARFCN() const;                 ///< this comes from mUpstream
-	TypeAndOffset typeAndOffset() const;    ///< this comes from mMapping
+    kneedeepbts::gsm::TypeAndOffset typeAndOffset() const;    ///< this comes from mMapping
 	//@}
 
 	/** Control the processing of handover access bursts. */
@@ -629,7 +629,7 @@ class L1FEC {
 
 	/**@name Pass-through actions that concern the physical channel. */
 	//@{
-	TypeAndOffset typeAndOffset() const
+    kneedeepbts::gsm::TypeAndOffset typeAndOffset() const
 		{ assert(mEncoder); return mEncoder->typeAndOffset(); }
 
 	unsigned TN() const		// Timeslot number to use.
@@ -715,7 +715,7 @@ class RACHL1Decoder : public L1Decoder
 	BitVector2 mU;					///< u[], as per GSM 05.03 2.2
 	BitVector2 mD;					///< d[], as per GSM 05.03 2.2
 	//@}
-	ChannelType channelType() const { return RACHType; }
+    kneedeepbts::gsm::ChannelType channelType() const { return kneedeepbts::gsm::RACHType; }
 
 	public:
 
@@ -879,7 +879,7 @@ class SDCCHL1Decoder : public XCCHL1Decoder {
 		:XCCHL1Decoder(wCN,wTN,wMapping,wParent)
 	{ }
 
-	ChannelType channelType() const { return SDCCHType; }
+    kneedeepbts::gsm::ChannelType channelType() const { return kneedeepbts::gsm::SDCCHType; }
 	const char* descriptiveString() const { return L1Decoder::descriptiveString(); }
 
 };
@@ -962,7 +962,7 @@ class SACCHL1Decoder : public XCCHL1Decoder, public MSPhysReportInfo {
 		//sacchInit();
 	}
 
-	ChannelType channelType() const { return SACCHType; }
+    kneedeepbts::gsm::ChannelType channelType() const { return kneedeepbts::gsm::SACCHType; }
 
 
 	/** Override decInit() to set physical parameters with reasonable defaults. */
@@ -1221,7 +1221,7 @@ class TCHFACCHL1Decoder :
 			   const TDMAMapping& wMapping,
 			   L1FEC *wParent);
 
-	ChannelType channelType() const { return FACCHType; }
+    kneedeepbts::gsm::ChannelType channelType() const { return kneedeepbts::gsm::FACCHType; }
 
 	/** TCH/FACCH has a special-case writeLowSide. */
 	void writeLowSideRx(const RxBurst& inBurst);

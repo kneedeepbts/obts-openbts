@@ -148,7 +148,7 @@ public:
 	const TDMAMapping& rcvMapping() const { devassert(mL1); return mL1->rcvMapping(); }
 
 	/** GSM 04.08 10.5.2.5 type and offset code. */
-	TypeAndOffset typeAndOffset() const { devassert(mL1); return mL1->typeAndOffset(); }
+    kneedeepbts::gsm::TypeAndOffset typeAndOffset() const { devassert(mL1); return mL1->typeAndOffset(); }
 
 	/** ARFCN */ /* TODO: Use this, or when obtaining the physical info use ARFCN from a diff location? */
 	unsigned ARFCN() const { devassert(mL1); return mL1->ARFCN(); }
@@ -171,7 +171,7 @@ public:
 
 
 	/** Return the channel type. */
-	virtual ChannelType chtype() const =0;
+	virtual kneedeepbts::gsm::ChannelType chtype() const =0;
 
 	/**
 		Make the channel ready for a new transaction.
@@ -351,7 +351,7 @@ class L2LogicalChannel: public L2SAPMux, public Control::L3LogicalChannel
 	
 	/* Set L1 physical parameters from an existing logical channel. */
 	virtual void setPhy(const L2LogicalChannel&);
-	virtual ChannelType chtype() const =0;	// Yet another redundant decl for wonderful C++.  
+	virtual kneedeepbts::gsm::ChannelType chtype() const =0;	// Yet another redundant decl for wonderful C++.
 
 
 	/**@name L2 passthroughs */
@@ -391,7 +391,7 @@ class SDCCHLogicalChannel : public L2LogicalChannel {
 		unsigned wTN,
 		const CompleteMapping& wMapping);
 
-	ChannelType chtype() const { return SDCCHType; }
+    kneedeepbts::gsm::ChannelType chtype() const { return kneedeepbts::gsm::SDCCHType; }
 };
 
 
@@ -517,7 +517,7 @@ class SACCHLogicalChannel : public L2SAPMux, public ChannelHistory
 		const MappingPair& wMapping,
 		/*const*/ L2LogicalChannel* wHost);
 
-	ChannelType chtype() const { return SACCHType; }
+        kneedeepbts::gsm::ChannelType chtype() const { return kneedeepbts::gsm::SACCHType; }
 
 	void sacchInit();
 
@@ -590,7 +590,7 @@ class TCHFACCHLogicalChannel : public L2LogicalChannel {
 	//UDPSocket * RTPSocket() { return mRTPSocket; }
 	//UDPSocket * RTCPSocket() { return mRTCPSocket; }
 
-	ChannelType chtype() const { return FACCHType; }
+    kneedeepbts::gsm::ChannelType chtype() const { return kneedeepbts::gsm::FACCHType; }
 
 	void sendTCH(SIP::AudioFrame* frame)
 		{ devassert(mTCHL1); mTCHL1->sendTCH(frame); }
@@ -628,7 +628,7 @@ class CBCHLogicalChannel : public L2LogicalChannel {
 
 	void cbchOpen();
 
-	ChannelType chtype() const { return CBCHType; }
+    kneedeepbts::gsm::ChannelType chtype() const { return kneedeepbts::gsm::CBCHType; }
 
 	// unneeded: void writeToL1(const L2Frame& frame) { mL1->writeHighSide(frame); }
 
@@ -657,7 +657,7 @@ class L3LoopbackLogicalChannel : public Control::L3LogicalChannel {
 	L3LoopbackLogicalChannel();
 
 	/** Fake the SDCCH channel type because that makes sense for most tests. */
-	ChannelType chtype() const { return SDCCHType; }
+    kneedeepbts::gsm::ChannelType chtype() const { return kneedeepbts::gsm::SDCCHType; }
 
 	/** L3 Loopback */
 

@@ -20,7 +20,7 @@
 #define GPRSTDMA_H
 
 
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSMTDMA.h"
 
 namespace GPRS {

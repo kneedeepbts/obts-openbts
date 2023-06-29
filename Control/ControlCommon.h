@@ -48,11 +48,11 @@
 // we dont support Group Call and even if we did, the Group Call MTIs (GSM 04.68 9.3) will probably not collide.
 // We use higher unused pds for our own purposes: 16 is for SIP Dialog messages, 17 for L3Frame primitives.
 #define L3CASE_RAW(pd,mti) (((pd)<<8)|(mti))
-#define L3CASE_CC(mti) L3CASE_RAW(L3CallControlPD,L3CCMessage::mti)			// pd == 3
-#define L3CASE_MM(mti) L3CASE_RAW(L3MobilityManagementPD,L3MMMessage::mti)		// pd == 5
-#define L3CASE_RR(mti) L3CASE_RAW(L3RadioResourcePD,L3RRMessage::mti)			// pd == 6
-#define L3CASE_SS(mti) L3CASE_RAW(L3NonCallSSPD,L3SupServMessage::mti)			// pd == 6
-#define L3CASE_SMS(mti) L3CASE_RAW(L3SMSPD,CPMessage::mti)			// pd == 9
+#define L3CASE_CC(mti) L3CASE_RAW(kneedeepbts::gsm::L3CallControlPD,L3CCMessage::mti)			// pd == 3
+#define L3CASE_MM(mti) L3CASE_RAW(kneedeepbts::gsm::L3MobilityManagementPD,L3MMMessage::mti)		// pd == 5
+#define L3CASE_RR(mti) L3CASE_RAW(kneedeepbts::gsm::L3RadioResourcePD,L3RRMessage::mti)			// pd == 6
+#define L3CASE_SS(mti) L3CASE_RAW(kneedeepbts::gsm::L3NonCallSSPD,L3SupServMessage::mti)			// pd == 6
+#define L3CASE_SMS(mti) L3CASE_RAW(kneedeepbts::gsm::L3SMSPD,CPMessage::mti)			// pd == 9
 #define L3CASE_PRIMITIVE(prim) L3CASE_RAW(17,prim)
 // L3CASE_DIALOG_STATE is for a raw dialog state number, and L3CASE_SIP is for a dialog state name.
 #define L3CASE_DIALOG_STATE(sipDialogState) L3CASE_RAW(16,sipDialogState)	// SIP messages use pd == 16, which is unused by GSM.

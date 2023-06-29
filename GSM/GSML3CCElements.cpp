@@ -271,10 +271,10 @@ void L3CalledPartyBCDNumber::parseV( const L3Frame &src, size_t &rp, size_t expe
 	LOG(DEBUG) << "L3CalledPartyBCDNumber::parseV rp="<<rp<<" expLen="<<expectedLength;
 	// ext bit must be 1
 	if (src.readField(rp, 1) != 1) L3_READ_ERROR;	
-	mType = (TypeOfNumber)src.readField(rp, 3);
+	mType = (kneedeepbts::gsm::TypeOfNumber)src.readField(rp, 3);
 	//LOG(DEBUG) << "parseV mType " << mType;
-	mPlan = (NumberingPlan)src.readField(rp, 4);
-	mDigits.parse(src,rp,expectedLength-1, mType == InternationalNumber);
+	mPlan = (kneedeepbts::gsm::NumberingPlan)src.readField(rp, 4);
+	mDigits.parse(src,rp,expectedLength-1, mType == kneedeepbts::gsm::InternationalNumber);
 }
 
 
@@ -322,9 +322,9 @@ void L3CallingPartyBCDNumber::parseV( const L3Frame &src, size_t &rp, size_t exp
 	size_t remainingLength = expectedLength;
 	// Read out first bit = 1.
 	mHaveOctet3a = !src.readField(rp, 1);	// Bit is reversed 0 means you have an octet
-	mType = (TypeOfNumber)src.readField(rp, 3);
+	mType = (kneedeepbts::gsm::TypeOfNumber)src.readField(rp, 3);
 	//LOG(DEBUG) << "parseV mType " << mType;
-	mPlan = (NumberingPlan)src.readField(rp, 4);
+	mPlan = (kneedeepbts::gsm::NumberingPlan)src.readField(rp, 4);
 	remainingLength -= 1;
 
 	if (mHaveOctet3a) {
@@ -335,7 +335,7 @@ void L3CallingPartyBCDNumber::parseV( const L3Frame &src, size_t &rp, size_t exp
 		remainingLength -= 1;
 	}
 
-	mDigits.parse(src,rp,remainingLength, mType == InternationalNumber);
+	mDigits.parse(src,rp,remainingLength, mType == kneedeepbts::gsm::InternationalNumber);
 }
 
 

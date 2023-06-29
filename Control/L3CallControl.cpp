@@ -26,7 +26,7 @@
 #include "L3SupServ.h"
 #include <SIPDialog.h>
 #include <Peering.h>
-#include <GSMCommon.h>
+#include <gsmenums.h>
 #include <GSML3Message.h>
 #include <GSMLogicalChannel.h>
 #include <GSML3SSMessages.h>
@@ -403,7 +403,7 @@ MachineStatus MOCMachine::sendCMServiceReject(MMRejectCause rejectCause, bool fa
 	}
 }
 
-bool CCBase::isVeryEarly() { return (channel()->chtype()==GSM::FACCHType); }
+bool CCBase::isVeryEarly() { return (channel()->chtype()==kneedeepbts::gsm::FACCHType); }
 
 
 // GSM 04.08 5.2.1.2

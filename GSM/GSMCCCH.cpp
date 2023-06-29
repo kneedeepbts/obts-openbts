@@ -170,12 +170,12 @@ static L2LogicalChannel *preallocateChForRach(RachInfo *rach, bool *deleteMe)
 	}
 
 	L2LogicalChannel *LCH = NULL;
-	ChannelType chtype = decodeChannelNeeded(rach->mRA);
-	if (chtype == PSingleBlock1PhaseType || chtype == PSingleBlock2PhaseType) {
+    kneedeepbts::gsm::ChannelType chtype = decodeChannelNeeded(rach->mRA);
+	if (chtype == kneedeepbts::gsm::PSingleBlock1PhaseType || chtype == kneedeepbts::gsm::PSingleBlock2PhaseType) {
 		return NULL;	// this routine does nothing for this.
-	} else if (chtype == TCHFType) {
+	} else if (chtype == kneedeepbts::gsm::TCHFType) {
 		LCH = gBTS.getTCH();
-	} else if (chtype == SDCCHType) {
+	} else if (chtype == kneedeepbts::gsm::SDCCHType) {
 		LCH = gBTS.getSDCCH();
 	} else {
 		LOG(NOTICE) << "RACH burst for unsupported service RA=" << rach->mRA;
@@ -286,10 +286,10 @@ bool CCCHLogicalChannel::processRaches()
 		}
 
 
-		ChannelType chtype = decodeChannelNeeded(rach->mRA);
+        kneedeepbts::gsm::ChannelType chtype = decodeChannelNeeded(rach->mRA);
 		LOG(DEBUG) <<LOGVAR(*rach) <<LOGVAR(chtype) <<LOGVAR(mCcchGroup);
 
-		if (chtype == PSingleBlock1PhaseType || chtype == PSingleBlock2PhaseType) {
+		if (chtype == kneedeepbts::gsm::PSingleBlock1PhaseType || chtype == kneedeepbts::gsm::PSingleBlock2PhaseType) {
 			assert(rach->mChan == NULL);
 			if (0 == gConfig.getNum("GPRS.Enable")) {
 				// GPRS service request when the beacon advertises no beacon support.
@@ -403,7 +403,7 @@ bool CCCHLogicalChannel::processPages()
 			}
 		} else {
 			const L3MobileIdentity& id1 = npe1->getMobileId();
-			ChannelType type1 = npe1->getGsmChanType();
+            kneedeepbts::gsm::ChannelType type1 = npe1->getGsmChanType();
 			L3PagingRequestType1 page1(id1,type1);
 			L2LogicalChannelBase::l2sendm(page1,L3_UNIT_DATA);
 		}

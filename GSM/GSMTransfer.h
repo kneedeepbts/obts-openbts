@@ -23,10 +23,11 @@
 #include "BitVector.h"
 #include "ByteVector.h"
 #include "L3Enums.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSM503Tables.h"
 #include "SIPRtp.h"	// For AudioFrame
 
+#include "gsmenums.h"
 #include "gsmtime.h"
 
 /* Data transfer objects for the GSM core. */
@@ -532,7 +533,7 @@ std::ostream& operator<<(std::ostream& os, const L2Header& header);
 std::ostream& operator<<(std::ostream& os, const L2Header::FrameFormat val);
 
 /** N201, the maximum payload size of an L2 frame in bytes, GSM 04.06 5.8.3. */
-unsigned N201(ChannelType, L2Header::FrameFormat);
+unsigned N201(kneedeepbts::gsm::ChannelType, L2Header::FrameFormat);
 
 
 
@@ -761,7 +762,7 @@ class L3Frame : public BitVector {		// (pat) This is in Layer3, common to UMTS a
 	//explicit L3Frame(const char*, size_t len);
 
 	/** Protocol Discriminator, GSM 04.08 10.2. */
-	L3PD PD() const { return (L3PD)peekField(4,4); }
+	kneedeepbts::gsm::L3PD PD() const { return (kneedeepbts::gsm::L3PD)peekField(4,4); }
 
 	/** Message Type Indicator, GSM 04.08 10.4.  */
 	// Note: must AND with 0xbf for MM and CC messages.  (And it doesnt hurt the other PDs either.)

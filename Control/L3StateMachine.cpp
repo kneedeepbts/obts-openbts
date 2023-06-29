@@ -827,7 +827,7 @@ static bool checkemMessages(L3LogicalChannel *dcch, int delay)
 // Prior to L3rewrite TCH traffic and messages were handled by callManagementLoop(), which called pollInCall(), updateGSMSignalling()
 static void l3CallTrafficLoop(L3LogicalChannel *dcch)
 {
-	assert(dcch->chtype() == FACCHType);
+	assert(dcch->chtype() == kneedeepbts::gsm::FACCHType);
 	GSM::TCHFACCHLogicalChannel *tch = dynamic_cast<typeof(tch)>(dcch);
 	// The gReports call invokes sqlite3 which takes tenths of seconds, which is too long
 	// during a voice call, and especially a handover, so only call gReports if nothing else is pending.
@@ -955,7 +955,7 @@ static void l3CallTrafficLoop(L3LogicalChannel *dcch)
 // Just have a primary transaction on the channel, which is known from the GSMState aka CallState.
 static void L3SDCCHLoop(L3LogicalChannel*dcch)
 {
-	assert(dcch->chtype() == SDCCHType);
+	assert(dcch->chtype() == kneedeepbts::gsm::SDCCHType);
 	while (dcch->chanRunning() && !gBTS.btsShutdown()) {
 		if (dcch->radioFailure()) {	// Checks expiry of T3109, set at 30s.
 			LOG(NOTICE) << "radio link failure, dropped call";
@@ -1000,10 +1000,10 @@ void L3DCCHLoop(L3LogicalChannel*dcch, L3Frame *frame)
 		}
 
 		switch (dcch->chtype()) {
-		case SDCCHType:
+		case kneedeepbts::gsm::SDCCHType:
 			L3SDCCHLoop(dcch);
 			break;
-		case FACCHType:
+		case kneedeepbts::gsm::FACCHType:
 			l3CallTrafficLoop(dcch);
 			break;
 		default:

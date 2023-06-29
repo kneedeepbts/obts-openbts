@@ -378,7 +378,7 @@ void L3ChannelDescription::writeV( L3Frame &dest, size_t &wp ) const
 void L3ChannelDescription::parseV(const L3Frame& src, size_t &rp)
 {
 	// GSM 04.08 10.5.2.5
-	mTypeAndOffset = (TypeAndOffset)src.readField(rp,5);
+	mTypeAndOffset = (kneedeepbts::gsm::TypeAndOffset)src.readField(rp,5);
 	mTN = src.readField(rp,3);
 	mTSC = src.readField(rp,3);
 	mHFlag = src.readField(rp,1);

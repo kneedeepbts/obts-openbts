@@ -20,7 +20,7 @@
 
 
 #include "GSMLogicalChannel.h"
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSMTDMA.h"
 #include "PagingEntry.h"
 
@@ -82,7 +82,7 @@ class CCCHLogicalChannel : public NDCCHLogicalChannel
 		);
 	bool sendGprsCcchMessage(Control::NewPagingEntry *gprsMsg, kneedeepbts::gsm::GsmTime &frameTime);
 
-	ChannelType chtype() const { return CCCHType; }
+    kneedeepbts::gsm::ChannelType chtype() const { return kneedeepbts::gsm::CCCHType; }
 };
 
 extern int gCcchTestIAReject;	// If non-zero, send an ImmediateAssignmentReject to every RACH with a delay time set from this var.

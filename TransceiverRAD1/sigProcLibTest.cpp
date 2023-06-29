@@ -19,7 +19,7 @@ Harvind S. Samra, hssamra@kestrelsp.com
 #include "sigProcLib.h"
 #include <Logger.h>
 #include <Configuration.h>
-#include <GSMCommon.h>
+#include <gsmenums.h>
 using namespace GSM;
 
 using namespace std;

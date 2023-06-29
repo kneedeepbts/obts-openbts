@@ -18,7 +18,7 @@
 #ifndef GPRSL1FEC_H
 #define GPRSL1FEC_H
 
-#include <GSMCommon.h>
+#include <gsmenums.h>
 //#include <GSMConfig.h>		// for gBTS
 #include <GSML1FEC.h>
 #include <GSMTransfer.h>	// for TxBurst
@@ -122,7 +122,7 @@ class PDCHL1FEC :
 	L3ChannelDescription packetChannelDescription()
 	{
 		L1FEC *lf = mchOldFec;
-		return L3ChannelDescription((TypeAndOffset) 1, lf->TN(), lf->TSC(), lf->ARFCN());
+		return L3ChannelDescription((kneedeepbts::gsm::TypeAndOffset) 1, lf->TN(), lf->TSC(), lf->ARFCN());
 	}
 };
 std::ostream& operator<<(std::ostream& os, PDCHL1FEC *ch);

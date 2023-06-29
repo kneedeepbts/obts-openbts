@@ -22,7 +22,7 @@
 #ifndef GSML3MMMESSAGES_H
 #define GSML3MMMESSAGES_H
 
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSML3Message.h"
 #include "GSML3CommonElements.h"
 #include "GSML3MMElements.h"
@@ -74,7 +74,7 @@ class L3MMMessage : public L3Message {
 	size_t fullBodyLength() const { return l2BodyLength(); }
 
 	/** Return the L3 protocol discriptor. */
-	L3PD PD() const { return L3MobilityManagementPD; }
+    kneedeepbts::gsm::L3PD PD() const { return kneedeepbts::gsm::L3MobilityManagementPD; }
 
 	void text(std::ostream&) const;
 };
@@ -387,12 +387,12 @@ class L3MMInformation : public L3MMMessage {
 class L3IdentityRequest : public L3MMMessage {
 
 	private:
-	
-	MobileIDType mType;
+
+    kneedeepbts::gsm::MobileIDType mType;
 
 	public:
 
-	L3IdentityRequest(MobileIDType wType)
+	L3IdentityRequest(kneedeepbts::gsm::MobileIDType wType)
 		:L3MMMessage(),mType(wType)
 	{}
 

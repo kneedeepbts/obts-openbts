@@ -18,7 +18,7 @@
 #ifndef _PAGING_H_
 #define _PAGING_H_
 
-#include <GSMCommon.h>
+#include <gsmenums.h>
 #include "ControlTransfer.h"
 namespace GSM { class L3Frame; class L2LogicalChannel; class L3ImmediateAssignment; class L3MobileIdentity; }
 
@@ -27,7 +27,7 @@ namespace Control {
 
 /** An entry in the paging list. */
 struct NewPagingEntry {
-	GSM::ChannelType mInitialChanType;
+    kneedeepbts::gsm::ChannelType mInitialChanType;
 	// Each page has to be sent twice to make sure the handset hears it.
 	Int_z mSendCount;	// Number of times this page has been sent.
 
@@ -44,7 +44,7 @@ struct NewPagingEntry {
 	unsigned mDrxBegin;	// GSM Frame number when DRX mode begins.
 
 	// Such a clever language.
-	NewPagingEntry(GSM::ChannelType wChanType, std::string &wImsi) :
+	NewPagingEntry(kneedeepbts::gsm::ChannelType wChanType, std::string &wImsi) :
 		/*mNpeType(wType),*/
 		mInitialChanType(wChanType),
 		mImsi(wImsi),
@@ -65,7 +65,7 @@ struct NewPagingEntry {
 	~NewPagingEntry();
 
 	// Return the GSM channel type, assuming it is not a GPRS paging type.
-	GSM::ChannelType getGsmChanType() const;
+    kneedeepbts::gsm::ChannelType getGsmChanType() const;
 	GSM::L3MobileIdentity getMobileId();
 	unsigned getImsiMod1000() const;
 	string text() const;

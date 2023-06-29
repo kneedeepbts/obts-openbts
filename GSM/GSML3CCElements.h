@@ -164,8 +164,8 @@ class L3CallingPartyBCDNumber : public L3ProtocolElement {
 
 private:
 
-	TypeOfNumber mType;
-	NumberingPlan mPlan;
+    kneedeepbts::gsm::TypeOfNumber mType;
+    kneedeepbts::gsm::NumberingPlan mPlan;
 
 	L3BCDDigits mDigits;
 
@@ -180,15 +180,15 @@ private:
 public:
 
 	L3CallingPartyBCDNumber()
-		:mType(UnknownTypeOfNumber), mPlan(UnknownPlan),
+		:mType(kneedeepbts::gsm::UnknownTypeOfNumber), mPlan(kneedeepbts::gsm::UnknownPlan),
 		mHaveOctet3a(false)
 	{ }
 
 	L3CallingPartyBCDNumber( const char * wDigits )
-		:mPlan(E164Plan), mDigits(wDigits),
+		:mPlan(kneedeepbts::gsm::E164Plan), mDigits(wDigits),
 		mHaveOctet3a(false)
 	{
-		mType = (wDigits[0] == '+') ?  GSM::InternationalNumber : GSM::NationalNumber;
+		mType = (wDigits[0] == '+') ?  kneedeepbts::gsm::InternationalNumber : kneedeepbts::gsm::NationalNumber;
 		//LOG(DEBUG) << "L3CallingPartyBCDNumber ctor type=" << mType << " Digits " << wDigits;		(pat) what was "ctor"?
 		LOG(DEBUG) << "L3CallingPartyBCDNumber create type=" << mType << " Digits " << wDigits;
 	}
@@ -201,8 +201,8 @@ public:
 	{}
 
 
-	NumberingPlan plan() const { return mPlan; }
-	TypeOfNumber type() const { return mType; }
+    kneedeepbts::gsm::NumberingPlan plan() const { return mPlan; }
+    kneedeepbts::gsm::TypeOfNumber type() const { return mType; }
 	const char* digits() const { return mDigits.digits(); }
 
 	size_t lengthV() const;
@@ -219,21 +219,21 @@ class L3CalledPartyBCDNumber : public L3ProtocolElement {
 
 private:
 
-	TypeOfNumber mType;
-	NumberingPlan mPlan;
+    kneedeepbts::gsm::TypeOfNumber mType;
+    kneedeepbts::gsm::NumberingPlan mPlan;
 	L3BCDDigits mDigits;
 
 public:
 
 	L3CalledPartyBCDNumber()
-		:mType(UnknownTypeOfNumber),
-		mPlan(UnknownPlan)
+		:mType(kneedeepbts::gsm::UnknownTypeOfNumber),
+		mPlan(kneedeepbts::gsm::UnknownPlan)
 	{ }
 
 	L3CalledPartyBCDNumber(const char * wDigits)
-		:mPlan(E164Plan), mDigits(wDigits)
+		:mPlan(kneedeepbts::gsm::E164Plan), mDigits(wDigits)
 	{
-		mType = (wDigits[0] == '+') ?  GSM::InternationalNumber : GSM::NationalNumber;
+		mType = (wDigits[0] == '+') ?  kneedeepbts::gsm::InternationalNumber : kneedeepbts::gsm::NationalNumber;
 		LOG(DEBUG) << "L3CallingPartyBCDNumber ctor type=" << mType << " Digits " << wDigits;
 	}
 
@@ -251,8 +251,8 @@ public:
 	{ }
 
 
-	NumberingPlan plan() const { return mPlan; }
-	TypeOfNumber type() const { return mType; }
+    kneedeepbts::gsm::NumberingPlan plan() const { return mPlan; }
+    kneedeepbts::gsm::TypeOfNumber type() const { return mType; }
 	const char* digits() const { return mDigits.digits(); }
 
 	size_t lengthV() const ; 

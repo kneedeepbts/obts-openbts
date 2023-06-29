@@ -22,7 +22,7 @@
 #ifndef RADIOCLOCK_H
 #define RADIOCLOCK_H
 
-#include "GSMCommon.h"
+#include "gsmenums.h"
 
 class RadioClock {
 public:

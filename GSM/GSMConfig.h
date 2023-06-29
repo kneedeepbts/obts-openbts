@@ -34,6 +34,7 @@
 
 #include "gsmband.h"
 #include "gsmclock.h"
+#include "gsmenums.h"
 #include "gsmtime.h"
 
 namespace GSM {
@@ -229,7 +230,7 @@ class GSMConfig {
 	L3ChannelDescription mCBCHDescription;
 	/** The add method is not mutex protected and should only be used during initialization. */
 	void addCBCH(CBCHLogicalChannel *wCBCH) { assert(mCBCH==NULL); mCBCH=wCBCH; }
-	void createCBCH(ARFCNManager *radio, TypeAndOffset type, int CN, int TN);
+	void createCBCH(ARFCNManager *radio, kneedeepbts::gsm::TypeAndOffset type, int CN, int TN);
 	CBCHLogicalChannel* getCBCH() { return mCBCH; }
 	//@}
 

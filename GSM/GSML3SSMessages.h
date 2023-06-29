@@ -37,7 +37,7 @@
 #define _GSML3SSMESSAGES_H_
 
 #include <string>
-#include "GSMCommon.h"
+#include "gsmenums.h"
 #include "GSML3Message.h"
 #include "GSML3CCElements.h"
 // #include "GSML3SSElements.h"		This file is in the features/uSupServ branch.
@@ -75,7 +75,7 @@ class L3SupServMessage : public L3Message {
 	/** Override the write method to include transaction identifiers in header. */
 	void write(L3Frame& dest) const;
 
-	L3PD PD() const { return L3NonCallSSPD; }
+    kneedeepbts::gsm::L3PD PD() const { return kneedeepbts::gsm::L3NonCallSSPD; }
 
 	unsigned TI() const { return mTI; }
 	void setTI(unsigned wTI) { mTI = wTI; }

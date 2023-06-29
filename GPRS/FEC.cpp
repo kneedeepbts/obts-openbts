@@ -217,11 +217,11 @@ void PDCHL1Downlink::transmit(RLCBSN_t bsn, BitVector *mI, const int *qbits, int
 		if (gConfig.getBool("Control.GSMTAP.GPRS")) {
 			// Send to GSMTAP.
 			gWriteGSMTAP(ARFCN(),TN(),gBSNNext.FN(),
-					TDMA_PDCH,
-					false,	// not SACCH
-					false,	// this is a downlink
-					mchBurst,
-					GSMTAP_TYPE_UM_BURST);
+                kneedeepbts::gsm::TDMA_PDCH,
+                false,	// not SACCH
+                false,	// this is a downlink
+                mchBurst,
+                GSMTAP_TYPE_UM_BURST);
 		}
 #if FEC_DEBUG
 		if (1) {
@@ -237,14 +237,14 @@ void PDCHL1Downlink::transmit(RLCBSN_t bsn, BitVector *mI, const int *qbits, int
 	}
 }
 
-static GSM::TypeAndOffset frame2GsmTapType(BitVector &frame)
+static kneedeepbts::gsm::TypeAndOffset frame2GsmTapType(BitVector &frame)
 {
 	switch (frame.peekField(0,2)) {	// Mac control field.
 		case MACPayloadType::RLCControl:
-			return TDMA_PACCH;
+			return kneedeepbts::gsm::TDMA_PACCH;
 		case MACPayloadType::RLCData:
 		default:
-			return TDMA_PDCH;
+			return kneedeepbts::gsm::TDMA_PDCH;
 	}
 }
 

@@ -17,9 +17,9 @@
 #define GSMRadioResource_H 1
 
 #include "Defines.h"
-#include "GSMCommon.h"
 #include "MemoryLeak.h"
 
+#include "gsmenums.h"
 #include "gsmtime.h"
 
 namespace GSM {
@@ -110,7 +110,7 @@ FakeRachType fakeRachTypeTranslate(const char *name);
 extern void createFakeRach(FakeRachType rachtype);
 
 extern void AccessGrantResponder(unsigned RA, const kneedeepbts::gsm::GsmTime& when, float RSSI, float timingError, int TN);
-extern ChannelType decodeChannelNeeded(unsigned RA);
+extern kneedeepbts::gsm::ChannelType decodeChannelNeeded(unsigned RA);
 extern bool requestingLUR(unsigned RA);
 
 };
