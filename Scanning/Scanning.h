@@ -20,7 +20,11 @@
 
 
 #include <list>
+#include <vector>
+
+// From GSM Library
 #include <GSMCommon.h>
+#include <gsmband.h>
 
 struct sqlite3;
 
@@ -93,19 +97,19 @@ class SpectrumMap {
 	void clear();
 
 	/** Mark a given ARFCN as having a given power level. */
-	void power(GSM::GSMBand band, unsigned ARFCN, float freq, LinkDirection& linkDir, float dBm);
+	void power(kneedeepbts::gsm::GsmBand band, unsigned ARFCN, float freq, LinkDirection& linkDir, float dBm);
 
 	/** Mark a given ARFCN as having a given power level. */
-	void power(GSM::GSMBand band, unsigned ARFCN, LinkDirection& linkDir, float dBm);
+	void power(kneedeepbts::gsm::GsmBand band, unsigned ARFCN, LinkDirection& linkDir, float dBm);
 
 	/** Mark a given ARFCN as having a given power level. */
 	//void power(GSM::GSMBand band, unsigned ARFCN, float freq, float dBm);
 
 	/** Return a list of up to count of the most powerful ARFCNs in a given band. */
-	ARFCNList topPower(GSM::GSMBand band, unsigned count) const;
+	ARFCNList topPower(kneedeepbts::gsm::GsmBand band, unsigned count) const;
 
 	/** Return a list of up to count of the least powerful ARFCNs in a given band. */
-	ARFCNList minimumPower(GSM::GSMBand band, unsigned count) const;
+	ARFCNList minimumPower(kneedeepbts::gsm::GsmBand band, unsigned count) const;
 
 };
 

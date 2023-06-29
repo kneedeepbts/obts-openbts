@@ -88,6 +88,9 @@
 
 #include <Logger.h>
 
+#include "gsmconstants.h"
+#include "gsmutilities.h"
+
 
 using namespace std;
 namespace GSM {
@@ -409,9 +412,9 @@ void L2LogicalChannel::lcstart()
 	if (mSACCH) mSACCH->sapStart();
 	sapStart();
 	mL3Out.clear();
-	mT3101.set(T3101ms);
-	mT3109.reset(gConfig.GSM.Timer.T3109);	// redundant with init in lcinit but cant be too careful.
-	mT3111.reset(T3111ms);					// redundant with init in lcinit but cant be too careful.
+	mT3101.set(kneedeepbts::gsm::T3101_MS);
+	mT3109.reset(gConfig.GSM.Timer.T3109); // redundant with init in lcinit but cant be too careful.
+	mT3111.reset(kneedeepbts::gsm::T3111_MS); // redundant with init in lcinit but cant be too careful.
 }
 
 
@@ -426,9 +429,9 @@ void L2LogicalChannel::lcinit()
 	if (mSACCH) mSACCH->sacchInit();
 	// We set T3101 now so the channel will become recyclable if the caller does nothing with it;
 	// the caller has this long to call lcstart before the channel goes back to the recyclable pool.
-	mT3101.set(T3101ms);	// It will be started again in l2start.
+	mT3101.set(kneedeepbts::gsm::T3101_MS);	// It will be started again in l2start.
 	mT3109.reset(gConfig.GSM.Timer.T3109);
-	mT3111.reset(T3111ms);
+	mT3111.reset(kneedeepbts::gsm::T3111_MS);
 	//mTRecycle.reset(500);	// (pat) Must set a dummy value.
 	if (!mlcMessageLoopRunning) {
 		mlcMessageLoopRunning=true;
@@ -515,7 +518,7 @@ void L2LogicalChannel::serviceHost()
 void *L2LogicalChannel::ControlServiceLoop(L2LogicalChannel* hostchan)
 {
 	while (!gBTS.btsShutdown()) {
-		sleepFrames(26);	// We dont have to do this very often.
+        kneedeepbts::gsm::sleepFrames(26);	// We dont have to do this very often.
 		if (hostchan->l1active()) {
 			hostchan->serviceHost();
 		}
@@ -857,7 +860,7 @@ void *SACCHLogicalChannel::SACCHServiceLoop(SACCHLogicalChannel* sacch)
 			// (pat 3-2014) Changing this sleepFrames(51) to sleepFrames(2) had an enormous impact
 			// on idle cpu utilization, from 11.2% to 8.5% with a C-5 beacon, ie, with only 4 SACCH running.
 			// TODO: Can use fewer CPU cycles by using something like waitToSend to sleep until the next SACCH transmission time.
-			sleepFrames(1);
+            kneedeepbts::gsm::sleepFrames(1);
 #endif
 			// A clever way to avoid the sleep above would be to wait for ESTABLISH primitive.
 			// (But which do you wait on - the tx or the rx queue?

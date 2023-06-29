@@ -29,6 +29,9 @@
 #include <SIPDialog.h>
 #include <Globals.h>
 
+// From GSM Library
+#include <gsmalphabets.h>
+
 
 // Generic SS messages are transferred by the Facility IE, whose content is described by 24.080 4.61
 // and by an ASN description in the 24.080 appendix.  This encoding is actually part of the GSM MAP reference
@@ -178,11 +181,11 @@ static string ussdDecode(string in)
 	for (unsigned i = 0; i < indatalen; i++) {
 		accum = accum | (indata[i] << offset);
 		//LOG(DEBUG) <<LOGHEX(i)<<LOGHEX(offset)<<LOGHEX(accum)<<LOGHEX(indata[i]);
-		*rp++ = decodeGSMChar(accum & 0x7f);
+		*rp++ = kneedeepbts::gsm::decodeGsmChar(accum & 0x7f);
 		accum >>= 7;
 		// When we have accumulated two 7-bit characters, we output them both.
 		if (++offset == 7) {
-			*rp++ = decodeGSMChar(accum & 0x7f);
+			*rp++ = kneedeepbts::gsm::decodeGsmChar(accum & 0x7f);
 			accum >>= 7;
 			offset = 0;
 		}
@@ -203,7 +206,7 @@ static string ussdEncode(string in)
 	unsigned offset = 0;
 	unsigned accum = 0;
 	for (unsigned i = 0; i < indatalen; i++) {
-		accum = accum | (encodeGSMChar(indata[i] & 0x7f) << offset);
+		accum = accum | (kneedeepbts::gsm::encodeGsmChar(indata[i] & 0x7f) << offset);
 		if (offset == 0) {
 			offset = 7;
 		} else {

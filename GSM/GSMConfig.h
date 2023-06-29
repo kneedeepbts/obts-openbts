@@ -32,6 +32,7 @@
 
 #include "TRXManager.h"
 
+#include "gsmband.h"
 #include "gsmclock.h"
 #include "gsmtime.h"
 
@@ -90,7 +91,7 @@ class GSMConfig {
 	unsigned mBCC;		///< basestation color code
 	//@}
 
-	GSMBand mBand;		///< BTS operating band, or 0 for custom band
+	kneedeepbts::gsm::GsmBand mBand;		///< BTS operating band, or 0 for custom band
 
 	kneedeepbts::gsm::GsmClock mClock;		///< local copy of BTS master clock
 
@@ -171,7 +172,7 @@ class GSMConfig {
 	/**@name Accessors. */
 	//@{
 	//Control::Pager& pager() { return mPager; }
-	GSMBand band() const { return mBand; }
+	kneedeepbts::gsm::GsmBand band() const { return mBand; }
 	unsigned BCC() const { return mBCC; }
 	unsigned NCC() const { return mNCC; }
     kneedeepbts::gsm::GsmClock& clock() { return mClock; }

@@ -23,6 +23,7 @@
 #include "../TransceiverRAD1/Transceiver.h"	// For Transceiver::IGPRS
 
 // From GSM Library
+#include <gsmbursts.h>
 #include <gsmtime.h>
 
 #define FEC_DEBUG 0
@@ -470,7 +471,7 @@ void PDCHL1Downlink::initBursts(L1FEC *oldfec)
 	// Set up the training sequence since they'll be the same for all bursts.
 	// training sequence, GSM 05.02 5.2.3
 	// (pat) Set from the BSC color-code from the original GSM channel.
-	GSM::gTrainingSequence[oldfec->TSC()].copyToSegment(mchBurst,61);
+	kneedeepbts::gsm::gTrainingSequence[oldfec->TSC()].copyToSegment(mchBurst,61);
 }
 
 

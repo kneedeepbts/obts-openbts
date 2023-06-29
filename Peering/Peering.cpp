@@ -28,6 +28,9 @@
 #include <L3TranEntry.h>
 //#include <TransactionTable.h>
 
+// From GSM Library
+#include "gsmutilities.h"
+
 #undef WARNING
 
 namespace Peering {
@@ -539,8 +542,8 @@ void PeerInterface::processHandoverRequest(const struct sockaddr_in* peer, const
 	chan->lcstart();
 
 	// Send accept.
-	// FIXME TODO_NOW: Get rid of this sleepFrames...
-	sleepFrames(30);	// Pat added delay to let SACCH get started.
+	// FIXME: Get rid of this sleepFrames...
+    kneedeepbts::gsm::sleepFrames(30);	// Pat added delay to let SACCH get started.
 
 	const GSM::L3ChannelDescription desc = chan->channelDescription();
 #if 1

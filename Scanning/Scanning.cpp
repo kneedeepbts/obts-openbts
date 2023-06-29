@@ -87,7 +87,7 @@ void SpectrumMap::clear()
 	sqlite3_command(mDB,"DELETE FROM SPECTRUM_MAP WHERE 1");
 }
 
-void SpectrumMap::power(GSM::GSMBand band, unsigned ARFCN, float freq, LinkDirection& linkDir, float dBm)
+void SpectrumMap::power(kneedeepbts::gsm::GsmBand band, unsigned ARFCN, float freq, LinkDirection& linkDir, float dBm)
 {
 	char q1[200];
 	sprintf(q1,"INSERT OR REPLACE INTO SPECTRUM_MAP (BAND,TIMESTAMP,ARFCN,RSSI,FREQ,LINK) "
@@ -97,14 +97,14 @@ void SpectrumMap::power(GSM::GSMBand band, unsigned ARFCN, float freq, LinkDirec
 	if (!s) LOG(ALERT) << "write to spectrum map failed";
 }
 
-void SpectrumMap::power(GSM::GSMBand band, unsigned ARFCN, LinkDirection& linkDir, float dBm)
+void SpectrumMap::power(kneedeepbts::gsm::GsmBand band, unsigned ARFCN, LinkDirection& linkDir, float dBm)
 {
 	float frequency = 1000.0F;
 
 	if (linkDir == SpectrumMap::LinkDirection::Up) {
-		frequency *= GSM::uplinkFreqKHz(band, ARFCN);
+		frequency *= kneedeepbts::gsm::uplinkFreqKHz(band, ARFCN);
 	} else if (linkDir == SpectrumMap::LinkDirection::Down) {
-		frequency *= GSM::downlinkFreqKHz(band, ARFCN);
+		frequency *= kneedeepbts::gsm::downlinkFreqKHz(band, ARFCN);
 	} else {
 		// Invalid direction
 		return;
@@ -118,7 +118,7 @@ void SpectrumMap::power(GSM::GSMBand band, unsigned ARFCN, LinkDirection& linkDi
 
 }*/
 
-ARFCNList SpectrumMap::topPower(GSM::GSMBand band, unsigned count) const
+ARFCNList SpectrumMap::topPower(kneedeepbts::gsm::GsmBand band, unsigned count) const
 {
 	char q[200];
 	sprintf(q,"SELECT ARFCN FROM SPECTRUM_MAP WHERE BAND=%u ORDER BY RSSI DESC", band);
@@ -137,7 +137,7 @@ ARFCNList SpectrumMap::topPower(GSM::GSMBand band, unsigned count) const
 }
 
 
-ARFCNList SpectrumMap::minimumPower(GSM::GSMBand band, unsigned count) const
+ARFCNList SpectrumMap::minimumPower(kneedeepbts::gsm::GsmBand band, unsigned count) const
 {
 	char q[200];
 	sprintf(q,"SELECT ARFCN FROM SPECTRUM_MAP WHERE BAND=%u ORDER BY RSSI", band);

@@ -60,9 +60,6 @@ namespace kneedeepbts::gsm {
         GsmTime &decTN(unsigned step = 1);
         GsmTime &incTN(unsigned step = 1);
 
-        /**@name Standard derivations. */
-        //@{
-
         /** GSM 05.02 3.3.2.2.1 */
         [[nodiscard]] unsigned SFN() const { return mFN / (26 * 51); }
 

@@ -40,6 +40,9 @@
 
 #include "../GPRS/GPRSExport.h"
 
+#include "gsmband.h"
+#include "gsmbursts.h"
+
 #undef WARNING
 
 namespace GSM {
@@ -142,27 +145,25 @@ static const int powerCommand1900[32] =
 	0, 0, 0, 0,		// 28-31
 };
 
-
 const int* pickTable()
 {
 	unsigned band = gBTS.band();
 
-
 	switch (band) {
-		case GSM850:
-		case EGSM900:
+        case kneedeepbts::gsm::GSM850:
+		case kneedeepbts::gsm::EGSM900:
 			return powerCommandLowBand;
 			break;
-		case DCS1800:
+		case kneedeepbts::gsm::DCS1800:
 			return powerCommand1800;
 			break;
-		case PCS1900:
+		case kneedeepbts::gsm::PCS1900:
 			return powerCommand1900;
 			break;
-		default: return NULL;
+		default:
+            return NULL;
 	}
 }
-
 
 int decodePower(unsigned code)
 {
@@ -1049,7 +1050,7 @@ XCCHL1Encoder::XCCHL1Encoder(
 	: SharedL1Encoder(),
 	  L1Encoder(wCN,wTN,wMapping,wParent)
 {
-	mFillerBurst = TxBurst(gDummyBurst);
+	mFillerBurst = TxBurst(kneedeepbts::gsm::gDummyBurst);
 
 	// Set up the training sequence and stealing bits
 	// since they'll be the same for all bursts.
@@ -1063,7 +1064,7 @@ XCCHL1Encoder::XCCHL1Encoder(
 	//mBurst.Hu(1);
 
 	// training sequence, GSM 05.02 5.2.3
-	gTrainingSequence[mTSC].copyToSegment(mBurst,61);
+	kneedeepbts::gsm::gTrainingSequence[mTSC].copyToSegment(mBurst,61);
 }
 
 

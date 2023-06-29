@@ -43,6 +43,9 @@ implementation, although no code is copied directly.
 #include <GSML3RRMessages.h>
 #include <L3StateMachine.h>
 
+#include "gsmconstants.h"
+#include "gsmutilities.h"
+
 using namespace std;
 using namespace GSM;
 
@@ -70,7 +73,7 @@ L2LAPDm::L2LAPDm(unsigned wC, SAPI_t wSAPI)
 	mC(wC),mR(1-wC),mSAPI(wSAPI),
 	mMaster(NULL),
 	mState(LAPDStateUnused),
-	mT200(T200ms),
+	mT200(kneedeepbts::gsm::T200_MS),
 	mIdleFrame(/*DATA*/)
 {
 	// sanity checks
@@ -155,7 +158,7 @@ void L2LAPDm::waitForAck()
 		// HACK -- We should not need a timeout here.
 		// (pat) When we send a RELEASE the calling thread blocks FOREVER so this timeout
 		// is needed to prevent the channel from hanging.  It will be gone for 30 secs.
-		mAckSignal.wait(mLock,N200()*T200ms);
+		mAckSignal.wait(mLock, N200() * kneedeepbts::gsm::T200_MS);
 		//OBJLOG(DEBUG) <<"L2LAPDm::waitForAck state=" << mState << " VS=" << mVS << " VA=" << mVA;
 		OBJLOG(DEBUG) <<"L2LAPDm::waitForAck ";
 	}
@@ -1070,7 +1073,7 @@ bool L2LAPDm::sendMultiframeData(const L3Frame& l3)
 		// pat 5-2013: Vastly reducing the delays here and in L2LogicalChannel to try to reduce
 		// random failures of handover and channel reassignment from SDCCH to TCHF.
 		// sleepFrames(51);
-		sleepFrames(4);	// FIXME - this is just dopey.  
+        kneedeepbts::gsm::sleepFrames(4);	// FIXME - this is just dopey.
 		return false;
 	}
 	mDiscardIQueue = false;

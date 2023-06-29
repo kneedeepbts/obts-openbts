@@ -98,7 +98,7 @@ void GSMConfig::gsmInit()
 		}
 	}
 
-	mBand = (GSMBand)gConfig.getNum("GSM.Radio.Band");
+	mBand = (kneedeepbts::gsm::GsmBand)gConfig.getNum("GSM.Radio.Band");
  	regenerateBeacon();
 }
 

@@ -34,6 +34,7 @@
 #include <stdlib.h>
 
 // From GSM Library
+#include <gsmband.h>
 #include <gsmtime.h>
 
 #undef WARNING
@@ -397,8 +398,8 @@ int ::ARFCNManager::sendCommand(const char*command)
 bool ::ARFCNManager::tune(int wARFCN)
 {
 	// convert ARFCN number to a frequency
-	unsigned rxFreq = uplinkFreqKHz(gBTS.band(),wARFCN);
-	unsigned txFreq = downlinkFreqKHz(gBTS.band(),wARFCN);
+	unsigned rxFreq = kneedeepbts::gsm::uplinkFreqKHz(gBTS.band(),wARFCN);
+	unsigned txFreq = kneedeepbts::gsm::downlinkFreqKHz(gBTS.band(),wARFCN);
 	// tune rx
 	int status = sendCommand("RXTUNE",rxFreq);
 	if (status!=0) {

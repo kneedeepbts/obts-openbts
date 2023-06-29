@@ -23,21 +23,23 @@
 #include "GSMCommon.h"
 #include "GSMTransfer.h"
 
+#include "gsmerror.h"
+
 namespace GSM {
 
 
 /**@name L3 Processing Errors */
 //@{
 
-class L3ReadError : public GSMError {
+class L3ReadError : public kneedeepbts::gsm::GsmError {
 	public:
-	L3ReadError():GSMError() {}
+	L3ReadError() : GsmError() {}
 };
 #define L3_READ_ERROR {throw L3ReadError();}
 
-class L3WriteError : public GSMError {
+class L3WriteError : public kneedeepbts::gsm::GsmError {
 	public:
-	L3WriteError():GSMError() {}
+	L3WriteError() : GsmError() {}
 };
 #define L3_WRITE_ERROR {throw L3WriteError();}
 

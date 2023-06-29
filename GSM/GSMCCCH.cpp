@@ -25,7 +25,9 @@
 #include <MAC.h>
 #include <math.h>
 
+#include "gsmconstants.h"
 #include "gsmtime.h"
+#include "gsmutilities.h"
 
 using namespace Control;
 using namespace GPRS;
@@ -362,21 +364,22 @@ bool CCCHLogicalChannel::processRaches()
 		);
 		//assign.setStartFrame(rach->mReadyTime.FN() + 104);
 
-		if (0) {	// This was for debugging.  Adding this delay made the layer1 connection reliable.
-			// Delay the channel assignment until the SACCH is known to be transmitting...
-            kneedeepbts::gsm::GsmTime sacchStart = LCH->getSACCH()->getNextWriteTime();
-			now = gBTS.time();	// Must update this because getTCH blocked.
-			int msecsDelay = ((sacchStart - now.FN()).FN() * gFrameMicroseconds) / 1000;
-			// Add an extra gratuitous 250ms delay for testing.
-			// msecsDelay += 250;
-			if (msecsDelay < 0) { msecsDelay = 0; }
-			if (msecsDelay) {
-				LCH->addT3101(msecsDelay);
-				//assign.setStartFrame(now.FN() + (1000 * msecsDelay) / gFrameMicroseconds);
-				usleep(msecsDelay * 1000);
-			}
-			LOG(INFO) << "sending L3ImmediateAssignment " << LCH->descriptiveString() <<LOGVAR(msecsDelay) <<" " <<assign;
-		}
+// NOTE: Commenting out as it was bypassed with an 'if(0)'
+//		if (0) {	// This was for debugging.  Adding this delay made the layer1 connection reliable.
+//			// Delay the channel assignment until the SACCH is known to be transmitting...
+//            kneedeepbts::gsm::GsmTime sacchStart = LCH->getSACCH()->getNextWriteTime();
+//			now = gBTS.time();	// Must update this because getTCH blocked.
+//			int msecsDelay = ((sacchStart - now.FN()).FN() * gFrameMicroseconds) / 1000;
+//			// Add an extra gratuitous 250ms delay for testing.
+//			// msecsDelay += 250;
+//			if (msecsDelay < 0) { msecsDelay = 0; }
+//			if (msecsDelay) {
+//				LCH->addT3101(msecsDelay);
+//				//assign.setStartFrame(now.FN() + (1000 * msecsDelay) / gFrameMicroseconds);
+//				usleep(msecsDelay * 1000);
+//			}
+//			LOG(INFO) << "sending L3ImmediateAssignment " << LCH->descriptiveString() <<LOGVAR(msecsDelay) <<" " <<assign;
+//		}
 
 		L2LogicalChannelBase::l2sendm(assign,L3_UNIT_DATA);
 		delete rach;
@@ -484,12 +487,25 @@ void CCCHLogicalChannel::ccchServiceLoop()
 	// See GSM 04.08 3.3.1.1.2 for the logic here.
 	static const unsigned txInteger = gConfig.getNum("GSM.RACH.TxInteger");
 	assert(txInteger <= 15);
+
+    // Number of slots used to spread RACH transmission as a function of broadcast Tx-integer.
+    // See GSM 04.08 Table 10.5.68 in section 10.5.2.29.
+    const uint16_t RACHSpreadSlots[16] = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 25, 32, 50};
+
+    // See GSM 04.08 Table 3.1
+    // Value of parameter S as a function of broadcast Tx-integer for non-combined CCCH.
+    const uint16_t RACHWaitSParam[16] = {55, 76, 109, 163, 217, 55, 76, 109, 163, 217, 55, 76, 109, 163, 217, 55};
+
+    // See GSM 04.08 Table 3.1.  S parameter used in 3.3.1.1.2
+    // Value of parameter S as a function of broadcast Tx-integer for combined CCCH, ie, any type except combination V.
+    const uint16_t RACHWaitSParamCombined[16] = {41, 52, 58, 86, 115, 41, 52, 58, 86, 115, 41, 52, 58, 86, 115, 41};
+
 	// RACH slot definition: we see in GSM 5.02 clause 7 table 3 of 9 that a RACH can appear on timeslots 0,2,4, or 6, and in table 5 of 9 we
 	// see that for a non-combined CCCH-CONF any of the 51 frames can be used, and for combined CCCH-CONF the available (51*4=204 slots/51-multiframe)
 	// frames are: B4, B5, B14, B15 ... B36, B45, B46 (27*4=108 slots/51-multiframe.)
 	// GSM 4.08 11.1.1, And I quote: "The minimum value of this timer is equal to the time taken by T+2S slots of the mobile station's
 	// RACH. S and T are defined in sub-clause 3.3.1.2. The maximum value of this timer is 5 seconds."
-	static const int stval = GSM::RACHSpreadSlots[txInteger] + 2*(isCCCHCombined ? GSM::RACHWaitSParamCombined[txInteger] : GSM::RACHWaitSParam[txInteger]);
+	static const int stval = RACHSpreadSlots[txInteger] + 2 * (isCCCHCombined ? RACHWaitSParamCombined[txInteger] : RACHWaitSParam[txInteger]);
 	// Subtract some frames from the maxAge to make sure we still have time left to send it; the amount should be 4 frames
 	// plus some time for the MS to receive and decode it plus the slack induced by the OpenBTS tranceiver interface, which we do not know.
 	sMaxAge = min(stval, (int)(5 * 51 * 4.2)) - 6;
@@ -541,12 +557,12 @@ void NewPager::serviceLoop()
 		// Wait for pending activity to clear PCH.
 		if (unsigned load = gPagingQ.getPagingLoad()) {
 			LOG(DEBUG) << "Pager waiting with load " << load;
-			sleepFrames(51); // There could be multiple paging channels, in which case this is longer than necessary, but no matter.
+            kneedeepbts::gsm::sleepFrames(51); // There could be multiple paging channels, in which case this is longer than necessary, but no matter.
 			continue;
 		}
 		// nextTime controls how quickly we resend pages.
 		if (! nextTime.passed()) {
-			sleepFrames(51);
+            kneedeepbts::gsm::sleepFrames(51);
 			continue;
 		}
 		newPageAll();

@@ -35,64 +35,27 @@ ostream& GSM::operator<<(ostream& os, L3PD val)
 }
 
 
-const BitVector2 GSM::gTrainingSequence[] = {
-    BitVector2("00100101110000100010010111"),
-    BitVector2("00101101110111100010110111"),
-    BitVector2("01000011101110100100001110"),
-    BitVector2("01000111101101000100011110"),
-    BitVector2("00011010111001000001101011"),
-    BitVector2("01001110101100000100111010"),
-    BitVector2("10100111110110001010011111"),
-    BitVector2("11101111000100101110111100"),
-};
+//const BitVector GSM::gTrainingSequence[] = {
+//    BitVector("00100101110000100010010111"),
+//    BitVector("00101101110111100010110111"),
+//    BitVector("01000011101110100100001110"),
+//    BitVector("01000111101101000100011110"),
+//    BitVector("00011010111001000001101011"),
+//    BitVector("01001110101100000100111010"),
+//    BitVector("10100111110110001010011111"),
+//    BitVector("11101111000100101110111100"),
+//};
 
-// (pat) Dummy Burst defined in GSM 5.02 5.2.6
-// From 5.02 6.5.1: A base transceiver station must transmit a burst in every timeslot of every TDMA frame in the downlink of
-// radio frequency channel C0 of the cell allocation (to allow mobiles to make power measurements of the radio
-// frequency channels supporting the BCCH, see GSM 05.08). In order to achieve this requirement a dummy
-// burst is defined in clause 5.2.6 which shall be transmitted by the base transceiver station on all timeslots of all
-// TDMA frames of radio frequency channel C0 for which no other channel requires a burst to be transmitted.
-// (pat) But this is probably not correct for an idle SACCH, where we should be delivering L2 idle frames.
-const BitVector2 GSM::gDummyBurst("0001111101101110110000010100100111000001001000100000001111100011100010111000101110001010111010010100011001100111001111010011111000100101111101010000");
-
-const BitVector2 GSM::gRACHSynchSequence("01001011011111111001100110101010001111000");
-
-
-
-unsigned char GSM::encodeGSMChar(unsigned char ascii)
-{
-	// Given an ASCII char, return the corresponding GSM char.
-	// Do it with a lookup table, generated on the first call.
-	// You might be tempted to replace this init with some more clever NULL-pointer trick.
-	// -- Don't.  This is thread-safe.
-	static char reverseTable[256]={'?'};
-	static volatile bool init = false;
-	if (!init) {
-		for (size_t i=0; i<sizeof(gGSMAlphabet); i++) {
-			reverseTable[(unsigned)gGSMAlphabet[i]]=i;
-		}
-		// Set the flag last to be thread-safe.
-		init=true;
-	}
-	return reverseTable[(unsigned)ascii];
-}
-
-
-char GSM::encodeBCDChar(char ascii)
-{
-	// Given an ASCII char, return the corresponding BCD.
-	if ((ascii>='0') && (ascii<='9')) return ascii-'0';
-	switch (ascii) {
-		case '.': return 11;
-		case '*': return 11;
-		case '#': return 12;
-		case 'a': return 13;
-		case 'b': return 14;
-		case 'c': return 15;
-		default: return 15;
-	}
-}
-
+//// (pat) Dummy Burst defined in GSM 5.02 5.2.6
+//// From 5.02 6.5.1: A base transceiver station must transmit a burst in every timeslot of every TDMA frame in the downlink of
+//// radio frequency channel C0 of the cell allocation (to allow mobiles to make power measurements of the radio
+//// frequency channels supporting the BCCH, see GSM 05.08). In order to achieve this requirement a dummy
+//// burst is defined in clause 5.2.6 which shall be transmitted by the base transceiver station on all timeslots of all
+//// TDMA frames of radio frequency channel C0 for which no other channel requires a burst to be transmitted.
+//// (pat) But this is probably not correct for an idle SACCH, where we should be delivering L2 idle frames.
+//const BitVector GSM::gDummyBurst("0001111101101110110000010100100111000001001000100000001111100011100010111000101110001010111010010100011001100111001111010011111000100101111101010000");
+//
+//const BitVector GSM::gRACHSynchSequence("01001011011111111001100110101010001111000");
 
 // Must be unsigned char, not signed char, or the conversion in sprintf below will be negative
 string GSM::data2hex(const unsigned char *data, unsigned nbytes)
@@ -111,173 +74,6 @@ string GSM::data2hex(const unsigned char *data, unsigned nbytes)
 	return result;
 }
 
-
-
-unsigned GSM::uplinkFreqKHz(GSMBand band, unsigned ARFCN)
-{
-	switch (band) {
-		case GSM850:
-			//assert((ARFCN<252)&&(ARFCN>129));		// this was a real bug, ticket #1420.
-			assert((ARFCN>=128)&&(ARFCN<=251));
-			return 824200+200*(ARFCN-128);
-		case EGSM900:
-			if (ARFCN<=124) return 890000+200*ARFCN;
-			assert((ARFCN>=975)&&(ARFCN<=1023));
-			return 890000+200*(ARFCN-1024);
-		case DCS1800:
-			assert((ARFCN>=512)&&(ARFCN<=885));
-			return 1710200+200*(ARFCN-512);
-		case PCS1900:
-			assert((ARFCN>=512)&&(ARFCN<=810));
-			return 1850200+200*(ARFCN-512);
-		default:
-			assert(0);
-	}
-}
-
-
-unsigned GSM::uplinkOffsetKHz(GSMBand band)
-{
-	switch (band) {
-		case GSM850: return 45000;
-		case EGSM900: return 45000;
-		case DCS1800: return 95000;
-		case PCS1900: return 80000;
-		default: assert(0);
-	}
-}
-
-
-unsigned GSM::downlinkFreqKHz(GSMBand band, unsigned ARFCN)
-{
-	return uplinkFreqKHz(band,ARFCN) + uplinkOffsetKHz(band);
-}
-
-
-
-
-// Number of slots used to spread RACH transmission as a function of broadcast Tx-integer.
-// See GSM 04.08 Table 10.5.68 in section 10.5.2.29.
-const unsigned GSM::RACHSpreadSlots[16] =
-{
-	3,4,5,6,
-	7,8,9,10,
-	11,12,14,16,
-	20,25,32,50
-};
-
-// See GSM 04.08 Table 3.1
-// Value of parameter S as a function of broadcast Tx-integer for non-combined CCCH.
-const unsigned GSM::RACHWaitSParam[16] =
-{
-	55,76,109,163,217,
-	55,76,109,163,217,
-	55,76,109,163,217,
-	55
-};
-
-// See GSM 04.08 Table 3.1.  S parameter used in 3.3.1.1.2
-// Value of parameter S as a function of broadcast Tx-integer for combined CCCH, ie, any type except combination V.
-const unsigned GSM::RACHWaitSParamCombined[16] =
-{
-	41,52,58,86,115,
-	41,52,58,86,115,
-	41,52,58,86,115,
-	41
-};
-
-
-
-///** Get a clock difference, within the modulus, v1-v2. */
-//int32_t GSM::FNDelta(int32_t v1, int32_t v2)
-//{
-//	static const int32_t halfModulus = gHyperframe/2;
-//	int32_t delta = v1-v2;
-//	if (delta>=halfModulus) delta -= gHyperframe;
-//	else if (delta<-halfModulus) delta += gHyperframe;
-//	return (int32_t) delta;
-//}
-//
-//int GSM::FNCompare(int32_t v1, int32_t v2)
-//{
-//	int32_t delta = FNDelta(v1,v2);
-//	if (delta>0) return 1;
-//	if (delta<0) return -1;
-//	return 0;
-//}
-
-
-
-
-//ostream& GSM::operator<<(ostream& os, const Time& t)
-//{
-//	os << t.TN() << ":" << t.FN();
-//	return os;
-//}
-
-
-
-
-//void Clock::clockSet(const Time& when)
-//{
-//	ScopedLock lock(mLock);
-//	mBaseTime = Timeval(0);
-//	mBaseFN = when.FN();
-//	isValid = true;
-//}
-//
-//
-//int32_t Clock::FN() const
-//{
-//	ScopedLock lock(mLock);
-//	Timeval now;
-//	int32_t deltaSec = now.sec() - mBaseTime.sec();
-//	int32_t deltaUSec = now.usec() - mBaseTime.usec();
-//	int64_t elapsedUSec = 1000000LL*deltaSec + deltaUSec;
-//	int64_t elapsedFrames = elapsedUSec / gFrameMicroseconds;
-//	int32_t currentFN = (mBaseFN + elapsedFrames) % gHyperframe;
-//	return currentFN;
-//}
-//
-//double Clock::systime(const GSM::Time& when) const
-//{
-//	ScopedLock lock(mLock);
-//	const double slotMicroseconds = (48.0 / 13e6) * 156.25;
-//	const double frameMicroseconds = slotMicroseconds * 8.0;
-//	int32_t elapsedFrames = when.FN() - mBaseFN;
-//	if (elapsedFrames<0) elapsedFrames += gHyperframe;
-//	double elapsedUSec = elapsedFrames * frameMicroseconds + when.TN() * slotMicroseconds;
-//	double baseSeconds = mBaseTime.sec() + mBaseTime.usec()*1e-6;
-//	double st = baseSeconds + 1e-6*elapsedUSec;
-//	return st;
-//}
-//
-//Timeval Clock::systime2(const GSM::Time& when) const
-//{
-//	double ftime = systime(when);
-//	unsigned sec = floor(ftime);
-//	unsigned usec = (ftime - sec) * 1e6;
-//	return Timeval(sec,usec);
-//}
-//
-//
-//void Clock::wait(const Time& when) const
-//{
-//	int32_t now = FN();
-//	int32_t target = when.FN();
-//	int32_t delta = FNDelta(target,now);
-//	if (delta<1) return;
-//	static const int32_t maxSleep = 51*26;
-//	if (delta>maxSleep) delta=maxSleep;
-//	sleepFrames(delta);
-//}
-
-
-
-
-
-
-
 ostream& GSM::operator<<(ostream& os, TypeOfNumber type)
 {
 	switch (type) {
@@ -290,7 +86,6 @@ ostream& GSM::operator<<(ostream& os, TypeOfNumber type)
 	}
 	return os;
 }
-
 
 ostream& GSM::operator<<(ostream& os, NumberingPlan plan)
 {
@@ -318,7 +113,6 @@ ostream& GSM::operator<<(ostream& os, MobileIDType wID)
 	}
 	return os;
 }
-
 
 ostream& GSM::operator<<(ostream& os, TypeAndOffset tao)
 {
@@ -379,68 +173,3 @@ ostream& GSM::operator<<(ostream& os, ChannelType val)
 	}
 	return os;
 }
-
-
-
-//
-//bool Z100Timer::expired() const
-//{
-//	assert(mLimitTime!=0);
-//	// A non-active timer does not expire.
-//	if (!mActive) return false;
-//	return mEndTime.passed();
-//}
-//
-//void Z100Timer::set()
-//{
-//	assert(mLimitTime!=0);
-//	mEndTime = Timeval(mLimitTime);
-//	mActive=true;
-//}
-//
-//void Z100Timer::addTime(int msecs)	// Can be positive or negative
-//{
-//	mLimitTime += msecs;
-//	if (mLimitTime < 0) { mLimitTime = 0; }
-//	if (mActive) {
-//		long remaining = mEndTime.remaining() + msecs;
-//		if (remaining < 0) { remaining = 0; }
-//		mEndTime.future(remaining);
-//	}
-//}
-//
-//void Z100Timer::expire()
-//{
-//	mEndTime = Timeval(0);
-//	mActive=true;
-//}
-//
-//
-//void Z100Timer::set(long wLimitTime)
-//{
-//	mLimitTime = wLimitTime;
-//	set();
-//}
-//
-//
-//long Z100Timer::remaining() const
-//{
-//	if (!mActive) return 0;
-//	long rem = mEndTime.remaining();
-//	if (rem<0) rem=0;
-//	return rem;
-//}
-//
-//void Z100Timer::wait() const
-//{
-//	while (!expired()) msleep(remaining());
-//}
-//
-//std::ostream& GSM::operator<<(std::ostream& os, const Z100Timer&zt)
-//{
-//	if (zt.active()) { os << zt.remaining(); }
-//	else { os << "inactive"; }
-//	return os;
-//}
-
-// vim: ts=4 sw=4

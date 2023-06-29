@@ -22,6 +22,9 @@
 #include "Timeval.h"
 #include <Logger.h>
 
+// From GSM Library
+#include <gsmalphabets.h>
+
 using namespace std;
 using namespace GSM;
 using namespace SMS;
@@ -523,9 +526,9 @@ void TLUserData::encode7bit(const char *text)
 
 	// 2. Write TP-UD
 	// This tail() works because UD is always the last field in the PDU.
-	BitVector2 chars = mRawData.tail(wp);
+	BitVector chars = mRawData.tail(wp);
 	for (unsigned i=0; i<mLength; i++) {
-		char gsm = encodeGSMChar(text[i]);
+		char gsm = kneedeepbts::gsm::encodeGsmChar(text[i]);
 		mRawData.writeFieldReversed(wp,gsm,7);
 	}
 	mRawData.writeField(wp,0,filler_bits);
@@ -573,7 +576,7 @@ std::string TLUserData::decode() const
 			text.resize(text_length);
 			for (unsigned i=0; i<text_length; i++) {
 				char gsm = mRawData.readFieldReversed(crp,7);
-				text[i] = decodeGSMChar(gsm);
+				text[i] = kneedeepbts::gsm::decodeGsmChar(gsm);
 			}
 			break;
 		}

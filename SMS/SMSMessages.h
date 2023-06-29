@@ -31,12 +31,16 @@
 #include <GSML3MMElements.h>
 #include <Logger.h>
 
+// From GSM Library
+#include <gsmalphabets.h>
+#include <gsmerror.h>
+
 namespace SMS {
 
 
-class SMSReadError : public GSM::GSMError {
+class SMSReadError : public kneedeepbts::gsm::GsmError {
 	public:
-	SMSReadError():GSMError() {}
+	SMSReadError() : GsmError() {}
 };
 #define SMS_READ_ERROR {throw SMSReadError();}
 
@@ -189,18 +193,18 @@ class TLUserData : public TLElement {
 	}
 
 	/** Initialize from a simple C string. */
-	TLUserData(const char* text, GSM::GSMAlphabet alphabet=GSM::ALPHABET_7BIT, bool wUDHI=false)
+	TLUserData(const char* text, kneedeepbts::gsm::GsmAlphabet alphabet = kneedeepbts::gsm::ALPHABET_7BIT, bool wUDHI=false)
 		:TLElement(),
 		mDCS(0),
 		mUDHI(wUDHI),
 		mLength(0)
 	{
 		switch(alphabet) {
-		case GSM::ALPHABET_7BIT:
+		case kneedeepbts::gsm::ALPHABET_7BIT:
 			encode7bit(text);
 			break;
-		case GSM::ALPHABET_8BIT:
-		case GSM::ALPHABET_UCS2:
+		case kneedeepbts::gsm::ALPHABET_8BIT:
+		case kneedeepbts::gsm::ALPHABET_UCS2:
 		default:
 			//LOG(WARNING) << "Unsupported alphabet: " << alphabet;
 			break;

@@ -27,6 +27,8 @@
 #include "GSML3Message.h"
 #include "../apps/OpenBTSConfig.h"
 
+#include "gsmalphabets.h"
+
 namespace GSM {
 
 /** CM Service Type, GSM 04.08 10.5.3.3 */
@@ -126,7 +128,7 @@ class L3NetworkName : public L3ProtocolElement {
 private:
 
 	static const unsigned maxLen=93;
-	GSMAlphabet mAlphabet;		///< Alphabet to use for encoding
+	kneedeepbts::gsm::GsmAlphabet mAlphabet;		///< Alphabet to use for encoding
 	char mName[maxLen+1];		///< network name as a C string
 	int mCI;		///< CI (Country Initials) bit value
 
@@ -134,14 +136,14 @@ public:
 
 	/** Set the network name, taking the default from gConfig. */
 	L3NetworkName(const char* wName,
-	              GSMAlphabet alphabet=ALPHABET_7BIT,
+                  kneedeepbts::gsm::GsmAlphabet alphabet = kneedeepbts::gsm::ALPHABET_7BIT,
 	              int wCI=gConfig.getBool("GSM.ShowCountry"))
 		:L3ProtocolElement(), mAlphabet(alphabet), mCI(wCI)
 	{ strncpy(mName,wName,maxLen); mName[maxLen] = '\0'; }
 
 	size_t lengthV() const
 	{
-		if (mAlphabet == ALPHABET_UCS2)
+		if (mAlphabet == kneedeepbts::gsm::ALPHABET_UCS2)
 			return 1+strlen(mName)*2;
 		else
 			return 1+(strlen(mName)*7+7)/8;

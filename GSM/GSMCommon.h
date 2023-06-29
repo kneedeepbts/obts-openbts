@@ -1,106 +1,27 @@
-/**@file Common-use GSM declarations, most from the GSM 04.xx and 05.xx series. */
-/*
-* Copyright 2008, 2009, 2010 Free Software Foundation, Inc.
-* Copyright 2010 Kestrel Signal Processing, Inc.
-* Copyright 2011, 2014 Range Networks, Inc.
-*
-* This software is distributed under multiple licenses;
-* see the COPYING file in the main directory for licensing
-* information for this specific distribution.
-*
-* This use of this software may be subject to additional restrictions.
-* See the LEGAL file in the main directory for details.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-*/
-
-
-
 #ifndef GSMCOMMON_H
 #define GSMCOMMON_H
 
-#include "Defines.h"
 #include <cstdlib>
-#include <sys/time.h>
 #include <ostream>
-#include <vector>
+//#include <unistd.h>
 
-#include <Threads.h>
-#include <Timeval.h>
+// From CommonLibs Library
+#include <Defines.h>
 #include <BitVector.h>
-#include <ScalarTypes.h>
+
+#include "gsmconstants.h"
 
 namespace GSM {
 /**@namespace GSM This namespace covers L1 FEC, L2 and L3 message translation. */
 
-/* forward references */
-//class L1FEC;
-//class L2LAPDm;
-//class L3Processor;
-//class L2Header;
-
-/** A base class for GSM exceptions. */
-class GSMError {};
-
-/** Duration ofa GSM frame, in microseconds. */
-const unsigned gFrameMicroseconds = 4615;
-
-/** Sleep for a given number of GSM frame periods. */
-inline void sleepFrames(unsigned frames)
-	{ usleep(frames * gFrameMicroseconds); }
-
-/** Sleep for 1 GSM frame period. */
-inline void sleepFrame()
-	{ usleep(gFrameMicroseconds); }
-
-/** GSM Training sequences from GSM 05.02 5.2.3. */
-extern const BitVector2 gTrainingSequence[];
-
-/** C0T0 filler burst, GSM 05.02, 5.2.6 */
-extern const BitVector2 gDummyBurst;
-
-/** Random access burst synch. sequence */
-extern const BitVector2 gRACHSynchSequence;
-
-enum GSMAlphabet {
-	ALPHABET_7BIT,
-	ALPHABET_8BIT,
-	ALPHABET_UCS2
-};
-
-/**@name Support for GSM 7-bit alphabet, GSM 03.38 6.2.1. */
-/**
-	Indexed by GSM 7-bit, returns ISO-8859-1.
-	We do not support the extended table, so 0x1B is a space.
-	FIXME -- ISO-8859-1 doesn't support Greek!
-*/
-static const unsigned char gGSMAlphabet[] = "@\243$\245\350\351\371\354\362\347\n\330\370\r\305\345D_FGLOPCSTZ \306\346\337\311 !\"#\244%&\'()*+,-./0123456789:;<=>?\241ABCDEFGHIJKLMNOPQRSTUVWXYZ\304\326\321\334\247\277abcdefghijklmnopqrstuvwxyz\344\366\361\374\341";
-unsigned char encodeGSMChar(unsigned char ascii);
-inline unsigned char decodeGSMChar(unsigned char sms) { return gGSMAlphabet[(unsigned)sms]; }
-
-/**@name BCD-ASCII mapping, GMS 04.08 Table 10.5.118. */
-/** Indexed by BCD, returns ASCII. */
-static const char gBCDAlphabet[] = "0123456789.#abc";
-char encodeBCDChar(char ascii);
-inline char decodeBCDChar(char bcd) { return gBCDAlphabet[(unsigned)bcd]; }
-
-/**@name Globally-fixed GSM timeout values (all in ms). */
-/**@name GSM LAPDm timeouts, GSM 04.06 5.8, ITU-T Q.921 5.9 */
-const unsigned T200ms = 900;		///< LAPDm ACK timeout, set for typical turnaround time
-/**@name GSM timeouts for radio resource management, GSM 04.08 11.1. */
-//const unsigned T3101ms = 4000;		///< L1 timeout for SDCCH assignment (pat) Started on Immediate Assignment, stopped when MS seizes channel.
-// (pat 4-2014) Increase T3101 to allow time for a SACCH init first, and additionally the old value seemed too low anyway, so add 2 secs.
-const unsigned T3101ms = 6000;		///< L1 timeout for SDCCH assignment (pat) Started on Immediate Assignment, stopped when MS seizes channel.
-const unsigned T3107ms = 3000;		///< L1 timeout for TCH/FACCH assignment (pat) or any change of channel assignment.
-// (pat) moved to config const unsigned T3109ms = 30000;		///< L1 timeout for an existing channel
-const unsigned T3111ms = 2*T200ms;	///< L1 timeout for reassignment of a channel
-/**@name GSM timeouts for mobility management, GSM 04.08 11.2. */
-const unsigned T3260ms = 12000;		///< ID request timeout
-/**@name GSM timeouts for SMS. GSM 04.11 */
-const unsigned TR1Mms = 30000;		///< RP-ACK timeout
+///** GSM Training sequences from GSM 05.02 5.2.3. */
+//extern const BitVector gTrainingSequence[];
+//
+///** C0T0 filler burst, GSM 05.02, 5.2.6 */
+//extern const BitVector gDummyBurst;
+//
+///** Random access burst synch. sequence */
+//extern const BitVector gRACHSynchSequence;
 
 /** GSM 04.08 Table 10.5.118 and GSM 03.40 9.1.2.5 */
 enum TypeOfNumber {
@@ -125,19 +46,6 @@ enum NumberingPlan {
 	ERMESPlan = 10
 };
 std::ostream& operator<<(std::ostream&, NumberingPlan);
-
-/** Codes for GSM band types, GSM 05.05 2.  */
-enum GSMBand {
-	GSM850=850,			///< US cellular
-	EGSM900=900,		///< extended GSM
-	DCS1800=1800,		///< worldwide DCS band
-	PCS1900=1900		///< US PCS band
-};
-
-/**@name Actual radio carrier frequencies, in kHz, GSM 05.05 2 */
-unsigned uplinkFreqKHz(GSMBand wBand, unsigned wARFCN);
-unsigned uplinkOffsetKHz(GSMBand);
-unsigned downlinkFreqKHz(GSMBand wBand, unsigned wARFCN);
 
 /**@name GSM Logical channel (LCH) types. */
 /** Codes for logical channel types. */

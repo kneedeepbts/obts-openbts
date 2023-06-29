@@ -32,6 +32,10 @@
 #include <GSML3SSMessages.h>
 #include <CLI.h>
 
+// From GSM Library
+#include <gsmalphabets.h>
+#include <gsmconstants.h>
+
 
 namespace Control {
 
@@ -795,8 +799,8 @@ MachineStatus AssignTCHMachine::machineRunState(int state, const GSM::L3Message 
 				// The TChReassignment timer controls how long we will keep re-trying.
 				// We used to use 3 (T3101-1) seconds, but I dont think this time is related to T3101 and 
 				// I dont know what the ultimate limit is, maybe nothing.  I am going to up it just use T3101.
-				TChReassignment.future(T3101ms);
-				timerStart(T3101,T3101ms,stateAssignTimeout);	// This timer will truly abort.
+				TChReassignment.future(kneedeepbts::gsm::T3101_MS);
+				timerStart(T3101, kneedeepbts::gsm::T3101_MS, stateAssignTimeout);	// This timer will truly abort.
 				sendReassignment();		// Sets T3101 as a side effect, way down in L1Decoder.
 			}
 			return MachineStatusOK;
@@ -1228,7 +1232,7 @@ MachineStatus InCallMachine::machineRunState(int state, const GSM::L3Message *l3
 				mDtmfSuccess |= s;
 			}
 			if (supportRFC2976()) {
-				unsigned bcd = GSM::encodeBCDChar(mDtmfKey);
+				unsigned bcd = kneedeepbts::gsm::encodeBcdChar(mDtmfKey);
 				getDialog()->sendInfoDtmf(bcd);
 				// In this case we need to return and wait for the reply to the INFO message;
 				// when it arrives we will go to the dialogDtmf state.

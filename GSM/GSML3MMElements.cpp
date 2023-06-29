@@ -23,11 +23,14 @@
 
 
 
+#include "gsmalphabets.h"
+#include "gsmtime.h"
 
-#include <gsmtime.h>
 #include "GSML3MMElements.h"
 #include <Logger.h>
 #include <Timeval.h>
+
+
 
 
 using namespace std;
@@ -90,7 +93,7 @@ void L3NetworkName::writeV(L3Frame& dest, size_t &wp) const
 {
 	unsigned sz = strlen(mName);
 	// header byte
-	if (mAlphabet == ALPHABET_UCS2) {
+	if (mAlphabet == kneedeepbts::gsm::ALPHABET_UCS2) {
 		// Ext: 1b, coding scheme: 001b (UCS2), CI, trailing spare bits: 000b (0)
 		dest.writeField(wp,1,1);	// ext bit
 		dest.writeField(wp,1,3);	// coding scheme USC2
@@ -116,7 +119,7 @@ void L3NetworkName::writeV(L3Frame& dest, size_t &wp) const
 		size_t twp = 0;
 		// the characters: 7 bit, GSM 03.38 6.1.2.2, 6.2.1
 		for (unsigned i=0; i<sz; i++) {
-			chars.writeFieldReversed(twp,encodeGSMChar(mName[i]),7);
+			chars.writeFieldReversed(twp,kneedeepbts::gsm::encodeGsmChar(mName[i]),7);
 		}
 		chars.writeField(twp,0,spareBits);
 		chars.LSB8MSB();

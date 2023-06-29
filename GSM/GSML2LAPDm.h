@@ -28,6 +28,7 @@ implementation, although no code is copied directly.
 #include "GSMTransfer.h"
 #include <ControlTransfer.h>
 
+#include "gsmconstants.h"
 #include "z100timer.h"
 
 
@@ -99,7 +100,7 @@ class L2DL {
 	virtual unsigned N200() const = 0;
 
 	/** T200 timeout for this channel, GSM 04.06 5.8.1. */
-	virtual unsigned T200() const { return T200ms; }
+	virtual unsigned T200() const { return kneedeepbts::gsm::T200_MS; }
 
 	/** Check for establishment of multifame mode; only valid for LAPDm. */
 	virtual bool multiframeMode() const { assert(0); }
@@ -486,7 +487,7 @@ class SACCHL2 : public L2LAPDm {
 	unsigned N200() const { return 5; }
 
 	/** T200 timeout for this channel, GSM 04.06 5.8.1. */
-	unsigned T200() const { return 4*T200ms; }
+	unsigned T200() const { return 4 * kneedeepbts::gsm::T200_MS; }
 
 	/** SACCH does not use idle frames. */
 	void sendIdle() {};
