@@ -108,7 +108,9 @@ void TransceiverManager::clockHandler()
 
 	// Did the transceiver die??
 	if (msgLen<0) {
-		LOG(EMERG) << "TRX clock interface timed out, assuming TRX is dead.";
+        // FIXME: Changing for now so it doesn't splatter the system-wide consoles.  Will make this an SPDLOG_ERROR later.
+		//LOG(EMERG) << "TRX clock interface timed out, assuming TRX is dead.";
+        LOG(ALERT) << "TRX clock interface timed out, assuming TRX is dead.";
 		gReports.incr("OpenBTS.Exit.Error.TransceiverHeartbeat");
 #if RN_DEVELOPER_MODE
 		// (pat) Added so you can keep debugging without the radio.
