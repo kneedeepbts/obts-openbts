@@ -1,29 +1,21 @@
-/*
-* Copyright 2008, 2009, 2010 Free Software Foundation, Inc.
-* Copyright 2010 Kestrel Signal Processing, Inc.
-* Copyright 2011-2021 Range Networks, Inc.
-*
-* This software is distributed under multiple licenses;
-* see the COPYING file in the main directory for licensing
-* information for this specific distribution.
-*
-* This use of this software may be subject to additional restrictions.
-* See the LEGAL file in the main directory for details.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-*/
 
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
-//#include <config.h>	// For VERSION
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+//Log dummy("openbts",gConfig.getStr("Log.Level").c_str(),LOG_LOCAL7);
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_DEBUG
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/sinks/basic_file_sink.h"
+
+
+
 
 #include "OpenBTSConfig.h"
 std::vector<std::string> configurationCrossCheck(const std::string& key);
@@ -32,10 +24,6 @@ std::string getARFCNsString(unsigned band);
 static const char *cOpenBTSConfigEnv = "OpenBTSConfigFile";
 static const char *cOpenBTSConfigFile = getenv(cOpenBTSConfigEnv)?getenv(cOpenBTSConfigEnv):"/etc/OpenBTS/OpenBTS.db";
 OpenBTSConfig gConfig(cOpenBTSConfigFile,"OpenBTS", getConfigurationKeys());
-
-
-#include <Logger.h>
-Log dummy("openbts",gConfig.getStr("Log.Level").c_str(),LOG_LOCAL7);
 
 // Set up the performance reporter.
 #include <Reporting.h>
@@ -149,43 +137,48 @@ pid_t gTransceiverPid = 0;
 
 void startTransceiver()
 {
+    // FIXME: This process shouldn't start or stop the transceiver process.
+    //        We'll let the system handle that.  What needs to be changed here
+    //        to fix this?
+
+
 	//if local kill the process currently listening on this port
-	if (gConfig.getStr("TRX.IP") == "127.0.0.1"){
-		char killCmd[32];
-		snprintf(killCmd,31,"fuser -k -n udp %d",(int)gConfig.getNum("TRX.Port"));
-		if (system(killCmd)) {}
-	}
+//	if (gConfig.getStr("TRX.IP") == "127.0.0.1"){
+//		char killCmd[32];
+//		snprintf(killCmd,31,"fuser -k -n udp %d",(int)gConfig.getNum("TRX.Port"));
+//		if (system(killCmd)) {}
+//	}
 
 	// Start the transceiver binary, if the path is defined.
 	// If the path is not defined, the transceiver must be started by some other process.
-	char TRXnumARFCN[4];
-	sprintf(TRXnumARFCN,"%1d",(int)gConfig.getNum("GSM.Radio.ARFCNs"));
-	//std::string extra_args = gConfig.getStr("TRX.Args");	// (pat 3-2014) remvoed pending demonstrated need.
-	string usernotice = format("starting transceiver %s with %s ARFCNs", transceiverPath, TRXnumARFCN);
-	if (getenv(cOpenBTSConfigEnv)) {
-		usernotice += " using config file: ";
-		usernotice += cOpenBTSConfigFile;
-	}
+//	char TRXnumARFCN[4];
+//	sprintf(TRXnumARFCN,"%1d",(int)gConfig.getNum("GSM.Radio.ARFCNs"));
+//	//std::string extra_args = gConfig.getStr("TRX.Args");	// (pat 3-2014) remvoed pending demonstrated need.
+//	string usernotice = format("starting transceiver %s with %s ARFCNs", transceiverPath, TRXnumARFCN);
+//	if (getenv(cOpenBTSConfigEnv)) {
+//		usernotice += " using config file: ";
+//		usernotice += cOpenBTSConfigFile;
+//	}
 
-	static char *argv[10]; int argc = 0;
-	argv[argc++] = const_cast<char*>(transceiverPath);
-	argv[argc++] = TRXnumARFCN;
-	argv[argc] = NULL;
-
-	LOG(ALERT) << usernotice;
-	gTransceiverPid = vfork();
-	LOG_ASSERT(gTransceiverPid>=0);
-	if (gTransceiverPid==0) {
-		// Pid==0 means this is the process that starts the transceiver.
-	    execvp(transceiverPath,argv);
-		LOG(EMERG) << "cannot find " << transceiverPath;
-		_exit(1);
-	} else {
-		int status;
-		waitpid(gTransceiverPid, &status,0);
-		LOG(EMERG) << "Transceiver quit with status " << status << ". Exiting.";
-		exit(2);
-	}
+//	static char *argv[10]; int argc = 0;
+//	argv[argc++] = const_cast<char*>(transceiverPath);
+//	argv[argc++] = TRXnumARFCN;
+//	argv[argc] = NULL;
+//
+//	LOG(ALERT) << usernotice;
+//	gTransceiverPid = vfork();
+//	LOG_ASSERT(gTransceiverPid>=0);
+//	if (gTransceiverPid==0) {
+//		// Pid==0 means this is the process that starts the transceiver.
+//	    execvp(transceiverPath,argv);
+//		LOG(EMERG) << "cannot find " << transceiverPath;
+//		_exit(1);
+//	} else {
+//		int status;
+//		waitpid(gTransceiverPid, &status,0);
+//		LOG(EMERG) << "Transceiver quit with status " << status << ". Exiting.";
+//		exit(2);
+//	}
 }
 
 
@@ -371,7 +364,9 @@ void createStats()
 // Control.Reporting.StatsTable StatsTable.db
 // Control.Reporting.PhysStatusTable PhysStatusTable.db
 
-namespace GSM { extern void TestTCHL1FEC(); };	// (pat) This is cheating, but I dont want to include the whole GSML1FEC.h.
+namespace GSM {
+    extern void TestTCHL1FEC();
+};	// (pat) This is cheating, but I dont want to include the whole GSML1FEC.h.
 
 /** Application specific NodeManager logic for handling requests. */
 JsonBox::Object nmHandler(JsonBox::Object& request)
@@ -442,7 +437,8 @@ static bool bAllowMultipleInstances = false;
 
 void processArgs(int argc, char *argv[])
 {
-	// TODO: Properly parse and handle any arguments
+	// FIXME: Properly parse and handle any arguments
+    //        This will likely drop to be just one argument that points to the config file.
 	if (argc > 1) {
 		bool testflag = false;
 		for (int argi = 1; argi < argc; argi++) {		// Skip argv[0] which is the program name.
@@ -475,12 +471,12 @@ void processArgs(int argc, char *argv[])
 			// so stick this arg in the environment, whence the ConfigurationTable can find it, and then reboot.
 			if (!strcmp(argv[argi],"--config")) {
 				if (++argi == argc) {
-					LOG(ALERT) <<"Missing argument to --config option";
+					SPDLOG_ERROR("Missing argument to --config option");
 					exit(2);
 				}
 				setenv(cOpenBTSConfigEnv,argv[argi],1);
 				execl(argv[0],"OpenBTS",NULL);
-				LOG(ALERT) <<"execl failed?  Exiting...";
+				SPDLOG_ERROR("execl failed?  Exiting...");
 				exit(0);
 			}
 			if (!strcmp(argv[argi],"--help")) {
@@ -569,6 +565,54 @@ struct TimeSlots {
 
 int main(int argc, char *argv[])
 {
+    /*** Parse CLI Arguments ***/
+    // TODO: Properly parse and handle any arguments
+
+    /*** Parse Config File ***/
+    // FIXME: Get the config file path from a command line arg.
+    // FIXME: Update this application to use a config file.
+//    shared_ptr<cpptoml::table> config = cpptoml::parse_file("/etc/openbts/smqueue.conf");
+//    shared_ptr<cpptoml::table> config_smqueue = config->get_table("smqueue");
+//    shared_ptr<cpptoml::table> config_logging = config->get_table("logging");
+//    std::string log_level = *config_logging->get_as<std::string>("level");
+//    std::string log_type = *config_logging->get_as<std::string>("type");
+//    std::string log_filename = *config_logging->get_as<std::string>("filename");
+    std::string log_level = "debug";
+    std::string log_type = "console";
+    std::string log_filename = "/var/log/openbts.log";
+
+//    std::uint16_t trxPort = 5700;
+//    std::string trxAddr = "127.0.0.1";
+//    std::string clock_reference_str = "internal";
+
+    /*** Setup Logger ***/
+    // create color console logger if enabled
+    if (log_type == "console") {
+        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+        console_sink->set_level(spdlog::level::from_str(log_level));
+        //console_sink->set_pattern("[multi_sink_example] [%^%l%$] %v");
+        auto console_logger = std::make_shared<spdlog::logger>("console_logger", console_sink);
+        console_logger->set_level(spdlog::level::from_str(log_level));
+        spdlog::register_logger(console_logger);
+        spdlog::set_default_logger(console_logger);
+    }
+        // create file logger if enabled
+    else if (log_type == "file") {
+        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_filename);
+        file_sink->set_level(spdlog::level::from_str(log_level));
+        //file_sink->set_pattern("[multi_sink_example] [%^%l%$] %v");
+        auto file_logger = std::make_shared<spdlog::logger>("file_logger", file_sink);
+        file_logger->set_level(spdlog::level::from_str(log_level));
+        spdlog::register_logger(file_logger);
+        spdlog::set_default_logger(file_logger);
+    }
+    SPDLOG_WARN("Log level value from the config: {}", log_level);
+    SPDLOG_DEBUG("DEBUG mode is enabled");
+
+
+
+
+
 	//mtrace();       // (pat) Enable memory leak detection.  Unfortunately, huge amounts of code have been started in the constructors above.
 	gLogGroup.setAll();
 	processArgs(argc, argv);
@@ -594,52 +638,52 @@ int main(int argc, char *argv[])
 
 	gConfig.setUpdateHook(purgeConfig);
 	//LOG(ALERT) << "OpenBTS (re)starting, ver " << VERSION << " build date/time " << TIMESTAMP_ISO;
-        LOG(ALERT) << "OpenBTS (re)starting, ver " << "VERSION" << " build date/time " << "TIMESTAMP_ISO";
-	LOG(ALERT) << "OpenBTS reading config file "<<cOpenBTSConfigFile;
+    SPDLOG_INFO("OpenBTS (re)starting");
 
-	COUT("\n\n" << gOpenBTSWelcome << "\n");
-	Control::controlInit();		// init Layer3: TMSITable, TransactionTable.
+	SPDLOG_INFO("OpenBTS reading config file {}", *cOpenBTSConfigFile); // FIXME: This will go away later, once the config system is replaced.
+	//COUT("\n\n" << gOpenBTSWelcome << "\n"); // FIXME: Bits and pieces of this should be in the readme, not in some startup message.
+
+    Control::controlInit();		// init Layer3: TMSITable, TransactionTable.
 	gPhysStatus.open(gConfig.getStr("Control.Reporting.PhysStatusTable").c_str());
 	gBTS.gsmInit();
 	gParser.addCommands();
 
-	COUT("\nStarting the system...");
+    SPDLOG_INFO("Starting the system...");
 
-	// (pat 3-16-2014) If there are multiple instances of OpenBTS running, dont go talking to some random transceiver.
-	// (pat) We dont - we talk to the transceiver on the specified port.
-	bool haveTRX = false;
-	//if (! bAllowMultipleInstances) {
-		// is the radio running?
-		// Start the transceiver interface.
-		LOG(INFO) << "checking transceiver";
-		//gTRX.ARFCN(0)->powerOn();
-		//sleep(gConfig.getNum("TRX.Timeout.Start"));
-		//bool haveTRX = gTRX.ARFCN(0)->powerOn(false);		This prints an inapplicable warning message.
-		haveTRX = gTRX.ARFCN(0)->trxRunning();			// This does not print an inapplicable warning message.
-	//}
+	SPDLOG_DEBUG("Checking transceiver");
+    // FIXME: This appears to check if the transmitter is already running,
+    //        implying the transmitter was started by a previous process.  Is
+    //        this still valid?
+    bool haveTRX = gTRX.ARFCN(0)->trxRunning();
 
 	Thread transceiverThread;
 	if (!haveTRX) {
-		//LOG(ALERT) << "starting the transceiver";
-		transceiverThread.start((void*(*)(void*)) startTransceiver, NULL);
+        SPDLOG_INFO("Starting the transceiver");
+        // FIXME: Why all the void* in the cast?
+		transceiverThread.start((void*(*)(void*)) startTransceiver, nullptr);
+
 		// sleep to let the FPGA code load
-		// TODO: we should be "pinging" the radio instead of sleeping
+		// FIXME: Should be "pinging" the radio instead of sleeping
 		sleep(5);
 	} else {
-		LOG(NOTICE) << "transceiver already running";
+        SPDLOG_WARN("transceiver already running");
 	}
 
 	// Start the SIP interface.
+    SPDLOG_INFO("Starting the SIP interface");
 	SIP::SIPInterfaceStart();
 
 	// Start the peer interface
+    SPDLOG_INFO("Starting the Peering interface");
 	gPeerInterface.start();
 
 	// Sync factory calibration as defaults from radio EEPROM
+    SPDLOG_INFO("Setting up the radio");
 	signed sdrsn = gTRX.ARFCN(0)->getFactoryCalibration("sdrsn");
 	if (sdrsn != 0 && sdrsn != 65535) {
 		signed val;
 
+        // FIXME: Do these values need to be stored?  Don't these values just come from the config?
 		val = gTRX.ARFCN(0)->getFactoryCalibration("band");
 		if (gConfig.isValidValue("GSM.Radio.Band", val)) {
 			gConfig.mSchema["GSM.Radio.Band"].updateDefaultValue(val);
@@ -662,6 +706,7 @@ int main(int argc, char *argv[])
 	}
 
 	// Limit valid ARFCNs to current band
+    // FIXME: What does this do? Shouldn't this come from the config?
 	gConfig.mSchema["GSM.Radio.C0"].updateValidValues(getARFCNsString(gConfig.getNum("GSM.Radio.Band")));
 
 	//
@@ -683,7 +728,7 @@ int main(int argc, char *argv[])
 	for (unsigned i=0; i<numARFCNs; i++) {
 		// Tune the radios.
 		unsigned ARFCN = C0 + i*2;
-		LOG(INFO) << "tuning TRX " << i << " to ARFCN " << ARFCN;
+		SPDLOG_INFO("Tuning TRX {} to ARFCN {}", i, ARFCN);
 		ARFCNManager* radio = gTRX.ARFCN(i);
 		radio->tune(ARFCN);
 	}
@@ -730,7 +775,7 @@ int main(int argc, char *argv[])
 	// sanity check on channel counts
 	// the clamp here could be improved to take the customer's current ratio of C1:C7 and scale it back to fit in the window
 	if (TimeSlots::maxC1plusC7() < TimeSlots::getNumC1s() + TimeSlots::getNumC7s()) {
-		LOG(CRIT) << "scaling back GSM.Channels.NumC1s and GSM.Channels.NumC7s to fit inside number of available timeslots.";
+        SPDLOG_WARN("Scaling back GSM.Channels.NumC1s and GSM.Channels.NumC7s to fit inside number of available timeslots.");
 		// NOTE!!! Must set NumC7s before calling defaultC1s.
 		//gConfig.set("GSM.Channels.NumC7s",TimeSlots::defaultC7s());
 		//gConfig.set("GSM.Channels.NumC1s",TimeSlots::defaultC1s());
@@ -744,7 +789,7 @@ int main(int argc, char *argv[])
 
 	gNumC7s = TimeSlots::getNumC7s();
 	gNumC1s = TimeSlots::getNumC1s();
-	LOG(NOTICE) << format("Creating %d Combination-1 (TCH/F) timeslots and %d Combination-7 (SDCCH) timeslots",gNumC1s,gNumC7s);
+    SPDLOG_INFO("Creating {} Combination-1 (TCH/F) timeslots and {} Combination-7 (SDCCH) timeslots", gNumC1s, gNumC7s);
 
 	if (gConfig.getBool("GSM.Channels.C1sFirst")) {
 		// Create C-I slots.
@@ -775,7 +820,7 @@ int main(int argc, char *argv[])
 	}
 
 	if (sCount<(numARFCNs*8)) {
-		LOG(CRIT) << "Only " << sCount << " timeslots configured in an " << numARFCNs << "-ARFCN system.";
+        SPDLOG_WARN("Only {} timeslots configured in an {}-ARFCN system.", sCount, numARFCNs);
 	}
 
 	// Set up idle filling on C0 as needed for unconfigured slots..
@@ -787,56 +832,49 @@ int main(int argc, char *argv[])
 
 	// Be sure we are not over-reserving.
 	if (0 == gBTS.SDCCHTotal()) {
-		LOG(CRIT) << "No SDCCH channels are allocated!  OpenBTS may not function properly.";
+        SPDLOG_WARN("No SDCCH channels are allocated!  OpenBTS may not function properly.");
 	} else if (gConfig.getNum("GSM.Channels.SDCCHReserve")>=(int)gBTS.SDCCHTotal()) {
 		int val = gBTS.SDCCHTotal() - 1;
 		if (val < 0) { val = 0; }
-		LOG(CRIT) << "GSM.Channels.SDCCHReserve too big, changing to " << val;
+        SPDLOG_WARN("GSM.Channels.SDCCHReserve too big, changing to {}", val);
 		gConfig.set("GSM.Channels.SDCCHReserve",val);
 	}
-
 
 	// OK, now it is safe to start the BTS.
 	gBTS.gsmStart();
 
 
-	LOG(INFO) << "system ready";
+	SPDLOG_INFO("system ready");
 
 	gNodeManager.setAppLogicHandler(&nmHandler);
 	gNodeManager.start(gConfig.getNum("NodeManager.Commands.Port"), gConfig.getNum("NodeManager.Events.Port"));
 
-	COUT("\nsystem ready\n");
-	COUT("\nuse the OpenBTSCLI utility to access CLI\n");
+	SPDLOG_INFO("system ready");
+	SPDLOG_INFO("use the OpenBTSCLI utility to access CLI");
+
+    // FIXME: Why is this running here?  It creates a "command-line" like interface.
+    //        This should be an idle loop with some signal catches instead of this parser thing.
 	gParser.cliServer();	// (pat) This does not return unless the user directs us to kill OpenBTS.
 
-	LOG(ALERT) << "exiting OpenBTS ...";
-	// End CLI Interface code
-
+    SPDLOG_INFO("exiting OpenBTS ...");
 	} // try
 
 	catch (ConfigurationTableKeyNotFound e) {
-		LOG(EMERG) << "required configuration parameter " << e.key() << " not defined, aborting";
+		SPDLOG_ERROR("required configuration parameter {} not defined, aborting", e.key());
 		gReports.incr("OpenBTS.Exit.Error.ConfigurationParamterNotFound");
 	}
 	catch (exception e) {
-		// (pat) This is C++ standard exception.  It will be thrown for string or STL [Standard Template Library] errors.
-		// They are also thrown from the zmq library used by the NodeManager, but the numnuts dont put any useful information in the e.what(0 field.
-		// man zmq_cpp for more info.
-		LOG(EMERG) << "C++ standard exception occurred: "<<e.what();
+		SPDLOG_ERROR("C++ standard exception occurred: {}", e.what());
 	}
 	catch (...) {
-		LOG(EMERG) << "Unrecognized C++  exception occurred, exiting...";
-		//printf("OpenBTS: exception occurred, exiting...\n"); fflush(stdout);
+		SPDLOG_ERROR("Unrecognized C++  exception occurred, exiting...");
 	}
 
-
-	//if (gTransceiverPid) kill(gTransceiverPid, SIGKILL);
-
 	exit(0);
-
 }
 
 /** Return warning strings about a potential conflicting value */
+// FIXME: This should be move to the parts where these keys are used.
 vector<string> configurationCrossCheck(const string& key) {
 	vector<string> warnings;
 	ostringstream warning;

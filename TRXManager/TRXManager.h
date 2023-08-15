@@ -33,6 +33,28 @@
 /* Forward refs into the GSM namespace. */
 namespace GSM {
 
+
+typedef enum {
+    FILL,               ///< Channel is transmitted, but unused
+    I,                  ///< TCH/FS
+    II,                 ///< TCH/HS, idle every other slot
+    III,                ///< TCH/HS
+    IV,                 ///< FCCH+SCH+CCCH+BCCH, uplink RACH
+    V,                  ///< FCCH+SCH+CCCH+BCCH+SDCCH/4+SACCH/4, uplink RACH+SDCCH/4
+    VI,                 ///< CCCH+BCCH, uplink RACH
+    VII,                ///< SDCCH/8 + SACCH/8
+    NONE,               ///< Channel is inactive, default
+    LOOPBACK,           ///< similar go VII, used in loopback testing
+    IGPRS				///< GPRS channel, like I but static filler frames.
+} ChannelCombination;
+
+// This magic flag is ORed with the TN TimeSlot in vectors passed to the transceiver
+// to indicate the radio block is a filler frame instead of a radio frame.
+// Must be higher than any possible TN.
+enum TransceiverFlags {
+    SET_FILLER_FRAME = 0x10
+};
+
 class L1Decoder;
 
 };
